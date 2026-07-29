@@ -163,7 +163,8 @@ function renderStats(perf) {
     ["TRADES CLÔTURÉS", perf.total_trades, ""],
     ["POSITIONS OUVERTES", perf.open_positions, ""],
     ["TAUX DE RÉUSSITE", perf.win_rate_pct + "%", ""],
-    ["PNL CUMULÉ", (perf.cumulative_pnl_pct > 0 ? "+" : "") + perf.cumulative_pnl_pct + "%", pnlClass],
+    ["PNL CUMULÉ", (perf.cumulative_pnl_pct > 0 ? "+" : "") + perf.cumulative_pnl_pct + "% (" +
+      (perf.cumulative_pnl_usd > 0 ? "+" : "") + perf.cumulative_pnl_usd + " USD)", pnlClass],
   ];
   document.getElementById("stats").innerHTML = items.map(([label, value, cls]) => `
     <div class="stat">
