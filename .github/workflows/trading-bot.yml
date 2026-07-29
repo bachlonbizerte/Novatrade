@@ -1,0 +1,45 @@
+name: Trading Bot
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # toutes les 15 minutes (ajuste selon ton timeframe)
+  workflow_dispatch:          # permet aussi de le lancer manuellement depuis GitHub
+
+permissions:
+  contents: write   # nécessaire pour que le job puisse commit les résultats du scan
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: Copier la config
+        run: cp config/config.example.yaml config/config.yaml
+
+      - name: Lancer le scanner multi-crypto
+        env:
+          EXCHANGE_API_KEY: ${{ secrets.EXCHANGE_API_KEY }}
+          EXCHANGE_API_SECRET: ${{ secrets.EXCHANGE_API_SECRET }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DRY_RUN: "true"   # passe à "false" seulement quand tu es prêt pour le réel
+        run: python -m src.scanner
+
+      - name: Publier les résultats pour le dashboard
+        run: |
+          git config user.name "nova-bot"
+          git config user.email "nova-bot@users.noreply.github.com"
+          git add docs/data/latest_scan.json
+          git diff --staged --quiet || git commit -m "chore: mise à jour du scan [skip ci]"
+          git push
+

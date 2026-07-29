@@ -1,0 +1,39 @@
+exchange:
+  name: binance
+  symbol: "BTC/USDT"        # utilisé par main.py (bot mono-paire, legacy)
+  timeframe: "15m"          # ex: 1m, 5m, 15m, 1h, 4h, 1d
+
+strategy:
+  name: "sma_crossover"
+  fast_period: 9
+  slow_period: 21
+
+# Utilisé par scanner.py (analyse multi-crypto + multi-timeframe avec IA de décision)
+watchlist:
+  timeframes: ["15m", "1h", "4h"]
+  timeframe_weights:
+    "15m": 0.2
+    "1h": 0.3
+    "4h": 0.5
+  notify_score_threshold: 70   # score final mini (sur 100) pour recevoir une notif avec boutons
+  symbols:
+    - "BTC/USDT"
+    - "ETH/USDT"
+    - "SOL/USDT"
+    - "BNB/USDT"
+    - "XRP/USDT"
+    - "ADA/USDT"
+    - "DOGE/USDT"
+    - "AVAX/USDT"
+    - "LINK/USDT"
+    - "MATIC/USDT"
+
+risk:
+  trade_amount_usdt: 20      # montant par trade (en mode réel)
+  stop_loss_pct: 2.0         # % de stop loss
+  take_profit_pct: 4.0       # % de take profit
+
+backtest:
+  start_date: "2024-01-01"
+  end_date: "2024-12-31"
+  initial_balance: 1000
