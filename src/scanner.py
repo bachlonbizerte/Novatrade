@@ -17,6 +17,9 @@ from src.exchange_client import ExchangeClient
 from src.ai_decision import decide
 from src.telegram_notifier import send_signal_notification, send_summary, send_message_simple
 from src.paper_trading import check_and_close_positions, get_stats
+from src.notification_limiter import can_send, record_sent, get_remaining
+from src.ai_agent import get_ai_verdict
+from src.action_log import log_action
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -54,25 +57,36 @@ def main():
         dry_run=dry_run,
     )
 
-    # 1. Vérifie d'abord si des positions simulées ouvertes doivent être clôturées (SL/TP atteint)
-    closed_trades = check_and_close_positions(client)
+    # 1. Vérifie d'abord si des positions simulées ouvertes doivent être clôturées (SL/TP/durée max atteints)
+    max_duration = config["risk"].get("max_position_duration_minutes", 60)
+    closed_trades = check_and_close_positions(client, max_duration_minutes=max_duration)
     if closed_trades and bot_token and chat_id:
         for t in closed_trades:
             emoji = "🟢" if t["pnl_pct"] > 0 else "🔴"
+            reason_fr = {"take_profit": "objectif atteint", "stop_loss": "stop touché",
+                         "time_limit": f"durée max ({max_duration} min) atteinte"}.get(t["exit_reason"], t["exit_reason"])
             msg = (f"{emoji} Position clôturée: {t['symbol']}\n"
-                   f"Raison: {t['exit_reason']} — PnL: {t['pnl_pct']}%")
+                   f"Raison: {reason_fr} — PnL: {t['pnl_pct']}% ({t.get('pnl_usd', 0)} USD)")
             send_message_simple(bot_token, chat_id, msg)
 
     symbols = config["watchlist"]["symbols"]
     timeframes = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
     tf_weights = config["watchlist"].get("timeframe_weights")
-    notify_threshold = config["watchlist"].get("notify_score_threshold", 70)
+    notify_threshold = config["watchlist"].get("notify_score_threshold", 90)
+    max_per_day = config["watchlist"].get("max_notifications_per_day", 15)
+    min_interval = config["watchlist"].get("min_minutes_between_notifications", 5)
 
     decisions = []
     for symbol in symbols:
         try:
             logger.info(f"Analyse IA de {symbol} sur {timeframes}...")
-            decision = decide(client, symbol, timeframes, tf_weights)
+            decision = decide(client, symbol, timeframes, tf_weights,
+                               stop_loss_pct=config["risk"]["stop_loss_pct"],
+                               take_profit_min_pct=config["risk"]["take_profit_min_pct"],
+                               take_profit_max_pct=config["risk"]["take_profit_max_pct"],
+                               capital_usd=config["risk"].get("capital_usd", 100),
+                               capital_allocation_pct=config["risk"].get("capital_allocation_pct", 80),
+                               max_concurrent_positions=config["risk"].get("max_concurrent_positions", 2))
             decisions.append(decision)
             logger.info(f"{symbol}: score final={decision['final_score']} ({decision['recommendation']})")
         except Exception as e:
@@ -85,10 +99,26 @@ def main():
         return
 
     top_opportunities = [d for d in decisions if d["final_score"] >= notify_threshold]
-    for opp in top_opportunities:
-        send_signal_notification(bot_token, chat_id, opp)
 
-    if decisions:
+    if not top_opportunities:
+        logger.info(f"Aucune crypto n'atteint le seuil strict de {notify_threshold}/100 — aucune notif envoyée.")
+    else:
+        # On ne garde QUE le meilleur marché du scan, pas tous ceux au-dessus du seuil
+        best = max(top_opportunities, key=lambda d: d["final_score"])
+
+        if not can_send(max_per_day, min_interval):
+            logger.info(f"Plafond quotidien atteint ou espacement de {min_interval} min pas encore écoulé "
+                        f"— {best['symbol']} non envoyé cette fois (le scan continue, réessaie au prochain run).")
+        else:
+            best["ai_verdict"] = get_ai_verdict(best)  # second avis IA, silencieux si non configuré
+            send_signal_notification(bot_token, chat_id, best)
+            record_sent()
+            log_action(best["symbol"], "signal_sent", score=best["final_score"], success=True)
+            remaining = get_remaining(max_per_day)
+            logger.info(f"Signal envoyé pour {best['symbol']} (score {best['final_score']}). "
+                        f"Notifications restantes aujourd'hui: {remaining}")
+
+    if config["watchlist"].get("send_daily_summary", False) and decisions:
         send_summary(bot_token, chat_id, decisions)
 
 

@@ -27,30 +27,41 @@ def send_message_simple(bot_token: str, chat_id: str, text: str) -> dict:
 def send_signal_notification(bot_token: str, chat_id: str, decision: dict) -> dict:
     """
     Envoie une notification formatée pour une opportunité détectée,
-    avec 3 boutons inline: Acheter / Attendre / Passer.
+    avec 3 boutons inline: Acheter / Ignorer / Rescan.
     `decision` est le dict retourné par src.ai_decision.decide().
     """
     symbol = decision["symbol"]
     score = decision["final_score"]
     reco = decision["recommendation"]
     confidence = decision.get("confidence", "")
-    reasoning = decision.get("reasoning", [])
+    entry = decision.get("entry_price")
+    stop = decision.get("stop_price")
+    target = decision.get("target_price")
+    amount = decision.get("suggested_amount_usdt")
+    horizon = decision.get("holding_horizon")
 
     emoji = "🟢" if reco == "ACHETER" else ("🟡" if reco == "ATTENDRE" else "🔴")
-    reasoning_text = "\n".join(f"• {r}" for r in reasoning)
 
     text = (
-        f"{emoji} *{symbol}* — Score IA: *{score}/100* ({reco})\n"
-        f"Confiance: {confidence}\n\n"
-        f"{reasoning_text}"
+        f"🚨 *NOVA AI SIGNAL*\n\n"
+        f"{emoji} *{symbol.replace('/', '')}*\n"
+        f"Score : *{score}/100* ({reco}, confiance {confidence})\n\n"
+        f"Entrée : `{entry}`\n"
+        f"Stop : `{stop}`\n"
+        f"Objectif : `{target}`\n"
+        f"Montant suggéré : `{amount} USDT`\n"
+        f"Horizon : {horizon}"
     )
 
-    # callback_data encode le symbole + l'action pour que le listener sache quoi faire
+    ai_verdict = decision.get("ai_verdict")
+    if ai_verdict:
+        text += f"\n\n🤖 *Avis IA (Claude)* :\n{ai_verdict}"
+
     reply_markup = {
         "inline_keyboard": [[
-            {"text": "✅ Acheter", "callback_data": f"buy|{symbol}"},
-            {"text": "⏳ Attendre", "callback_data": f"wait|{symbol}"},
-            {"text": "❌ Passer", "callback_data": f"pass|{symbol}"},
+            {"text": "✅ ACHETER", "callback_data": f"buy|{symbol}"},
+            {"text": "❌ IGNORER", "callback_data": f"ignore|{symbol}"},
+            {"text": "🔄 RESCAN", "callback_data": f"rescan|{symbol}"},
         ]]
     }
 

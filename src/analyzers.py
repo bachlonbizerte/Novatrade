@@ -45,10 +45,20 @@ def atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
     return tr.rolling(period).mean()
 
 
+def support_resistance(df: pd.DataFrame, lookback: int = 50):
+    """Support/résistance simplifiés: plus bas et plus haut sur les N dernières bougies."""
+    window = df.tail(lookback)
+    return float(window["low"].min()), float(window["high"].max())
+
+
 def analyze(df: pd.DataFrame, symbol: str) -> dict:
     """
-    Analyse un DataFrame OHLCV et retourne un dict avec le score composite
-    et le détail de chaque sous-indicateur, pour un symbole donné.
+    Analyse un DataFrame OHLCV et retourne un score /100 découpé en 5 catégories :
+      - Trend (tendance de fond, EMA50/EMA200)          .... /25
+      - Momentum (RSI + MACD)                           .... /20
+      - Volume (confirmation par le volume)              .... /20
+      - Structure (position par rapport au support/résistance) .... /20
+      - Risk (volatilité — pénalise les marchés erratiques)     .... /15
     """
     df = df.copy()
     if len(df) < 210:
@@ -64,55 +74,86 @@ def analyze(df: pd.DataFrame, symbol: str) -> dict:
 
     last = df.iloc[-1]
     prev = df.iloc[-2]
+    price = last["close"]
 
-    score = 0
     details = {}
 
-    # 1. RSI : idéal dans zone de reprise depuis survente (30-50), mauvais si surachat (>70)
+    # 1. TREND /25 — tendance de fond (EMA50 vs EMA200) + confirmation par le prix
+    trend_score = 0
+    bullish_trend = last["ema50"] > last["ema200"]
+    if bullish_trend:
+        trend_score = 15
+        if price > last["ema50"]:  # le prix confirme aussi la tendance court-terme
+            trend_score += 10
+    score_trend = trend_score
+    details["trend"] = "haussière" if bullish_trend else "baissière"
+
+    # 2. MOMENTUM /20 — RSI (jusqu'à 10) + MACD (jusqu'à 10)
     rsi_val = last["rsi"]
     if 30 <= rsi_val <= 50:
-        rsi_score = 25
+        rsi_part = 10
     elif 50 < rsi_val <= 65:
-        rsi_score = 15
+        rsi_part = 6
     elif rsi_val < 30:
-        rsi_score = 20  # survente = opportunité mais risquée
+        rsi_part = 8  # survente = opportunité mais risquée
     else:
-        rsi_score = 0  # surachat
-    score += rsi_score
-    details["rsi"] = round(rsi_val, 1)
+        rsi_part = 0  # surachat
 
-    # 2. MACD : histogramme qui vient de passer positif = momentum haussier naissant
-    macd_score = 0
     if prev["macd_hist"] <= 0 and last["macd_hist"] > 0:
-        macd_score = 25  # croisement fraîchement haussier
+        macd_part = 10  # croisement fraîchement haussier
     elif last["macd_hist"] > 0:
-        macd_score = 15  # déjà haussier
-    score += macd_score
+        macd_part = 6
+    else:
+        macd_part = 0
+    score_momentum = rsi_part + macd_part
+    details["rsi"] = round(rsi_val, 1)
     details["macd_hist"] = round(last["macd_hist"], 4)
 
-    # 3. Tendance de fond : EMA50 > EMA200 (golden cross zone) = favorable
-    trend_score = 20 if last["ema50"] > last["ema200"] else 0
-    score += trend_score
-    details["trend"] = "haussière" if last["ema50"] > last["ema200"] else "baissière"
-
-    # 4. Volume : confirmation par un volume au-dessus de la moyenne
-    volume_score = 0
+    # 3. VOLUME /20 — confirmation par un volume au-dessus de la moyenne
+    score_volume = 0
     if last["volume_avg"] and last["volume"] > 1.3 * last["volume_avg"]:
-        volume_score = 15
+        score_volume = 20
     elif last["volume_avg"] and last["volume"] > last["volume_avg"]:
-        volume_score = 8
-    score += volume_score
+        score_volume = 12
     details["volume_ratio"] = round(last["volume"] / last["volume_avg"], 2) if last["volume_avg"] else None
 
-    # 5. Volatilité : pénalise les marchés trop erratiques (ATR élevé relatif au prix)
-    volatility_score = 0
-    atr_pct = (last["atr"] / last["close"]) * 100 if last["close"] else 0
+    # 4. STRUCTURE /20 — position du prix entre support et résistance récents.
+    #    Proche du support avec de la marge avant la résistance = bon point d'entrée.
+    #    Proche de la résistance = upside limité, on pénalise.
+    support, resistance = support_resistance(df)
+    price_range = resistance - support
+    position_in_range = (price - support) / price_range if price_range > 0 else 0.5
+
+    if position_in_range <= 0.3:
+        score_structure = 20
+    elif position_in_range <= 0.5:
+        score_structure = 14
+    elif position_in_range <= 0.7:
+        score_structure = 8
+    else:
+        score_structure = 0
+    details["support"] = round(support, 4)
+    details["resistance"] = round(resistance, 4)
+    details["position_in_range_pct"] = round(position_in_range * 100, 1)
+
+    # 5. RISK /15 — pénalise les marchés trop volatils (ATR élevé relatif au prix)
+    atr_pct = (last["atr"] / price) * 100 if price else 0
     if atr_pct < 3:
-        volatility_score = 15
+        score_risk = 15
     elif atr_pct < 6:
-        volatility_score = 8
-    score += volatility_score
+        score_risk = 8
+    else:
+        score_risk = 0
     details["volatility_pct"] = round(atr_pct, 2)
+
+    score = score_trend + score_momentum + score_volume + score_structure + score_risk
+    details["breakdown"] = {
+        "trend": f"{score_trend}/25",
+        "momentum": f"{score_momentum}/20",
+        "volume": f"{score_volume}/20",
+        "structure": f"{score_structure}/20",
+        "risk": f"{score_risk}/15",
+    }
 
     if score >= 70:
         recommendation = "ACHETER"
@@ -125,7 +166,7 @@ def analyze(df: pd.DataFrame, symbol: str) -> dict:
         "symbol": symbol,
         "score": score,
         "recommendation": recommendation,
-        "price": round(last["close"], 4),
+        "price": round(price, 4),
         "details": details,
     }
 
