@@ -15,7 +15,10 @@ watchlist:
     "15m": 0.2
     "1h": 0.3
     "4h": 0.5
-  notify_score_threshold: 70   # score final mini (sur 100) pour recevoir une notif avec boutons
+  notify_score_threshold: 90     # score final mini STRICT (sur 100) — sinon rien n'est envoyé
+  max_notifications_per_day: 15  # plafond quotidien, remis à zéro chaque jour (UTC)
+  min_minutes_between_notifications: 5   # espacement minimum, même si le scanner tourne chaque minute
+  send_daily_summary: false      # true si tu veux aussi un résumé de tous les scores à chaque run
   symbols:
     - "BTC/USDT"
     - "ETH/USDT"
@@ -26,12 +29,16 @@ watchlist:
     - "DOGE/USDT"
     - "AVAX/USDT"
     - "LINK/USDT"
-    - "MATIC/USDT"
+    - "SUI/USDT"
 
 risk:
-  trade_amount_usdt: 20      # montant par trade (en mode réel)
-  stop_loss_pct: 2.0         # % de stop loss
-  take_profit_pct: 4.0       # % de take profit
+  capital_usd: 100                    # capital de référence de départ (évolue avec les gains/pertes simulés)
+  capital_allocation_pct: 80          # % du capital courant utilisable pour trader — le reste (20%) reste en sécurité
+  max_concurrent_positions: 2         # jusqu'à 2 positions ouvertes en même temps, budget partagé intelligemment entre elles
+  max_position_duration_minutes: 60   # clôture automatique si ni le stop ni l'objectif ne sont touchés après ce délai
+  stop_loss_pct: 1.0            # SL fixe: 1% sous le prix d'entrée
+  take_profit_min_pct: 2.0      # TP dynamique: jamais moins de 2%
+  take_profit_max_pct: 5.0      # TP dynamique: jamais plus de 5% (calé sur la volatilité ATR du moment)
 
 backtest:
   start_date: "2024-01-01"
