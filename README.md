@@ -11,6 +11,43 @@ des risques de perte financière. Teste **toujours** en mode `DRY_RUN=true`
 (ou en environnement testnet de l'exchange) avant d'utiliser de l'argent réel.
 Ceci n'est pas un conseil financier.
 
+## 🎯 Gestion du risque par trade
+
+Chaque position ouverte (via le bouton "✅ ACHETER") utilise :
+- **Stop-loss fixe : 1%** sous le prix d'entrée
+- **Take-profit dynamique : entre 2% et 5%**, calculé automatiquement selon la
+  volatilité réelle du marché à l'instant T (ATR%) — un marché agité vise un
+  objectif plus large, un marché calme un objectif plus proche et plus vite atteignable
+
+## 🧾 Historique complet des actions (mémoire du bot)
+
+Chaque clic sur un bouton (Acheter / Ignorer / Rescan), **y compris les
+échecs** (ex: erreur API, ordre refusé), est journalisé dans
+`docs/data/action_log.json` via `action_log.py`. En parallèle,
+`paper_trading.py` calcule un taux de réussite **par crypto** à partir des
+positions déjà clôturées.
+
+Le moteur de décision (`ai_decision.py`) utilise cet historique : si une
+crypto a un mauvais taux de réussite sur ses derniers trades (< 40% sur au
+moins 3 trades), son score est réduit par prudence ; si son taux est bon
+(> 70%), le score est renforcé. C'est la mécanique d'apprentissage à partir
+des performances passées — pas un modèle qui "apprend" au sens machine
+learning, mais un ajustement factuel basé sur ce qui s'est vraiment passé.
+
+## 🤖 Second avis IA (Claude, optionnel)
+
+En plus du scoring par règles, le bot peut demander un avis qualitatif à
+Claude (Anthropic) sur chaque signal envoyé — un regard en langage naturel
+qui peut souligner des nuances qu'un score seul ne capture pas.
+
+Pour l'activer :
+1. `pip install anthropic` (déjà dans `requirements.txt`)
+2. Ajoute `ANTHROPIC_API_KEY` à ton `.env` (local) ou aux secrets GitHub Actions
+3. Sans cette clé, le bot fonctionne exactement pareil — cette étape est simplement ignorée
+
+⚠️ C'est une couche d'aide à la décision supplémentaire, pas un remplacement
+du scoring ni une garantie de justesse.
+
 ## Structure
 
 ```
@@ -20,7 +57,10 @@ trading-bot/
 │   ├── analyzers.py          # analyse technique + agrégation multi-timeframe
 │   ├── tradingview_module.py # signal externe TradingView (consensus tiers)
 │   ├── ai_decision.py        # moteur de décision: combine tout en 1 score final
-│   ├── paper_trading.py      # positions simulées suivies (SL/TP auto + stats)
+│   ├── paper_trading.py      # positions simulées suivies (SL/TP auto + stats par crypto)
+│   ├── action_log.py         # journal de toutes les actions, succès ET échecs
+│   ├── notification_limiter.py # plafond quotidien de notifications
+│   ├── ai_agent.py            # second avis qualitatif via Claude (optionnel)
 │   ├── exchange_client.py    # wrapper ccxt (données + ordres)
 │   ├── backtester.py         # moteur de backtest
 │   ├── run_backtest.py       # script CLI pour lancer un backtest
@@ -39,6 +79,15 @@ trading-bot/
 ├── requirements.txt
 └── .env.example
 ```
+
+## 🎯 Sélectivité stricte des notifications
+
+Par défaut le bot est réglé pour être **très sélectif**, pas bavard :
+- Seuil strict : `notify_score_threshold: 90` — en dessous, rien n'est envoyé, même si c'est la "meilleure" crypto du scan
+- **Un seul signal par run** : parmi les cryptos qui dépassent le seuil, seule celle avec le score le plus haut est notifiée (pas une notif par crypto qualifiée)
+- Plafond quotidien : `max_notifications_per_day: 15`, remis à zéro chaque jour (minuit UTC), pour éviter le spam même si le marché est agité
+
+⚠️ Un score élevé reflète la qualité *technique* de la configuration de marché selon nos critères (tendance, momentum, volume, structure, risque) — **ce n'est pas une probabilité de gain**. Aucun système ne peut garantir un taux de réussite donné ; c'est justement pour ça que le paper trading existe (voir plus bas).
 
 ## 📈 Paper trading (suivi de performance)
 
