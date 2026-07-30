@@ -18,16 +18,19 @@ from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
 from src.scanner import load_config, scan_once
+from src.dashboard_publisher import push_dashboard_data
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
 SCAN_INTERVAL_SECONDS = 60
+DASHBOARD_PUSH_INTERVAL_SECONDS = 300  # toutes les ~5 min, pas à chaque cycle (éviter de spammer les commits)
 
 
 def run_forever():
     load_dotenv()
     logger.info("NOVA Scanner démarré en continu (VPS) — un scan toutes les 60s.")
+    last_push = 0
 
     while True:
         cycle_start = time.time()
@@ -46,6 +49,10 @@ def run_forever():
             )
 
             scan_once(config, client, bot_token, chat_id)
+
+            if time.time() - last_push >= DASHBOARD_PUSH_INTERVAL_SECONDS:
+                push_dashboard_data()
+                last_push = time.time()
 
         except Exception as e:
             logger.error(f"Erreur pendant le cycle de scan (on continue au prochain): {e}")
