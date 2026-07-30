@@ -20,6 +20,9 @@ watchlist:
   max_notifications_per_day: 9999  # plafond quotidien, remis à zéro chaque jour (UTC)
   min_minutes_between_notifications: 5   # espacement minimum, même si le scanner tourne chaque minute
   send_daily_summary: true      # true si tu veux aussi un résumé de tous les scores à chaque run
+  auto_trade: true                # ouvre automatiquement les positions ACHETER, SANS confirmation manuelle.
+                                   # ⚠️ Ne fonctionne QUE si DRY_RUN=true (garde-fou codé en dur, pas juste
+                                   # une histoire de config) — impossible d'auto-trader en argent réel.
   symbols:
     - "BTC/USDT"
     - "ETH/USDT"

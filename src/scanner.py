@@ -17,7 +17,10 @@ from dotenv import load_dotenv
 from src.exchange_client import ExchangeClient
 from src.ai_decision import decide
 from src.telegram_notifier import send_signal_notification, send_summary, send_message_simple, send_position_status
-from src.paper_trading import check_and_close_positions, get_stats, get_open_positions, touch_status_sent
+from src.paper_trading import (
+    check_and_close_positions, get_stats, get_open_positions, touch_status_sent,
+    open_position, suggest_position_size, get_account_state,
+)
 from src.notification_limiter import can_send, record_sent, get_remaining
 from src.ai_agent import get_ai_verdict
 from src.action_log import log_action
@@ -33,13 +36,6 @@ def load_config(path: str = "config/config.yaml") -> dict:
 
 
 def _sanitize_for_json(obj):
-    """
-    Remplace récursivement les NaN/Infinity (valides en Python, mais PAS en
-    JSON strict) par null. Sans ça, un calcul foireux quelque part (ex:
-    division par zéro sur peu de données) produit un fichier que Python lit
-    sans broncher mais que JavaScript (le dashboard) ne peut pas parser du
-    tout — silencieusement, jusqu'à ce qu'on ouvre la console du navigateur.
-    """
     if isinstance(obj, float):
         return None if (math.isnan(obj) or math.isinf(obj)) else obj
     if isinstance(obj, dict):
@@ -61,6 +57,41 @@ def save_results(decisions: list, stats: dict, path: str = "docs/data/latest_sca
     logger.info(f"Résultats sauvegardés dans {path}")
 
 
+def _auto_buy(client, config: dict, symbol: str) -> str:
+    """
+    Ouvre une position automatiquement, SANS confirmation manuelle.
+    Garde-fou strict: ne fait absolument rien si client.dry_run est False —
+    l'auto-trading ne doit jamais pouvoir déclencher un ordre réel, peu
+    importe la config. Retourne None si rien n'a été ouvert (positions
+    max atteintes, budget insuffisant, ou mode réel).
+    """
+    if not client.dry_run:
+        logger.warning("Auto-trading ignoré: le mode réel (DRY_RUN=false) exige toujours une "
+                        "confirmation manuelle via Telegram, par sécurité.")
+        return None
+
+    sl_pct = config["risk"]["stop_loss_pct"]
+    tp_min_pct = config["risk"]["take_profit_min_pct"]
+    capital_usd = config["risk"].get("capital_usd", 100)
+    allocation_pct = config["risk"].get("capital_allocation_pct", 80)
+    max_concurrent = config["risk"].get("max_concurrent_positions", 2)
+
+    state = get_account_state(capital_usd, allocation_pct, max_concurrent)
+    if state["open_positions_count"] >= max_concurrent:
+        return None
+
+    amount = suggest_position_size(capital_usd, allocation_pct, max_concurrent)
+    if not amount or amount <= 0:
+        return None
+
+    df = client.fetch_ohlcv(symbol, "15m", limit=1)
+    current_price = float(df.iloc[-1]["close"])
+    open_position(symbol, current_price, sl_pct, tp_min_pct, position_size_usdt=amount)
+
+    return (f"🤖 *[AUTO-TRADE]* Position ouverte automatiquement pour {symbol} @ {current_price}\n"
+            f"Montant: {amount} USDT · SL: -{sl_pct}% · TP: +{tp_min_pct}%")
+
+
 def scan_once(config: dict, client, bot_token: str, chat_id: str):
     """
     Effectue UN cycle complet: vérifie/clôture les positions ouvertes, envoie
@@ -68,7 +99,6 @@ def scan_once(config: dict, client, bot_token: str, chat_id: str):
     opportunité si le seuil est atteint. Ne gère PAS les clics de boutons
     Telegram — ça, c'est le rôle de telegram_listener.py (séparé, en continu).
     """
-    # 1. Vérifie d'abord si des positions simulées ouvertes doivent être clôturées (SL/TP/durée max atteints)
     max_duration = config["risk"].get("max_position_duration_minutes", 60)
     closed_trades = check_and_close_positions(client, max_duration_minutes=max_duration)
     if closed_trades and bot_token and chat_id:
@@ -80,8 +110,6 @@ def scan_once(config: dict, client, bot_token: str, chat_id: str):
                    f"Raison: {reason_fr} — PnL: {t['pnl_pct']}% ({t.get('pnl_usd', 0)} USD)")
             send_message_simple(bot_token, chat_id, msg)
 
-    # 1bis. Envoie un point de statut périodique pour chaque position encore ouverte
-    #       (prix actuel, PnL, boutons Clôturer/Prolonger) — espacé pour ne pas spammer.
     status_interval = config["risk"].get("position_status_interval_minutes", 30)
     if bot_token and chat_id:
         for pos in get_open_positions():
@@ -137,11 +165,25 @@ def scan_once(config: dict, client, bot_token: str, chat_id: str):
                         f"— {best['symbol']} non envoyé cette fois (le scan continue, réessaie au prochain run).")
         else:
             best["ai_verdict"] = get_ai_verdict(best)
-            send_signal_notification(bot_token, chat_id, best)
+            auto_trade = config["watchlist"].get("auto_trade", False)
+
+            if auto_trade and best["recommendation"] == "ACHETER":
+                auto_msg = _auto_buy(client, config, best["symbol"])
+                if auto_msg:
+                    send_message_simple(bot_token, chat_id,
+                                         f"{auto_msg}\n\nScore: {best['final_score']}/100 "
+                                         f"(confiance {best.get('confidence', '')})")
+                    log_action(best["symbol"], "auto_buy", score=best["final_score"], success=True)
+                else:
+                    send_signal_notification(bot_token, chat_id, best)
+                    log_action(best["symbol"], "signal_sent", score=best["final_score"], success=True)
+            else:
+                send_signal_notification(bot_token, chat_id, best)
+                log_action(best["symbol"], "signal_sent", score=best["final_score"], success=True)
+
             record_sent()
-            log_action(best["symbol"], "signal_sent", score=best["final_score"], success=True)
             remaining = get_remaining(max_per_day)
-            logger.info(f"Signal envoyé pour {best['symbol']} (score {best['final_score']}). "
+            logger.info(f"Traitement fait pour {best['symbol']} (score {best['final_score']}). "
                         f"Notifications restantes aujourd'hui: {remaining}")
 
     if config["watchlist"].get("send_daily_summary", False) and decisions:
@@ -169,8 +211,6 @@ def main():
         fallback_exchanges=config["exchange"].get("fallback", []),
     )
 
-    # En mode "run unique" (GitHub Actions), on traite aussi les clics en attente ici,
-    # puisqu'il n'y a pas de listener séparé qui tourne en continu dans ce mode.
     timeframes_for_poll = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
     tf_weights_for_poll = config["watchlist"].get("timeframe_weights")
     try:
