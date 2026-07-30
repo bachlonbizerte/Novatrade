@@ -81,8 +81,10 @@ def main():
     #    — remplace le besoin d'un listener hébergé à part, tournant en continu.
     timeframes_for_poll = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
     tf_weights_for_poll = config["watchlist"].get("timeframe_weights")
-    poll_and_handle_updates(bot_token, client, config, timeframes_for_poll, tf_weights_for_poll)
-
+    try:
+        poll_and_handle_updates(bot_token, client, config, timeframes_for_poll, tf_weights_for_poll)
+    except Exception as e:
+        logger.error(f"Erreur dans le traitement des clics Telegram (le scan continue normalement): {e}")
     # 1. Vérifie d'abord si des positions simulées ouvertes doivent être clôturées (SL/TP/durée max atteints)
     max_duration = config["risk"].get("max_position_duration_minutes", 60)
     closed_trades = check_and_close_positions(client, max_duration_minutes=max_duration)
