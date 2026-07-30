@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
 from src.ai_decision import decide
-from src.telegram_notifier import send_signal_notification, send_summary, send_message_simple
-from src.paper_trading import check_and_close_positions, get_stats
+from src.telegram_notifier import send_signal_notification, send_summary, send_message_simple, send_position_status
+from src.paper_trading import check_and_close_positions, get_stats, get_open_positions, touch_status_sent
 from src.notification_limiter import can_send, record_sent, get_remaining
 from src.ai_agent import get_ai_verdict
 from src.action_log import log_action
@@ -61,30 +61,13 @@ def save_results(decisions: list, stats: dict, path: str = "docs/data/latest_sca
     logger.info(f"Résultats sauvegardés dans {path}")
 
 
-def main():
-    load_dotenv()
-    config = load_config()
-
-    dry_run = os.getenv("DRY_RUN", "true").lower() == "true"
-    bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
-    chat_id = os.getenv("TELEGRAM_CHAT_ID", "")
-
-    client = ExchangeClient(
-        exchange_name=config["exchange"]["name"],
-        api_key=os.getenv("EXCHANGE_API_KEY", ""),
-        api_secret=os.getenv("EXCHANGE_API_SECRET", ""),
-        dry_run=dry_run,
-        fallback_exchanges=config["exchange"].get("fallback", []),
-    )
-
-    # 0. Traite d'abord les clics de boutons Telegram en attente (Acheter/Ignorer/Rescan)
-    #    — remplace le besoin d'un listener hébergé à part, tournant en continu.
-    timeframes_for_poll = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
-    tf_weights_for_poll = config["watchlist"].get("timeframe_weights")
-    try:
-        poll_and_handle_updates(bot_token, client, config, timeframes_for_poll, tf_weights_for_poll)
-    except Exception as e:
-        logger.error(f"Erreur dans le traitement des clics Telegram (le scan continue normalement): {e}")
+def scan_once(config: dict, client, bot_token: str, chat_id: str):
+    """
+    Effectue UN cycle complet: vérifie/clôture les positions ouvertes, envoie
+    les statuts périodiques, analyse les 10 cryptos, notifie la meilleure
+    opportunité si le seuil est atteint. Ne gère PAS les clics de boutons
+    Telegram — ça, c'est le rôle de telegram_listener.py (séparé, en continu).
+    """
     # 1. Vérifie d'abord si des positions simulées ouvertes doivent être clôturées (SL/TP/durée max atteints)
     max_duration = config["risk"].get("max_position_duration_minutes", 60)
     closed_trades = check_and_close_positions(client, max_duration_minutes=max_duration)
@@ -96,6 +79,22 @@ def main():
             msg = (f"{emoji} Position clôturée: {t['symbol']}\n"
                    f"Raison: {reason_fr} — PnL: {t['pnl_pct']}% ({t.get('pnl_usd', 0)} USD)")
             send_message_simple(bot_token, chat_id, msg)
+
+    # 1bis. Envoie un point de statut périodique pour chaque position encore ouverte
+    #       (prix actuel, PnL, boutons Clôturer/Prolonger) — espacé pour ne pas spammer.
+    status_interval = config["risk"].get("position_status_interval_minutes", 30)
+    if bot_token and chat_id:
+        for pos in get_open_positions():
+            last_sent = pos.get("last_status_sent_at") or pos["opened_at"]
+            elapsed = (datetime.now(timezone.utc) - datetime.fromisoformat(last_sent)).total_seconds() / 60
+            if elapsed >= status_interval:
+                try:
+                    df = client.fetch_ohlcv(pos["symbol"], "15m", limit=1)
+                    current_price = float(df.iloc[-1]["close"])
+                    send_position_status(bot_token, chat_id, pos, current_price)
+                    touch_status_sent(pos["id"])
+                except Exception as e:
+                    logger.warning(f"Impossible d'envoyer le statut de {pos['symbol']}: {e}")
 
     symbols = config["watchlist"]["symbols"]
     timeframes = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
@@ -131,14 +130,13 @@ def main():
     if not top_opportunities:
         logger.info(f"Aucune crypto n'atteint le seuil strict de {notify_threshold}/100 — aucune notif envoyée.")
     else:
-        # On ne garde QUE le meilleur marché du scan, pas tous ceux au-dessus du seuil
         best = max(top_opportunities, key=lambda d: d["final_score"])
 
         if not can_send(max_per_day, min_interval):
             logger.info(f"Plafond quotidien atteint ou espacement de {min_interval} min pas encore écoulé "
                         f"— {best['symbol']} non envoyé cette fois (le scan continue, réessaie au prochain run).")
         else:
-            best["ai_verdict"] = get_ai_verdict(best)  # second avis IA, silencieux si non configuré
+            best["ai_verdict"] = get_ai_verdict(best)
             send_signal_notification(bot_token, chat_id, best)
             record_sent()
             log_action(best["symbol"], "signal_sent", score=best["final_score"], success=True)
@@ -148,6 +146,39 @@ def main():
 
     if config["watchlist"].get("send_daily_summary", False) and decisions:
         send_summary(bot_token, chat_id, decisions)
+
+
+def main():
+    """
+    Point d'entrée pour un run UNIQUE (ex: GitHub Actions, ou test manuel).
+    Sur le VPS, c'est run_forever.py qui est utilisé à la place (boucle
+    continue), avec telegram_listener.py séparé pour les boutons.
+    """
+    load_dotenv()
+    config = load_config()
+
+    dry_run = os.getenv("DRY_RUN", "true").lower() == "true"
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID", "")
+
+    client = ExchangeClient(
+        exchange_name=config["exchange"]["name"],
+        api_key=os.getenv("EXCHANGE_API_KEY", ""),
+        api_secret=os.getenv("EXCHANGE_API_SECRET", ""),
+        dry_run=dry_run,
+        fallback_exchanges=config["exchange"].get("fallback", []),
+    )
+
+    # En mode "run unique" (GitHub Actions), on traite aussi les clics en attente ici,
+    # puisqu'il n'y a pas de listener séparé qui tourne en continu dans ce mode.
+    timeframes_for_poll = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
+    tf_weights_for_poll = config["watchlist"].get("timeframe_weights")
+    try:
+        poll_and_handle_updates(bot_token, client, config, timeframes_for_poll, tf_weights_for_poll)
+    except Exception as e:
+        logger.error(f"Erreur dans le traitement des clics Telegram (le scan continue normalement): {e}")
+
+    scan_once(config, client, bot_token, chat_id)
 
 
 if __name__ == "__main__":
