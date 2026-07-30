@@ -20,6 +20,7 @@ from src.paper_trading import check_and_close_positions, get_stats
 from src.notification_limiter import can_send, record_sent, get_remaining
 from src.ai_agent import get_ai_verdict
 from src.action_log import log_action
+from src.telegram_poller import poll_and_handle_updates
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -57,6 +58,12 @@ def main():
         dry_run=dry_run,
         fallback_exchanges=config["exchange"].get("fallback", []),
     )
+
+    # 0. Traite d'abord les clics de boutons Telegram en attente (Acheter/Ignorer/Rescan)
+    #    — remplace le besoin d'un listener hébergé à part, tournant en continu.
+    timeframes_for_poll = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
+    tf_weights_for_poll = config["watchlist"].get("timeframe_weights")
+    poll_and_handle_updates(bot_token, client, config, timeframes_for_poll, tf_weights_for_poll)
 
     # 1. Vérifie d'abord si des positions simulées ouvertes doivent être clôturées (SL/TP/durée max atteints)
     max_duration = config["risk"].get("max_position_duration_minutes", 60)
