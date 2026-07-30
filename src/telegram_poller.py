@@ -105,23 +105,23 @@ def poll_and_handle_updates(bot_token: str, client, config: dict, timeframes: li
         if not callback:
             continue
 
-        data = callback["data"]  # ex: "buy|BTC/USDT"
-        action, symbol = data.split("|", 1)
-        chat_id = callback["message"]["chat"]["id"]
+        try:
+            data = callback["data"]  # ex: "buy|BTC/USDT"
+            action, symbol = data.split("|", 1)
+            chat_id = callback["message"]["chat"]["id"]
 
-        if action == "buy":
-            confirmation = _handle_buy(client, config, symbol)
-            _answer_callback(bot_token, callback["id"], "Position enregistrée ✅")
-            _send_message(bot_token, chat_id, confirmation)
-            logger.info(confirmation)
+            if action == "buy":
+                confirmation = _handle_buy(client, config, symbol)
+                _answer_callback(bot_token, callback["id"], "Position enregistrée ✅")
+                _send_message(bot_token, chat_id, confirmation)
+                logger.info(confirmation)
 
-        elif action == "ignore":
-            _answer_callback(bot_token, callback["id"], "Signal ignoré")
-            logger.info(f"{symbol} ignoré par l'utilisateur.")
+            elif action == "ignore":
+                _answer_callback(bot_token, callback["id"], "Signal ignoré")
+                logger.info(f"{symbol} ignoré par l'utilisateur.")
 
-        elif action == "rescan":
-            _answer_callback(bot_token, callback["id"], "Rescan en cours...")
-            try:
+            elif action == "rescan":
+                _answer_callback(bot_token, callback["id"], "Rescan en cours...")
                 decision = decide(
                     client, symbol, timeframes, tf_weights,
                     stop_loss_pct=config["risk"]["stop_loss_pct"],
@@ -133,9 +133,17 @@ def poll_and_handle_updates(bot_token: str, client, config: dict, timeframes: li
                 )
                 send_signal_notification(bot_token, chat_id, decision)
                 logger.info(f"Rescan de {symbol}: score={decision['final_score']}")
-            except Exception as e:
-                _send_message(bot_token, chat_id, f"❌ Erreur lors du rescan de {symbol}: {e}")
-                logger.error(f"Erreur rescan {symbol}: {e}")
+
+        except Exception as e:
+            # Un clic qui plante ne doit JAMAIS bloquer les suivants — on log,
+            # on prévient l'utilisateur si possible, et on continue.
+            logger.error(f"Erreur en traitant le clic (update {update.get('update_id')}): {e}")
+            try:
+                chat_id_fallback = callback.get("message", {}).get("chat", {}).get("id")
+                if chat_id_fallback:
+                    _send_message(bot_token, chat_id_fallback, f"❌ Erreur lors du traitement de ce clic: {e}")
+            except Exception:
+                pass  # on ne laisse jamais une erreur secondaire remonter
 
     if last_offset != offset:
         _save_offset(last_offset)
