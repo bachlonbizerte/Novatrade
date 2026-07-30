@@ -231,8 +231,11 @@ async function loadPositions() {
     const nowPct = livePrice !== null ? clampPct(((livePrice - low) / range) * 100) : null;
 
     const pnlPct = livePrice !== null ? ((livePrice - t.entry_price) / t.entry_price * 100) : null;
+    const pnlUsd = pnlPct !== null ? (t.position_size_usdt * pnlPct / 100) : null;
     const pnlClass = pnlPct === null ? "" : pnlPct >= 0 ? "pos" : "neg";
-    const pnlText = pnlPct === null ? "prix en direct indisponible" : `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(2)}%`;
+    const pnlText = pnlPct === null
+      ? "prix en direct indisponible"
+      : `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(2)}% (${pnlUsd >= 0 ? "+" : ""}${pnlUsd.toFixed(2)} USDT)`;
 
     card.innerHTML = `
       <div class="position-top">
