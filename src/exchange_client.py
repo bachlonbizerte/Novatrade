@@ -28,7 +28,7 @@ class ExchangeClient:
         for name in candidates:
             try:
                 exchange_class = getattr(ccxt, name)
-                config = {"enableRateLimit": True}
+                config = {"enableRateLimit": True, "timeout": 15000}  # 15s max par requête, sinon on abandonne
                 if not dry_run:
                     # Clés API transmises uniquement en mode réel (voir note plus bas)
                     config["apiKey"] = api_key
