@@ -45,6 +45,8 @@ def open_position(symbol: str, entry_price: float, stop_loss_pct: float,
         "opened_at": datetime.now(timezone.utc).isoformat(),
         "status": "open",
         "score_at_entry": score,
+        "extended_minutes": 0,
+        "last_status_sent_at": None,
     }
     trades.append(trade)
     _save(trades, path)
@@ -56,8 +58,7 @@ def check_and_close_positions(client, max_duration_minutes: float = None, path: 
     """
     Vérifie chaque position ouverte contre le prix actuel: la ferme si le
     stop loss ou le take profit est atteint, OU si elle est ouverte depuis
-    plus de `max_duration_minutes` (pour éviter les positions qui traînent
-    sans jamais toucher ni SL ni TP). Retourne la liste des trades fermés.
+    plus de `max_duration_minutes`. Retourne la liste des trades fermés.
     """
     trades = _load(path)
     closed_now = []
@@ -78,7 +79,8 @@ def check_and_close_positions(client, max_duration_minutes: float = None, path: 
 
         opened_at = datetime.fromisoformat(trade["opened_at"])
         age_minutes = (now - opened_at).total_seconds() / 60
-        hit_time_limit = max_duration_minutes and age_minutes >= max_duration_minutes
+        effective_max_duration = (max_duration_minutes + trade.get("extended_minutes", 0)) if max_duration_minutes else None
+        hit_time_limit = effective_max_duration and age_minutes >= effective_max_duration
 
         if hit_tp or hit_sl or hit_time_limit:
             trade["status"] = "closed"
@@ -100,14 +102,7 @@ def check_and_close_positions(client, max_duration_minutes: float = None, path: 
 
 def get_account_state(starting_capital: float, allocation_pct: float,
                        max_concurrent_positions: int, path: str = TRADES_PATH) -> dict:
-    """
-    Calcule l'état du "compte" simulé:
-    - current_capital: capital de départ + tous les gains/pertes réalisés
-    - allocated_budget: la part de ce capital qu'on s'autorise à trader (ex: 80%)
-    - open_allocated: combien de ce budget est déjà immobilisé dans des positions ouvertes
-    - available_budget: ce qu'il reste pour ouvrir de nouvelles positions
-    Le budget grandit avec les gains (et rétrécit avec les pertes) — jamais figé.
-    """
+    """Calcule l'état du "compte" simulé (capital courant, budget alloué/disponible)."""
     trades = _load(path)
     closed = [t for t in trades if t["status"] == "closed"]
     open_trades = [t for t in trades if t["status"] == "open"]
@@ -130,18 +125,69 @@ def get_account_state(starting_capital: float, allocation_pct: float,
 
 def suggest_position_size(starting_capital: float, allocation_pct: float,
                            max_concurrent_positions: int, path: str = TRADES_PATH) -> float:
-    """
-    Montant à proposer pour une NOUVELLE position: le budget alloué est
-    réparti à parts égales entre le nombre max de positions simultanées
-    (ex: 80 USDT / 2 = 40 USDT par position), plafonné par ce qui est
-    réellement disponible. Retourne 0 si le nombre max de positions
-    ouvertes est déjà atteint.
-    """
+    """Montant à proposer pour une NOUVELLE position (budget réparti entre les positions max)."""
     state = get_account_state(starting_capital, allocation_pct, max_concurrent_positions, path)
     if state["open_positions_count"] >= max_concurrent_positions:
         return 0
     per_position_budget = state["allocated_budget"] / max_concurrent_positions
     return round(min(per_position_budget, state["available_budget"]), 2)
+
+
+def _find_trade(trades: list, trade_id: str):
+    for t in trades:
+        if t["id"] == trade_id:
+            return t
+    return None
+
+
+def get_trade_by_id(trade_id: str, path: str = TRADES_PATH) -> dict:
+    return _find_trade(_load(path), trade_id)
+
+
+def get_open_positions(path: str = TRADES_PATH) -> list:
+    return [t for t in _load(path) if t["status"] == "open"]
+
+
+def close_position_manually(trade_id: str, current_price: float, path: str = TRADES_PATH) -> dict:
+    """Clôture immédiate d'une position à la demande de l'utilisateur (bouton Telegram)."""
+    trades = _load(path)
+    trade = _find_trade(trades, trade_id)
+    if not trade or trade["status"] != "open":
+        return None
+
+    trade["status"] = "closed"
+    trade["exit_price"] = current_price
+    trade["closed_at"] = datetime.now(timezone.utc).isoformat()
+    trade["exit_reason"] = "manual"
+    trade["pnl_pct"] = round((current_price - trade["entry_price"]) / trade["entry_price"] * 100, 2)
+    size = trade.get("position_size_usdt", 0) or 0
+    trade["pnl_usd"] = round(size * trade["pnl_pct"] / 100, 2)
+    _save(trades, path)
+    logger.info(f"Position clôturée manuellement: {trade['symbol']} (pnl={trade['pnl_pct']}%)")
+    return trade
+
+
+def extend_position(trade_id: str, extra_minutes: int = 30, path: str = TRADES_PATH) -> dict:
+    """Repousse la limite de durée max d'une position spécifique (bouton Prolonger)."""
+    trades = _load(path)
+    trade = _find_trade(trades, trade_id)
+    if not trade or trade["status"] != "open":
+        return None
+
+    trade["extended_minutes"] = trade.get("extended_minutes", 0) + extra_minutes
+    _save(trades, path)
+    logger.info(f"Position prolongée: {trade['symbol']} (+{extra_minutes} min, "
+                f"total prolongation: {trade['extended_minutes']} min)")
+    return trade
+
+
+def touch_status_sent(trade_id: str, path: str = TRADES_PATH):
+    """Marque qu'un message de statut vient d'être envoyé pour cette position (espacement)."""
+    trades = _load(path)
+    trade = _find_trade(trades, trade_id)
+    if trade:
+        trade["last_status_sent_at"] = datetime.now(timezone.utc).isoformat()
+        _save(trades, path)
 
 
 def get_symbol_stats(symbol: str, path: str = TRADES_PATH) -> dict:
