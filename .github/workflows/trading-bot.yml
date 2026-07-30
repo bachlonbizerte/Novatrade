@@ -2,13 +2,12 @@ name: Trading Bot
 
 on:
   schedule:
-    # Chaque minute, en théorie. ⚠️ GitHub Actions ne garantit PAS cette
-    # précision : en cas de forte charge sur leurs serveurs, l'exécution
-    # peut être retardée de plusieurs minutes. C'est documenté par GitHub
-    # lui-même. Le vrai espacement des notifications est de toute façon
-    # imposé côté code (min_minutes_between_notifications dans la config),
-    # donc ce n'est pas un problème pour le résultat final.
-    - cron: "* * * * *"
+    # Toutes les 5 minutes. ⚠️ GitHub Actions ne déclenche PAS de façon fiable
+    # les crons plus fréquents que ça (ex: "* * * * *" chaque minute) — en cas
+    # de forte charge, ces déclenchements sont simplement ignorés/sautés. 5 min
+    # est l'intervalle le plus court que GitHub respecte de manière cohérente.
+    - cron: "*/5 * * * *"
+  workflow_dispatch:          # permet aussi de le lancer manuellement depuis GitHub
   workflow_dispatch:          # permet aussi de le lancer manuellement depuis GitHub
 
 permissions:
