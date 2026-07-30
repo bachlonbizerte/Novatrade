@@ -1,15 +1,13 @@
 """
-Processus à part, qui doit tourner EN CONTINU (contrairement au scanner,
-qui lui s'exécute par cron). Il écoute les clics sur les boutons Telegram
-(long polling) et déclenche l'action correspondante : ACHETER / IGNORER / RESCAN.
+Écoute en continu les clics sur les boutons Telegram (ACHETER / IGNORER /
+RESCAN / Clôturer / Prolonger) via long-polling — réaction quasi instantanée.
 
-⚠️ Ce script ne peut PAS tourner sur GitHub Actions (qui est fait pour des
-jobs courts et ponctuels). Options pour l'héberger gratuitement :
-- Railway / Render (background worker, free tier)
-- Une petite VM Oracle Cloud Free Tier
-- Plus tard : ton VPS payant
+Fait pour tourner 24/7 sur un VPS (contrairement à telegram_poller.py, conçu
+pour un contexte "un seul passage" comme GitHub Actions). Sur le VPS, ce
+script tourne en parallèle de run_forever.py (le scan périodique), géré par
+systemd (nova-listener.service).
 
-Lancement: python -m src.telegram_listener
+Lancement : python -m src.telegram_listener
 """
 
 import os
@@ -20,7 +18,10 @@ import requests
 from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
-from src.paper_trading import open_position, suggest_position_size, get_account_state
+from src.paper_trading import (
+    open_position, suggest_position_size, get_account_state,
+    close_position_manually, extend_position, get_trade_by_id,
+)
 from src.ai_decision import decide
 from src.telegram_notifier import send_signal_notification
 
@@ -47,7 +48,6 @@ def handle_buy(client: ExchangeClient, config: dict, symbol: str) -> str:
     allocation_pct = config["risk"].get("capital_allocation_pct", 80)
     max_concurrent = config["risk"].get("max_concurrent_positions", 2)
 
-    # Recalcul en temps réel au moment du clic (l'état a pu changer depuis la notification)
     state = get_account_state(capital_usd, allocation_pct, max_concurrent)
     if state["open_positions_count"] >= max_concurrent:
         return (f"⛔ Impossible d'ouvrir {symbol} : {max_concurrent} positions déjà ouvertes "
@@ -61,13 +61,10 @@ def handle_buy(client: ExchangeClient, config: dict, symbol: str) -> str:
     current_price = float(df.iloc[-1]["close"])
 
     if client.dry_run:
-        # En mode DRY_RUN: on ouvre une position simulée SUIVIE (avec SL/TP)
-        # au lieu d'un simple ordre "tiré et oublié" — ça permet de mesurer
-        # la performance réelle de la stratégie dans le temps.
         open_position(symbol, current_price, sl_pct, tp_min_pct, position_size_usdt=amount)
         return (f"✅ [SIMULATION] Position ouverte pour {symbol} @ {current_price}\n"
                 f"Montant: {amount} USDT · SL: -{sl_pct}% · TP: +{tp_min_pct}%\n"
-                f"Capital courant: {state['current_capital']} USD · Budget restant après ce trade: "
+                f"Capital courant: {state['current_capital']} USD · Budget restant: "
                 f"{round(state['available_budget'] - amount, 2)} USDT")
     else:
         client.create_market_order(symbol, "buy", amount)
@@ -93,7 +90,7 @@ def run_listener():
     )
 
     offset = None
-    logger.info("Listener Telegram démarré (long polling)...")
+    logger.info("Listener Telegram démarré (long polling, réaction instantanée)...")
 
     while True:
         try:
@@ -111,26 +108,25 @@ def run_listener():
                 if not callback:
                     continue
 
-                data = callback["data"]  # ex: "buy|BTC/USDT"
-                action, symbol = data.split("|", 1)
-                chat_id = callback["message"]["chat"]["id"]
+                try:
+                    data = callback["data"]
+                    action, payload_id = data.split("|", 1)
+                    chat_id = callback["message"]["chat"]["id"]
 
-                if action == "buy":
-                    confirmation = handle_buy(client, config, symbol)
-                    answer_callback(bot_token, callback["id"], "Position enregistrée ✅")
-                    send_message(bot_token, chat_id, confirmation)
-                    logger.info(confirmation)
+                    if action == "buy":
+                        confirmation = handle_buy(client, config, payload_id)
+                        answer_callback(bot_token, callback["id"], "Position enregistrée ✅")
+                        send_message(bot_token, chat_id, confirmation)
+                        logger.info(confirmation)
 
-                elif action == "ignore":
-                    answer_callback(bot_token, callback["id"], "Signal ignoré")
-                    logger.info(f"{symbol} ignoré par l'utilisateur.")
+                    elif action == "ignore":
+                        answer_callback(bot_token, callback["id"], "Signal ignoré")
+                        logger.info(f"{payload_id} ignoré par l'utilisateur.")
 
-                elif action == "rescan":
-                    # Relance une analyse fraîche du symbole et renvoie une notification à jour
-                    answer_callback(bot_token, callback["id"], "Rescan en cours...")
-                    try:
+                    elif action == "rescan":
+                        answer_callback(bot_token, callback["id"], "Rescan en cours...")
                         decision = decide(
-                            client, symbol, timeframes, tf_weights,
+                            client, payload_id, timeframes, tf_weights,
                             stop_loss_pct=config["risk"]["stop_loss_pct"],
                             take_profit_min_pct=config["risk"]["take_profit_min_pct"],
                             take_profit_max_pct=config["risk"]["take_profit_max_pct"],
@@ -139,10 +135,41 @@ def run_listener():
                             max_concurrent_positions=config["risk"].get("max_concurrent_positions", 2),
                         )
                         send_signal_notification(bot_token, chat_id, decision)
-                        logger.info(f"Rescan de {symbol}: score={decision['final_score']}")
-                    except Exception as e:
-                        send_message(bot_token, chat_id, f"❌ Erreur lors du rescan de {symbol}: {e}")
-                        logger.error(f"Erreur rescan {symbol}: {e}")
+                        logger.info(f"Rescan de {payload_id}: score={decision['final_score']}")
+
+                    elif action == "close":
+                        trade = get_trade_by_id(payload_id)
+                        if not trade:
+                            answer_callback(bot_token, callback["id"], "Position introuvable (déjà clôturée ?)")
+                        else:
+                            df = client.fetch_ohlcv(trade["symbol"], "15m", limit=1)
+                            current_price = float(df.iloc[-1]["close"])
+                            closed = close_position_manually(payload_id, current_price)
+                            answer_callback(bot_token, callback["id"], "Position clôturée ✅")
+                            send_message(bot_token, chat_id,
+                                         f"🔴 {closed['symbol']} clôturée manuellement.\n"
+                                         f"PnL: {closed['pnl_pct']:+.2f}% ({closed.get('pnl_usd', 0):+.2f} USD)")
+                            logger.info(f"Position clôturée manuellement: {closed['symbol']}")
+
+                    elif action == "extend":
+                        trade = extend_position(payload_id, extra_minutes=30)
+                        if not trade:
+                            answer_callback(bot_token, callback["id"], "Position introuvable (déjà clôturée ?)")
+                        else:
+                            answer_callback(bot_token, callback["id"], "Prolongée de 30 min ✅")
+                            send_message(bot_token, chat_id,
+                                         f"⏱ {trade['symbol']} prolongée de 30 min supplémentaires "
+                                         f"(total: +{trade['extended_minutes']} min).")
+                            logger.info(f"Position prolongée: {trade['symbol']}")
+
+                except Exception as e:
+                    logger.error(f"Erreur en traitant le clic (update {update.get('update_id')}): {e}")
+                    try:
+                        chat_id_fallback = callback.get("message", {}).get("chat", {}).get("id")
+                        if chat_id_fallback:
+                            send_message(bot_token, chat_id_fallback, f"❌ Erreur lors du traitement de ce clic: {e}")
+                    except Exception:
+                        pass
 
         except Exception as e:
             logger.error(f"Erreur dans la boucle du listener: {e}")
