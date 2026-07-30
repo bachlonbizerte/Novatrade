@@ -8,6 +8,7 @@ Point d'entrée pour le cron GitHub Actions:
 
 import os
 import json
+import math
 import logging
 from datetime import datetime, timezone
 import yaml
@@ -31,15 +32,32 @@ def load_config(path: str = "config/config.yaml") -> dict:
         return yaml.safe_load(f)
 
 
+def _sanitize_for_json(obj):
+    """
+    Remplace récursivement les NaN/Infinity (valides en Python, mais PAS en
+    JSON strict) par null. Sans ça, un calcul foireux quelque part (ex:
+    division par zéro sur peu de données) produit un fichier que Python lit
+    sans broncher mais que JavaScript (le dashboard) ne peut pas parser du
+    tout — silencieusement, jusqu'à ce qu'on ouvre la console du navigateur.
+    """
+    if isinstance(obj, float):
+        return None if (math.isnan(obj) or math.isinf(obj)) else obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    return obj
+
+
 def save_results(decisions: list, stats: dict, path: str = "docs/data/latest_scan.json"):
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    payload = {
+    payload = _sanitize_for_json({
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "results": decisions,
         "performance": stats,
-    }
+    })
     with open(path, "w") as f:
-        json.dump(payload, f, indent=2, default=str)
+        json.dump(payload, f, indent=2, default=str, allow_nan=False)
     logger.info(f"Résultats sauvegardés dans {path}")
 
 
