@@ -1,0 +1,14 @@
+[Unit]
+Description=NOVA Trading Bot - Dashboard web (servi localement)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/Novatrade/docs
+ExecStart=/usr/bin/python3 -m http.server 8080
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
