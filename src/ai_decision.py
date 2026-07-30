@@ -75,8 +75,16 @@ def decide(client, symbol: str, timeframes: list, tf_weights: dict = None,
     mtf = analyze_multi_timeframe(client, symbol, timeframes, tf_weights)
     internal_score = mtf["consolidated_score"]
 
-    entry_price = mtf["per_timeframe"].get(timeframes[0], {}).get("price")
-
+    # Prix d'entrée: normalement celui de la timeframe la plus courte, mais si
+    # celle-ci manquait de données (ex: exchange de secours avec moins d'historique),
+    # on prend le premier prix valide trouvé parmi les autres timeframes plutôt
+    # que de laisser Entrée/Stop/Objectif à None dans la notification.
+    entry_price = None
+    for tf in timeframes:
+        tf_price = mtf["per_timeframe"].get(tf, {}).get("price")
+        if tf_price:
+            entry_price = tf_price
+            break
     tv = get_tradingview_signal(symbol, timeframe=timeframes[0])
     tv_score = tv["score"]
 
