@@ -16,11 +16,17 @@ class ExchangeClient:
     def __init__(self, exchange_name: str, api_key: str = "", api_secret: str = "", dry_run: bool = True):
         self.dry_run = dry_run
         exchange_class = getattr(ccxt, exchange_name)
-        self.exchange = exchange_class({
-            "apiKey": api_key,
-            "secret": api_secret,
-            "enableRateLimit": True,
-        })
+
+        config = {"enableRateLimit": True}
+        if not dry_run:
+            # Les clés API ne sont transmises qu'en mode réel. En DRY_RUN, on ne lit
+            # que des données publiques (bougies) — inutile d'authentifier, et ça évite
+            # un appel privé (fetchCurrencies) que Binance bloque depuis les IP de
+            # datacenters comme celles de GitHub Actions ("restricted location").
+            config["apiKey"] = api_key
+            config["secret"] = api_secret
+
+        self.exchange = exchange_class(config)
         logger.info(f"Exchange initialisé: {exchange_name} (dry_run={dry_run})")
 
     def fetch_ohlcv(self, symbol: str, timeframe: str, limit: int = 200) -> pd.DataFrame:
