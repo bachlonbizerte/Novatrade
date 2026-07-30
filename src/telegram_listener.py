@@ -20,10 +20,10 @@ from dotenv import load_dotenv
 from src.exchange_client import ExchangeClient
 from src.paper_trading import (
     open_position, suggest_position_size, get_account_state,
-    close_position_manually, extend_position, get_trade_by_id,
+    close_position_manually, extend_position, get_trade_by_id, get_open_positions,
 )
 from src.ai_decision import decide
-from src.telegram_notifier import send_signal_notification
+from src.telegram_notifier import send_signal_notification, send_position_status
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -36,9 +36,32 @@ def answer_callback(bot_token: str, callback_query_id: str, text: str):
     requests.post(url, json={"callback_query_id": callback_query_id, "text": text}, timeout=10)
 
 
-def send_message(bot_token: str, chat_id: str, text: str):
+def send_message(bot_token: str, chat_id: str, text: str, keyboard: bool = False):
+    payload = {"chat_id": chat_id, "text": text}
+    if keyboard:
+        payload["reply_markup"] = {
+            "keyboard": [[{"text": "📊 Statut des positions"}]],
+            "resize_keyboard": True,
+        }
     url = TELEGRAM_API.format(token=bot_token, method="sendMessage")
-    requests.post(url, json={"chat_id": chat_id, "text": text}, timeout=10)
+    requests.post(url, json=payload, timeout=10)
+
+
+def handle_status_command(client: ExchangeClient, bot_token: str, chat_id: str):
+    """Répond à /status ou au bouton 'Statut des positions': état de chaque position ouverte."""
+    open_positions = get_open_positions()
+
+    if not open_positions:
+        send_message(bot_token, chat_id, "Aucune position ouverte actuellement.")
+        return
+
+    for pos in open_positions:
+        try:
+            df = client.fetch_ohlcv(pos["symbol"], "15m", limit=1)
+            current_price = float(df.iloc[-1]["close"])
+            send_position_status(bot_token, chat_id, pos, current_price)
+        except Exception as e:
+            send_message(bot_token, chat_id, f"❌ Impossible de récupérer le statut de {pos['symbol']}: {e}")
 
 
 def handle_buy(client: ExchangeClient, config: dict, symbol: str) -> str:
@@ -92,6 +115,12 @@ def run_listener():
     offset = None
     logger.info("Listener Telegram démarré (long polling, réaction instantanée)...")
 
+    chat_id_env = os.getenv("TELEGRAM_CHAT_ID", "")
+    if chat_id_env:
+        send_message(bot_token, chat_id_env,
+                      "🤖 NOVA est en ligne. Utilise le bouton ci-dessous ou tape /status "
+                      "pour voir l'état de tes positions ouvertes à tout moment.", keyboard=True)
+
     while True:
         try:
             url = TELEGRAM_API.format(token=bot_token, method="getUpdates")
@@ -103,6 +132,14 @@ def run_listener():
 
             for update in resp.get("result", []):
                 offset = update["update_id"] + 1
+
+                message = update.get("message")
+                if message and message.get("text", "").strip() in ("/status", "📊 Statut des positions"):
+                    try:
+                        handle_status_command(client, bot_token, message["chat"]["id"])
+                    except Exception as e:
+                        logger.error(f"Erreur lors du /status: {e}")
+                    continue
 
                 callback = update.get("callback_query")
                 if not callback:
