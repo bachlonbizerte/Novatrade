@@ -167,16 +167,32 @@ def scan_once(config: dict, client, bot_token: str, chat_id: str):
             best["ai_verdict"] = get_ai_verdict(best)
             auto_trade = config["watchlist"].get("auto_trade", False)
 
-            if auto_trade and best["recommendation"] == "ACHETER":
-                auto_msg = _auto_buy(client, config, best["symbol"])
-                if auto_msg:
+            if auto_trade and best["recommendation"] == "ACHETER" and client.dry_run:
+                max_concurrent = config["risk"].get("max_concurrent_positions", 2)
+                capital_usd = config["risk"].get("capital_usd", 100)
+                allocation_pct = config["risk"].get("capital_allocation_pct", 80)
+                state = get_account_state(capital_usd, allocation_pct, max_concurrent)
+
+                if state["open_positions_count"] >= max_concurrent:
                     send_message_simple(bot_token, chat_id,
-                                         f"{auto_msg}\n\nScore: {best['final_score']}/100 "
-                                         f"(confiance {best.get('confidence', '')})")
-                    log_action(best["symbol"], "auto_buy", score=best["final_score"], success=True)
+                                         f"ℹ️ Opportunité détectée: *{best['symbol']}* "
+                                         f"(score {best['final_score']}/100, ACHETER) mais les "
+                                         f"{max_concurrent} positions max sont déjà ouvertes — "
+                                         f"aucune action, en attente qu'une position se libère.")
+                    log_action(best["symbol"], "auto_buy_skipped_full", score=best["final_score"], success=False)
                 else:
-                    send_signal_notification(bot_token, chat_id, best)
-                    log_action(best["symbol"], "signal_sent", score=best["final_score"], success=True)
+                    auto_msg = _auto_buy(client, config, best["symbol"])
+                    if auto_msg:
+                        send_message_simple(bot_token, chat_id,
+                                             f"{auto_msg}\n\nScore: {best['final_score']}/100 "
+                                             f"(confiance {best.get('confidence', '')})")
+                        log_action(best["symbol"], "auto_buy", score=best["final_score"], success=True)
+                    else:
+                        send_message_simple(bot_token, chat_id,
+                                             f"ℹ️ Opportunité détectée: *{best['symbol']}* "
+                                             f"(score {best['final_score']}/100) mais budget disponible "
+                                             f"insuffisant — aucune action.")
+                        log_action(best["symbol"], "auto_buy_skipped_budget", score=best["final_score"], success=False)
             else:
                 send_signal_notification(bot_token, chat_id, best)
                 log_action(best["symbol"], "signal_sent", score=best["final_score"], success=True)
