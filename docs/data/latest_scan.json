@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-07-29T23:54:49.557152+00:00",
+  "generated_at": "2026-07-30T00:06:41.007384+00:00",
   "results": [
     {
       "symbol": "BTC/USDT",
-      "final_score": 25,
+      "final_score": 20,
       "recommendation": "PASSER",
-      "confidence": "haute",
+      "confidence": "basse",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: NEUTRAL (10 achat / 8 vente / 8 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
+        "TradingView: BUY (12 achat / 4 vente / 10 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
       "entry_price": null,
@@ -32,28 +32,28 @@
               "symbol": "BTC/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369286973&recvWindow=10000&signature=1e2ba4ecc1e8fd326305865f9fe512612317e2906c285291bcbfd1d869fc9e31 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "BTC/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287188&recvWindow=10000&signature=70f54ecbd0927d0cea4239dfbeab34c7347e5c5cb9c1bc98f4b61f13b4192d96 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "BTC/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287238&recvWindow=10000&signature=9c117ea43ce5588ed7210dcd4f5be54b4125d01949a15d864609aae9d3f28b0e 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
         "tradingview": {
-          "recommendation": "NEUTRAL",
-          "score": 50,
-          "buy_signals": 10,
-          "sell_signals": 8,
-          "neutral_signals": 8
+          "recommendation": "BUY",
+          "score": 75,
+          "buy_signals": 12,
+          "sell_signals": 4,
+          "neutral_signals": 10
         }
       }
     },
@@ -64,7 +64,7 @@
       "confidence": "basse",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: BUY (16 achat / 2 vente / 8 neutre)",
+        "TradingView: BUY (14 achat / 3 vente / 9 neutre)",
         "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
@@ -88,28 +88,28 @@
               "symbol": "ETH/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287412&recvWindow=10000&signature=250f0109fdd4e03dc3512539d240fe885b55074a22fed0137fa4d222cac3a44b 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "ETH/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287462&recvWindow=10000&signature=3dc8625eb59c795b5552308d890be04acc2afa0ed81d26862113695d8b4ffb03 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "ETH/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287513&recvWindow=10000&signature=0e5aeb49501a776430f339e12e67f8c66bf8f49f0ed7e5d8ba92e856dbdb9088 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
         "tradingview": {
           "recommendation": "BUY",
           "score": 75,
-          "buy_signals": 16,
-          "sell_signals": 2,
-          "neutral_signals": 8
+          "buy_signals": 14,
+          "sell_signals": 3,
+          "neutral_signals": 9
         }
       }
     },
@@ -120,7 +120,7 @@
       "confidence": "basse",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: BUY (15 achat / 2 vente / 9 neutre)",
+        "TradingView: BUY (14 achat / 2 vente / 10 neutre)",
         "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
@@ -144,28 +144,28 @@
               "symbol": "SOL/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287634&recvWindow=10000&signature=ecb4ee4a742af6a5f63f70d1cf84cc286f884b426d4b3d8c1204b123a5d1d385 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "SOL/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287684&recvWindow=10000&signature=6113db4d4627728556119f9be4fe32644c70088b9c6b55a6e6124f316b595e9d 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "SOL/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287735&recvWindow=10000&signature=bb8edad911684bb90889678ac8259b16133ac2121b032e0213845d7caed24949 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
         "tradingview": {
           "recommendation": "BUY",
           "score": 75,
-          "buy_signals": 15,
+          "buy_signals": 14,
           "sell_signals": 2,
-          "neutral_signals": 9
+          "neutral_signals": 10
         }
       }
     },
@@ -176,7 +176,7 @@
       "confidence": "basse",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: BUY (16 achat / 2 vente / 8 neutre)",
+        "TradingView: BUY (15 achat / 2 vente / 9 neutre)",
         "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
@@ -200,28 +200,28 @@
               "symbol": "BNB/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287924&recvWindow=10000&signature=62d577d5a6ca1ed40803f61d7f42dace384ceb870bb15663d56ffa105f050da0 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "BNB/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369287974&recvWindow=10000&signature=8ccb3b240318ee1d62c07583ca51c31e284d5b7967c8ac2089f54f897da94119 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "BNB/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288025&recvWindow=10000&signature=2a8f48ff59fbf76841f4315bb29bc8ee645f79e7a1232def68dca0383e36364f 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
         "tradingview": {
           "recommendation": "BUY",
           "score": 75,
-          "buy_signals": 16,
+          "buy_signals": 15,
           "sell_signals": 2,
-          "neutral_signals": 8
+          "neutral_signals": 9
         }
       }
     },
@@ -232,7 +232,7 @@
       "confidence": "haute",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: SELL (6 achat / 10 vente / 10 neutre)",
+        "TradingView: SELL (6 achat / 11 vente / 9 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
@@ -256,19 +256,19 @@
               "symbol": "XRP/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288200&recvWindow=10000&signature=76964823d62f7f5837618301a10dd9bb0cee259d2820976fd7cd3a12bcea9da1 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "XRP/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288250&recvWindow=10000&signature=ed8272010b263f2495f10c5d6529f82b6d67f3bb2dea00bc4e8cb4d1a8a13f84 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "XRP/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288300&recvWindow=10000&signature=41ff4b2b29a4136ca8b6ee2fd82dcddb57d3468439d9f11929ae93b89925cfcc 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
@@ -276,8 +276,8 @@
           "recommendation": "SELL",
           "score": 25,
           "buy_signals": 6,
-          "sell_signals": 10,
-          "neutral_signals": 10
+          "sell_signals": 11,
+          "neutral_signals": 9
         }
       }
     },
@@ -312,19 +312,19 @@
               "symbol": "ADA/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288483&recvWindow=10000&signature=f5cea59644a8ce90ea2732ea5e77139679cd437399379c218e32314b25a00e8b 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "ADA/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288533&recvWindow=10000&signature=7119c47147ff813efbdb8850befe67538fa0f0ebb8da78974e8b4a6ace31f909 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "ADA/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288583&recvWindow=10000&signature=286024007aa7cac57e53472250f01e174e75d7c37a4b871454df46d978a8d70a 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
@@ -339,12 +339,12 @@
     },
     {
       "symbol": "DOGE/USDT",
-      "final_score": 15,
+      "final_score": 25,
       "recommendation": "PASSER",
       "confidence": "haute",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: SELL (8 achat / 10 vente / 8 neutre)",
+        "TradingView: NEUTRAL (10 achat / 8 vente / 8 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
@@ -368,40 +368,40 @@
               "symbol": "DOGE/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288695&recvWindow=10000&signature=94af27333a099c956ee49e9337a4d7db028f83687d60ad90f32bc8792efa2010 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "DOGE/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288745&recvWindow=10000&signature=442d143169b6e0a0ed79c4fab571d4d136eb540a5074f91da522b4c1e1e4d2c3 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "DOGE/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288795&recvWindow=10000&signature=5bb6fbeb091686ddfe1302c8d43087dafd2a10838f3991a8548b2715d5d4369f 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
         "tradingview": {
-          "recommendation": "SELL",
-          "score": 25,
-          "buy_signals": 8,
-          "sell_signals": 10,
+          "recommendation": "NEUTRAL",
+          "score": 50,
+          "buy_signals": 10,
+          "sell_signals": 8,
           "neutral_signals": 8
         }
       }
     },
     {
       "symbol": "AVAX/USDT",
-      "final_score": 20,
+      "final_score": 25,
       "recommendation": "PASSER",
-      "confidence": "basse",
+      "confidence": "haute",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: BUY (12 achat / 5 vente / 9 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
+        "TradingView: NEUTRAL (10 achat / 7 vente / 9 neutre)",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
       "entry_price": null,
@@ -424,40 +424,40 @@
               "symbol": "AVAX/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288935&recvWindow=10000&signature=9f6444e7cf839f67b5614ba98100be3c641b30712d0a7b70883283839e04e7a4 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "AVAX/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369288985&recvWindow=10000&signature=eac5798990c53ad1a8e0bad01e6889f1cac3aef43e6fef7fafcf319d143ed7f8 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "AVAX/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369289035&recvWindow=10000&signature=bd5e77124e9808c421579638bfca5010ea126b77a8790c2096b0585f5041a0d6 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
         "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 12,
-          "sell_signals": 5,
+          "recommendation": "NEUTRAL",
+          "score": 50,
+          "buy_signals": 10,
+          "sell_signals": 7,
           "neutral_signals": 9
         }
       }
     },
     {
       "symbol": "LINK/USDT",
-      "final_score": 20,
+      "final_score": 25,
       "recommendation": "PASSER",
-      "confidence": "basse",
+      "confidence": "haute",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: BUY (11 achat / 6 vente / 9 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
+        "TradingView: NEUTRAL (10 achat / 6 vente / 10 neutre)",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
       "entry_price": null,
@@ -480,40 +480,40 @@
               "symbol": "LINK/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369289150&recvWindow=10000&signature=f559f7d1547c8b7606c5c2f7844360dfbc01dc0ebbd13f37427782724539270b 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "LINK/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369289201&recvWindow=10000&signature=49a1b269aaf3754151122ecd42398ee557783559f71f90742d98c10ad1891095 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "LINK/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369289251&recvWindow=10000&signature=0f3a8a5851f9b0a4c49f31a45cb75a8415218aa2f100100e70d12a4be9bc7856 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
         "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 11,
+          "recommendation": "NEUTRAL",
+          "score": 50,
+          "buy_signals": 10,
           "sell_signals": 6,
-          "neutral_signals": 9
+          "neutral_signals": 10
         }
       }
     },
     {
       "symbol": "SUI/USDT",
-      "final_score": 25,
+      "final_score": 20,
       "recommendation": "PASSER",
-      "confidence": "haute",
+      "confidence": "basse",
       "reasoning": [
         "Analyse interne multi-timeframe: 0/100 (consensus: ERREUR)",
-        "TradingView: NEUTRAL (9 achat / 9 vente / 8 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
+        "TradingView: BUY (14 achat / 3 vente / 9 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
         "Montant sugg\u00e9r\u00e9: 40.0 USDT (part du budget allou\u00e9, 80% du capital r\u00e9parti sur 2 positions max)"
       ],
       "entry_price": null,
@@ -536,28 +536,28 @@
               "symbol": "SUI/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369289380&recvWindow=10000&signature=6e7548c9a1a00a327f04c75fba4da38eae2ad11ac7af8cd4e26fdc1dc8c6d4e8 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "1h": {
               "symbol": "SUI/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369289430&recvWindow=10000&signature=acdb0513963264ac48cc06f6138c384e76ae43c94e1d5fb1421929b3758bd141 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             },
             "4h": {
               "symbol": "SUI/USDT",
               "score": 0,
               "recommendation": "ERREUR",
-              "error": "binance GET https://api.binance.com/sapi/v1/capital/config/getall?timestamp=1785369289480&recvWindow=10000&signature=238d91985de00f9e5c25155fad0b739ad4e80acd2d04dd8e008da0c3f2693199 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
+              "error": "binance GET https://api.binance.com/api/v3/exchangeInfo 451  {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.\"\n}"
             }
           }
         },
         "tradingview": {
-          "recommendation": "NEUTRAL",
-          "score": 50,
-          "buy_signals": 9,
-          "sell_signals": 9,
-          "neutral_signals": 8
+          "recommendation": "BUY",
+          "score": 75,
+          "buy_signals": 14,
+          "sell_signals": 3,
+          "neutral_signals": 9
         }
       }
     }
