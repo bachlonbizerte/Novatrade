@@ -27,21 +27,25 @@ def send_message_simple(bot_token: str, chat_id: str, text: str) -> dict:
 
 def send_position_status(bot_token: str, chat_id: str, trade: dict, current_price: float) -> dict:
     """
-    Envoie un point de statut pour une position ouverte: prix actuel, PnL,
-    temps écoulé — avec 2 boutons pour agir directement dessus.
+    Envoie un point de statut pour une position ouverte: prix actuel, PnL
+    (en % ET en USDT réels), temps écoulé — avec 2 boutons pour agir directement dessus.
     """
     pnl_pct = round((current_price - trade["entry_price"]) / trade["entry_price"] * 100, 2)
+    size = trade.get("position_size_usdt", 0) or 0
+    pnl_usd = round(size * pnl_pct / 100, 2)
     emoji = "🟢" if pnl_pct >= 0 else "🔴"
 
     opened_at = datetime.fromisoformat(trade["opened_at"])
     elapsed_min = int((datetime.now(timezone.utc) - opened_at).total_seconds() / 60)
 
     text = (
-        f"{emoji} *{trade['symbol']}* — position en cours ({pnl_pct:+.2f}%)\n\n"
+        f"{emoji} *{trade['symbol']}* — position en cours\n"
+        f"PnL : *{pnl_pct:+.2f}%* ({pnl_usd:+.2f} USDT)\n\n"
         f"Entrée : `{trade['entry_price']}`\n"
         f"Actuel : `{current_price}`\n"
         f"Stop : `{trade['stop_loss_price']}`\n"
         f"Objectif : `{trade['take_profit_price']}`\n"
+        f"Montant engagé : `{size} USDT`\n"
         f"Ouverte depuis {elapsed_min} min"
     )
 
