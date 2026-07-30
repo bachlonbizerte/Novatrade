@@ -16,10 +16,10 @@ watchlist:
     "15m": 0.2
     "1h": 0.3
     "4h": 0.5
-  notify_score_threshold: 59     # score final mini STRICT (sur 100) — sinon rien n'est envoyé
+  notify_score_threshold: 50     # score final mini STRICT (sur 100) — sinon rien n'est envoyé
   max_notifications_per_day: 15  # plafond quotidien, remis à zéro chaque jour (UTC)
   min_minutes_between_notifications: 5   # espacement minimum, même si le scanner tourne chaque minute
-  send_daily_summary: false      # true si tu veux aussi un résumé de tous les scores à chaque run
+  send_daily_summary: true      # true si tu veux aussi un résumé de tous les scores à chaque run
   symbols:
     - "BTC/USDT"
     - "ETH/USDT"
