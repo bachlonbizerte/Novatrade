@@ -55,6 +55,7 @@ def main():
         api_key=os.getenv("EXCHANGE_API_KEY", ""),
         api_secret=os.getenv("EXCHANGE_API_SECRET", ""),
         dry_run=dry_run,
+        fallback_exchanges=config["exchange"].get("fallback", []),
     )
 
     # 1. Vérifie d'abord si des positions simulées ouvertes doivent être clôturées (SL/TP/durée max atteints)
