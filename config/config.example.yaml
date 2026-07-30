@@ -1,7 +1,8 @@
 exchange:
   name: binance
-  symbol: "BTC/USDT"        # utilisé par main.py (bot mono-paire, legacy)
-  timeframe: "15m"          # ex: 1m, 5m, 15m, 1h, 4h, 1d
+  fallback: ["bybit", "kraken"]
+  symbol: "BTC/USDT"
+  timeframe: "15m"
 
 strategy:
   name: "sma_crossover"
