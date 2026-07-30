@@ -120,6 +120,35 @@
   #empty { font-family: var(--mono); color: var(--text-dim); font-size: 13px; padding: 40px 0; text-align: center; }
   #chart-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-bottom: 28px; }
   footer { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-align: center; margin-top: 20px; }
+
+  #positions-section { margin-bottom: 32px; }
+  #positions-section h2 {
+    font-family: var(--mono); font-size: 13px; letter-spacing: 0.5px;
+    color: var(--text-dim); font-weight: 600; margin: 0 0 12px;
+  }
+  .position-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 16px 18px; margin-bottom: 12px;
+  }
+  .position-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+  .position-symbol { font-family: var(--mono); font-weight: 600; font-size: 15px; }
+  .position-pnl { font-family: var(--mono); font-size: 14px; font-weight: 600; }
+  .position-pnl.pos { color: var(--buy); }
+  .position-pnl.neg { color: var(--pass); }
+  .position-range-track {
+    position: relative; height: 8px; background: #1a2029; border-radius: 4px; margin: 18px 0 6px;
+  }
+  .position-range-fill { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: var(--accent); }
+  .position-marker {
+    position: absolute; top: -18px; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 9.5px; color: var(--text-dim); white-space: nowrap;
+  }
+  .position-dot {
+    position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--text); transform: translate(-50%, -50%); border: 2px solid var(--bg);
+  }
+  .position-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--text-dim); margin-top: 14px; }
+  .position-meta { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -130,6 +159,11 @@
   </header>
 
   <div id="stats"></div>
+
+  <div id="positions-section" style="display:none;">
+    <h2>POSITIONS OUVERTES — PROGRESSION EN TEMPS RÉEL</h2>
+    <div id="positions-list"></div>
+  </div>
 
   <div id="chart-wrap"><canvas id="scoreChart" height="90"></canvas></div>
 
@@ -142,8 +176,87 @@
 <script>
 // Chemin relatif car data/ est servi depuis le même dossier docs/ par GitHub Pages
 const DATA_URL = "./data/latest_scan.json";
+const TRADES_URL = "./data/trades.json";
 
 const colorFor = (reco) => reco === "ACHETER" ? "var(--buy)" : reco === "ATTENDRE" ? "var(--wait)" : "var(--pass)";
+
+async function fetchLivePrice(symbol) {
+  // Appel public direct à Binance (pas besoin de clé) pour le prix courant.
+  // Si bloqué/indisponible depuis le navigateur, on se contente d'afficher
+  // entrée/stop/objectif sans le point de progression en temps réel.
+  const ticker = symbol.replace("/", "");
+  const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${ticker}`);
+  const data = await res.json();
+  return parseFloat(data.price);
+}
+
+function timeElapsed(openedAt) {
+  const mins = Math.floor((Date.now() - new Date(openedAt).getTime()) / 60000);
+  if (mins < 60) return `${mins} min`;
+  return `${Math.floor(mins / 60)}h ${mins % 60}min`;
+}
+
+async function loadPositions() {
+  let trades;
+  try {
+    const res = await fetch(TRADES_URL + "?t=" + Date.now());
+    trades = await res.json();
+  } catch (e) {
+    return; // pas de trades.json encore généré, rien à afficher
+  }
+
+  const open = (trades || []).filter(t => t.status === "open");
+  const section = document.getElementById("positions-section");
+  const listEl = document.getElementById("positions-list");
+
+  if (!open.length) {
+    section.style.display = "none";
+    return;
+  }
+  section.style.display = "block";
+  listEl.innerHTML = "";
+
+  for (const t of open) {
+    const card = document.createElement("div");
+    card.className = "position-card";
+    listEl.appendChild(card);
+
+    let livePrice = null;
+    try { livePrice = await fetchLivePrice(t.symbol); } catch (e) { /* pas grave, on affiche sans le point live */ }
+
+    const low = t.stop_loss_price, high = t.take_profit_price;
+    const range = high - low;
+    const clampPct = (p) => Math.max(0, Math.min(100, p));
+    const entryPct = clampPct(((t.entry_price - low) / range) * 100);
+    const nowPct = livePrice !== null ? clampPct(((livePrice - low) / range) * 100) : null;
+
+    const pnlPct = livePrice !== null ? ((livePrice - t.entry_price) / t.entry_price * 100) : null;
+    const pnlClass = pnlPct === null ? "" : pnlPct >= 0 ? "pos" : "neg";
+    const pnlText = pnlPct === null ? "prix en direct indisponible" : `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(2)}%`;
+
+    card.innerHTML = `
+      <div class="position-top">
+        <div class="position-symbol">${t.symbol}</div>
+        <div class="position-pnl ${pnlClass}">${pnlText}</div>
+      </div>
+      <div class="position-range-track">
+        <div class="position-range-fill" style="left:0; width:${entryPct}%; opacity:0.15;"></div>
+        <div class="position-marker" style="left:0;">STOP</div>
+        <div class="position-marker" style="left:100%; transform:translateX(-100%);">OBJECTIF</div>
+        <div class="position-dot" style="left:${entryPct}%; background:var(--text-dim);" title="Entrée"></div>
+        ${nowPct !== null ? `<div class="position-dot" style="left:${nowPct}%; background:var(--accent);" title="Prix actuel"></div>` : ""}
+      </div>
+      <div class="position-labels">
+        <span>${low}</span>
+        <span>${high}</span>
+      </div>
+      <div class="position-meta">
+        Entrée: ${t.entry_price} · Montant: ${t.position_size_usdt} USDT · Ouverte depuis ${timeElapsed(t.opened_at)}
+        ${livePrice !== null ? ` · Prix actuel: ${livePrice}` : ""}
+      </div>
+    `;
+  }
+}
 
 async function load() {
   try {
@@ -154,6 +267,7 @@ async function load() {
     document.getElementById("empty").style.display = "block";
     document.getElementById("updated").textContent = "pas de données disponibles";
   }
+  loadPositions();
 }
 
 function renderStats(perf) {
@@ -221,6 +335,7 @@ function render(data) {
 }
 
 load();
+setInterval(loadPositions, 30000);  // rafraîchit le prix des positions ouvertes toutes les 30s
 </script>
 </body>
 </html>
