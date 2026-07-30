@@ -10,6 +10,7 @@ Pour créer un bot Telegram et récupérer ton token :
 """
 
 import logging
+from datetime import datetime, timezone
 import requests
 
 logger = logging.getLogger(__name__)
@@ -21,6 +22,39 @@ def send_message_simple(bot_token: str, chat_id: str, text: str) -> dict:
     """Envoi d'un message texte simple, sans boutons (ex: notif de clôture de position)."""
     url = TELEGRAM_API.format(token=bot_token, method="sendMessage")
     resp = requests.post(url, json={"chat_id": chat_id, "text": text, "parse_mode": "Markdown"}, timeout=15)
+    return resp.json()
+
+
+def send_position_status(bot_token: str, chat_id: str, trade: dict, current_price: float) -> dict:
+    """
+    Envoie un point de statut pour une position ouverte: prix actuel, PnL,
+    temps écoulé — avec 2 boutons pour agir directement dessus.
+    """
+    pnl_pct = round((current_price - trade["entry_price"]) / trade["entry_price"] * 100, 2)
+    emoji = "🟢" if pnl_pct >= 0 else "🔴"
+
+    opened_at = datetime.fromisoformat(trade["opened_at"])
+    elapsed_min = int((datetime.now(timezone.utc) - opened_at).total_seconds() / 60)
+
+    text = (
+        f"{emoji} *{trade['symbol']}* — position en cours ({pnl_pct:+.2f}%)\n\n"
+        f"Entrée : `{trade['entry_price']}`\n"
+        f"Actuel : `{current_price}`\n"
+        f"Stop : `{trade['stop_loss_price']}`\n"
+        f"Objectif : `{trade['take_profit_price']}`\n"
+        f"Ouverte depuis {elapsed_min} min"
+    )
+
+    reply_markup = {
+        "inline_keyboard": [[
+            {"text": "🔴 Clôturer maintenant", "callback_data": f"close|{trade['id']}"},
+            {"text": "⏱ Prolonger +30min", "callback_data": f"extend|{trade['id']}"},
+        ]]
+    }
+
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "Markdown", "reply_markup": reply_markup}
+    url = TELEGRAM_API.format(token=bot_token, method="sendMessage")
+    resp = requests.post(url, json=payload, timeout=15)
     return resp.json()
 
 
