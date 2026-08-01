@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
 from src.ai_decision import decide, decide_capital
+from src.capital_trading import handle_capital_buy, get_open_capital_positions
 from src.telegram_notifier import (
     send_signal_notification, send_summary, send_message_simple,
     send_position_status, send_capital_signal_notification,
@@ -225,8 +226,30 @@ def scan_capital_once(config: dict, capital_client, bot_token: str, chat_id: str
     top = [d for d in results if d["final_score"] >= notify_threshold]
     if top:
         best = max(top, key=lambda d: d["final_score"])
-        send_capital_signal_notification(bot_token, chat_id, best)
-        log_action(best["symbol"], "capital_signal_sent", score=best["final_score"], success=True)
+        auto_trade = cap_config.get("auto_trade", False)
+
+        if auto_trade and best["recommendation"] == "ACHETER" and capital_client.demo:
+            max_concurrent = cap_config.get("max_concurrent_positions", 2)
+            open_positions = get_open_capital_positions(capital_client)
+
+            if len(open_positions) >= max_concurrent:
+                send_message_simple(bot_token, chat_id,
+                                     f"ℹ️ *[CAPITAL.COM]* Opportunité détectée: *{best['symbol']}* "
+                                     f"(score {best['final_score']}/100, ACHETER) mais les "
+                                     f"{max_concurrent} positions max sont déjà ouvertes — "
+                                     f"aucune action, en attente qu'une position se libère.")
+                log_action(best["symbol"], "capital_auto_buy_skipped_full",
+                           score=best["final_score"], success=False)
+            else:
+                confirmation = handle_capital_buy(capital_client, config, best["symbol"])
+                send_message_simple(bot_token, chat_id,
+                                     f"🤖 {confirmation}\n\nScore: {best['final_score']}/100")
+                log_action(best["symbol"], "capital_auto_buy", score=best["final_score"], success=True)
+        else:
+            send_capital_signal_notification(bot_token, chat_id, best)
+            log_action(best["symbol"], "capital_signal_sent", score=best["final_score"], success=True)
+
+
 def main():
     load_dotenv()
     config = load_config()
