@@ -1,12 +1,8 @@
 """
-Point d'entrée pour le VPS : tourne en continu, scanne toutes les 60 secondes.
+Point d'entrée pour le VPS : tourne en continu, scanne toutes les 90 secondes.
 Contrairement à scanner.main() (fait pour un run unique via GitHub Actions),
 ce script ne s'arrête jamais — c'est systemd (nova-scanner.service) qui le
 garde en vie et le relance automatiquement en cas de plantage ou de reboot.
-
-Le traitement des boutons Telegram (Acheter/Ignorer/Rescan/Clôturer/Prolonger)
-est géré séparément par telegram_listener.py, en parallèle, pour une réaction
-instantanée plutôt qu'un délai d'attente jusqu'au prochain scan.
 
 Lancement : python -m src.run_forever
 """
@@ -17,20 +13,31 @@ import logging
 from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
-from src.scanner import load_config, scan_once
+from src.scanner import load_config, scan_once, scan_capital_once
 from src.dashboard_publisher import push_dashboard_data
+from src.capital_client import CapitalClient
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
 SCAN_INTERVAL_SECONDS = 90
-DASHBOARD_PUSH_INTERVAL_SECONDS = 300  # toutes les ~5 min, pas à chaque cycle (éviter de spammer les commits)
+DASHBOARD_PUSH_INTERVAL_SECONDS = 300
 
 
 def run_forever():
     load_dotenv()
-    logger.info("NOVA Scanner démarré en continu (VPS) — un scan toutes les 60s.")
+    logger.info("NOVA Scanner démarré en continu (VPS) — un scan toutes les 90s.")
     last_push = 0
+
+    config = load_config()
+    capital_client = None
+    if config.get("capital", {}).get("enabled", False):
+        capital_client = CapitalClient(
+            api_key=os.getenv("CAPITAL_API_KEY", ""),
+            identifier=os.getenv("CAPITAL_IDENTIFIER", ""),
+            api_password=os.getenv("CAPITAL_API_PASSWORD", ""),
+            demo=True,
+        )
 
     while True:
         cycle_start = time.time()
@@ -49,6 +56,12 @@ def run_forever():
             )
 
             scan_once(config, client, bot_token, chat_id)
+
+            if capital_client:
+                try:
+                    scan_capital_once(config, capital_client, bot_token, chat_id)
+                except Exception as e:
+                    logger.error(f"Erreur pendant le scan Capital.com (le reste continue): {e}")
 
             if time.time() - last_push >= DASHBOARD_PUSH_INTERVAL_SECONDS:
                 push_dashboard_data()
