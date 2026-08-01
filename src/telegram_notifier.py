@@ -62,6 +62,44 @@ def send_position_status(bot_token: str, chat_id: str, trade: dict, current_pric
     return resp.json()
 
 
+def send_capital_signal_notification(bot_token: str, chat_id: str, decision: dict) -> dict:
+    """
+    Notification pour une opportunité Capital.com (métaux, indices...),
+    visuellement distincte des cryptos, avec ses propres boutons.
+    """
+    symbol = decision["symbol"]
+    score = decision["final_score"]
+    reco = decision["recommendation"]
+    confidence = decision.get("confidence", "")
+    entry = decision.get("entry_price")
+    stop = decision.get("stop_price")
+    target = decision.get("target_price")
+    reasoning_text = "\n".join(f"• {r}" for r in decision.get("reasoning", []))
+
+    emoji = "🟢" if reco == "ACHETER" else ("🟡" if reco == "ATTENDRE" else "🔴")
+
+    text = (
+        f"🥇 *[CAPITAL.COM]* {symbol}\n"
+        f"Score : *{score}/100* ({reco}, confiance {confidence})\n\n"
+        f"{reasoning_text}\n\n"
+        f"Entrée : `{entry}`\n"
+        f"Stop : `{stop}`\n"
+        f"Objectif : `{target}`"
+    )
+
+    reply_markup = {
+        "inline_keyboard": [[
+            {"text": "✅ ACHETER (Demo)", "callback_data": f"capbuy|{symbol}"},
+            {"text": "❌ IGNORER", "callback_data": f"capignore|{symbol}"},
+        ]]
+    }
+
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "Markdown", "reply_markup": reply_markup}
+    url = TELEGRAM_API.format(token=bot_token, method="sendMessage")
+    resp = requests.post(url, json=payload, timeout=15)
+    return resp.json()
+
+
 def send_signal_notification(bot_token: str, chat_id: str, decision: dict) -> dict:
     """
     Envoie une notification formatée pour une opportunité détectée,

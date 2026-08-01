@@ -21,6 +21,12 @@ LIVE_BASE_URL = "https://api-capital.backend-capital.com"
 SESSION_REFRESH_MARGIN_SECONDS = 8 * 60
 
 
+RESOLUTION_MAP = {
+    "1m": "MINUTE", "5m": "MINUTE_5", "15m": "MINUTE_15",
+    "1h": "HOUR", "4h": "HOUR_4", "1d": "DAY",
+}
+
+
 class CapitalClient:
     def __init__(self, api_key: str, identifier: str, api_password: str, demo: bool = True):
         self.api_key = api_key
@@ -64,12 +70,15 @@ class CapitalClient:
         resp.raise_for_status()
         return resp.json().get("markets", [])
 
+    def get_market_details(self, epic: str) -> dict:
+        """Détails complets d'un instrument, dont la taille minimale de position autorisée."""
+        self._ensure_session()
+        url = f"{self.base_url}/api/v1/markets/{epic}"
+        resp = requests.get(url, headers=self._headers(), timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
     def get_prices(self, epic: str, resolution: str = "MINUTE_15", max_points: int = 250) -> pd.DataFrame:
-        """
-        Récupère l'historique de prix pour un epic, retourné dans le même format
-        de DataFrame que ExchangeClient.fetch_ohlcv (compatible avec analyzers.py).
-        resolution: MINUTE, MINUTE_5, MINUTE_15, HOUR, HOUR_4, DAY...
-        """
         self._ensure_session()
         url = f"{self.base_url}/api/v1/prices/{epic}"
         resp = requests.get(url, headers=self._headers(),
@@ -90,9 +99,12 @@ class CapitalClient:
         df["timestamp"] = pd.to_datetime(df["timestamp"])
         return df
 
+    def fetch_ohlcv(self, symbol: str, timeframe: str, limit: int = 200) -> pd.DataFrame:
+        resolution = RESOLUTION_MAP.get(timeframe, "MINUTE_15")
+        return self.get_prices(symbol, resolution=resolution, max_points=limit)
+
     def create_position(self, epic: str, direction: str, size: float,
                          stop_level: float = None, profit_level: float = None) -> dict:
-        """Ouvre une position (BUY/SELL) sur le compte Demo, avec stop/objectif optionnels."""
         self._ensure_session()
         url = f"{self.base_url}/api/v1/positions"
         payload = {"epic": epic, "direction": direction.upper(), "size": size}

@@ -41,7 +41,7 @@ def _dynamic_take_profit(client, symbol: str, timeframe: str,
         atr_pct = (last_atr / last_price) * 100 if last_price else tp_min_pct
         return round(min(tp_max_pct, max(tp_min_pct, atr_pct)), 2)
     except Exception:
-        return tp_min_pct  # en cas de doute, on reste sur l'objectif le plus prudent
+        return tp_min_pct
 
 
 HORIZON_BY_TIMEFRAME = {
@@ -55,7 +55,7 @@ HORIZON_BY_TIMEFRAME = {
 def _estimate_horizon(timeframes: list, weights: dict = None) -> str:
     """Estime combien de temps garder la position, basé sur la timeframe dominante."""
     if not weights:
-        dominant = timeframes[-1]  # à défaut, on suppose la plus longue = la plus significative
+        dominant = timeframes[-1]
     else:
         dominant = max(weights, key=weights.get)
     return HORIZON_BY_TIMEFRAME.get(dominant, "durée non déterminée")
@@ -75,16 +75,13 @@ def decide(client, symbol: str, timeframes: list, tf_weights: dict = None,
     mtf = analyze_multi_timeframe(client, symbol, timeframes, tf_weights)
     internal_score = mtf["consolidated_score"]
 
-    # Prix d'entrée: normalement celui de la timeframe la plus courte, mais si
-    # celle-ci manquait de données (ex: exchange de secours avec moins d'historique),
-    # on prend le premier prix valide trouvé parmi les autres timeframes plutôt
-    # que de laisser Entrée/Stop/Objectif à None dans la notification.
     entry_price = None
     for tf in timeframes:
         tf_price = mtf["per_timeframe"].get(tf, {}).get("price")
         if tf_price:
             entry_price = tf_price
             break
+
     tv = get_tradingview_signal(symbol, timeframe=timeframes[0])
     tv_score = tv["score"]
 
@@ -108,7 +105,6 @@ def decide(client, symbol: str, timeframes: list, tf_weights: dict = None,
         reasoning.append("Signaux contradictoires entre analyse interne et TradingView → prudence")
         confidence = "basse"
 
-    # Ajustement par l'historique réel de performance sur ce symbole (paper trading)
     hist = get_symbol_stats(symbol)
     if hist["num_trades"] >= 3:
         if hist["win_rate_pct"] < 40:
@@ -156,4 +152,70 @@ def decide(client, symbol: str, timeframes: list, tf_weights: dict = None,
             "internal_multi_timeframe": mtf,
             "tradingview": tv,
         },
+    }
+
+
+def decide_capital(client, epic: str, timeframes: list, tf_weights: dict = None,
+                    stop_loss_pct: float = 1.0, take_profit_min_pct: float = 2.0,
+                    take_profit_max_pct: float = 5.0) -> dict:
+    """
+    Version simplifiée de decide(), pour les instruments Capital.com (métaux,
+    indices...). Différences volontaires par rapport aux cryptos:
+    - Pas de mélange avec TradingView
+    - Pas de calcul de montant suggéré basé sur le capital crypto
+    - Score basé uniquement sur l'analyse technique interne multi-timeframe
+    """
+    mtf = analyze_multi_timeframe(client, epic, timeframes, tf_weights)
+    final_score = mtf["consolidated_score"]
+
+    entry_price = None
+    for tf in timeframes:
+        tf_price = mtf["per_timeframe"].get(tf, {}).get("price")
+        if tf_price:
+            entry_price = tf_price
+            break
+
+    reasoning = [f"Analyse technique interne multi-timeframe: {final_score}/100 "
+                 f"(consensus: {mtf['consensus']})",
+                 "Score basé uniquement sur l'analyse interne (pas de croisement TradingView "
+                 "pour cet instrument)"]
+    confidence = "moyenne"
+
+    hist = get_symbol_stats(epic)
+    if hist["num_trades"] >= 3:
+        if hist["win_rate_pct"] < 40:
+            final_score = max(0, final_score - 5)
+            reasoning.append(f"Historique {epic}: {hist['win_rate_pct']}% de réussite sur "
+                              f"{hist['num_trades']} trades passés → score réduit par prudence")
+        elif hist["win_rate_pct"] > 70:
+            final_score = min(100, final_score + 5)
+            confidence = "haute"
+            reasoning.append(f"Historique {epic}: {hist['win_rate_pct']}% de réussite sur "
+                              f"{hist['num_trades']} trades passés → confiance renforcée")
+
+    if final_score >= 70:
+        recommendation = "ACHETER"
+    elif final_score >= 45:
+        recommendation = "ATTENDRE"
+    else:
+        recommendation = "PASSER"
+
+    dynamic_tp_pct = _dynamic_take_profit(client, epic, timeframes[0], take_profit_min_pct, take_profit_max_pct)
+    horizon = _estimate_horizon(timeframes, tf_weights)
+
+    return {
+        "symbol": epic,
+        "final_score": final_score,
+        "recommendation": recommendation,
+        "confidence": confidence,
+        "reasoning": reasoning,
+        "entry_price": entry_price,
+        "stop_price": round(entry_price * (1 - stop_loss_pct / 100), 6) if entry_price else None,
+        "target_price": round(entry_price * (1 + dynamic_tp_pct / 100), 6) if entry_price else None,
+        "dynamic_take_profit_pct": dynamic_tp_pct,
+        "suggested_amount_usdt": None,
+        "holding_horizon": horizon,
+        "symbol_history": hist,
+        "source": "capital",
+        "breakdown": {"internal_multi_timeframe": mtf},
     }

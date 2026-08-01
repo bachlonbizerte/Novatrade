@@ -18,6 +18,8 @@ import requests
 from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
+from src.capital_client import CapitalClient
+from src.capital_trading import handle_capital_buy
 from src.paper_trading import (
     open_position, suggest_position_size, get_account_state,
     close_position_manually, extend_position, get_trade_by_id, get_open_positions,
@@ -112,6 +114,15 @@ def run_listener():
         fallback_exchanges=config["exchange"].get("fallback", []),
     )
 
+    capital_client = None
+    if config.get("capital", {}).get("enabled", False):
+        capital_client = CapitalClient(
+            api_key=os.getenv("CAPITAL_API_KEY", ""),
+            identifier=os.getenv("CAPITAL_IDENTIFIER", ""),
+            api_password=os.getenv("CAPITAL_API_PASSWORD", ""),
+            demo=True,
+        )
+
     offset = None
     logger.info("Listener Telegram démarré (long polling, réaction instantanée)...")
 
@@ -198,6 +209,19 @@ def run_listener():
                                          f"⏱ {trade['symbol']} prolongée de 30 min supplémentaires "
                                          f"(total: +{trade['extended_minutes']} min).")
                             logger.info(f"Position prolongée: {trade['symbol']}")
+
+                    elif action == "capbuy":
+                        if not capital_client:
+                            answer_callback(bot_token, callback["id"], "Capital.com non configuré")
+                        else:
+                            confirmation = handle_capital_buy(capital_client, config, payload_id)
+                            answer_callback(bot_token, callback["id"], "Traité ✅")
+                            send_message(bot_token, chat_id, confirmation)
+                            logger.info(confirmation)
+
+                    elif action == "capignore":
+                        answer_callback(bot_token, callback["id"], "Signal ignoré")
+                        logger.info(f"[CAPITAL] {payload_id} ignoré par l'utilisateur.")
 
                 except Exception as e:
                     logger.error(f"Erreur en traitant le clic (update {update.get('update_id')}): {e}")
