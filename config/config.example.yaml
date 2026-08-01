@@ -74,6 +74,9 @@ backtest:
 capital:
   enabled: true
   max_concurrent_positions: 2   # séparé des cryptos — 2 positions max ici, indépendamment des cryptos
+  auto_trade: true               # ouvre automatiquement sur le compte Demo, sans confirmation manuelle.
+                                  # ⚠️ Ne fonctionne QUE si le client Capital.com est en mode Demo
+                                  # (garde-fou codé en dur) — jamais d'auto-trade en mode reel
   symbols:
     - "GOLD"
     - "SILVER"
