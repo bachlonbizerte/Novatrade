@@ -21,6 +21,12 @@ LIVE_BASE_URL = "https://api-capital.backend-capital.com"
 SESSION_REFRESH_MARGIN_SECONDS = 8 * 60
 
 
+RESOLUTION_MAP = {
+    "1m": "MINUTE", "5m": "MINUTE_5", "15m": "MINUTE_15",
+    "1h": "HOUR", "4h": "HOUR_4", "1d": "DAY",
+}
+
+
 class CapitalClient:
     def __init__(self, api_key: str, identifier: str, api_password: str, demo: bool = True):
         self.api_key = api_key
@@ -89,6 +95,15 @@ class CapitalClient:
         df = pd.DataFrame(rows)
         df["timestamp"] = pd.to_datetime(df["timestamp"])
         return df
+
+    def fetch_ohlcv(self, symbol: str, timeframe: str, limit: int = 200) -> pd.DataFrame:
+        """
+        Alias compatible avec l'interface d'ExchangeClient (même signature), pour
+        que analyzers.py/ai_decision.py puissent utiliser CapitalClient exactement
+        comme ExchangeClient, sans code séparé pour les deux sources de données.
+        """
+        resolution = RESOLUTION_MAP.get(timeframe, "MINUTE_15")
+        return self.get_prices(symbol, resolution=resolution, max_points=limit)
 
     def create_position(self, epic: str, direction: str, size: float,
                          stop_level: float = None, profit_level: float = None) -> dict:
