@@ -225,18 +225,8 @@ def scan_capital_once(config: dict, capital_client, bot_token: str, chat_id: str
     top = [d for d in results if d["final_score"] >= notify_threshold]
     if top:
         best = max(top, key=lambda d: d["final_score"])
-        reasoning_text = "\n".join(f"• {r}" for r in best["reasoning"])
-        send_message_simple(bot_token, chat_id,
-                             f"🥇 *[CAPITAL.COM]* Opportunité détectée: *{best['symbol']}*\n"
-                             f"Score: {best['final_score']}/100 ({best['recommendation']})\n\n"
-                             f"{reasoning_text}\n\n"
-                             f"Entrée: `{best['entry_price']}` · Stop: `{best['stop_price']}` · "
-                             f"Objectif: `{best['target_price']}`\n\n"
-                             f"⚠️ Exécution automatique pas encore activée pour Capital.com — "
-                             f"information uniquement pour l'instant.")
-        log_action(best["symbol"], "capital_signal_info", score=best["final_score"], success=True)
-
-
+        send_capital_signal_notification(bot_token, chat_id, best)
+        log_action(best["symbol"], "capital_signal_sent", score=best["final_score"], success=True)
 def main():
     load_dotenv()
     config = load_config()
