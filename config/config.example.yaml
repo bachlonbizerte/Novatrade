@@ -73,6 +73,7 @@ backtest:
 # CAPITAL_API_PASSWORD dans le .env.
 capital:
   enabled: true
+  max_concurrent_positions: 2   # séparé des cryptos — 2 positions max ici, indépendamment des cryptos
   symbols:
     - "GOLD"
     - "SILVER"
