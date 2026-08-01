@@ -16,7 +16,10 @@ from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
 from src.ai_decision import decide, decide_capital
-from src.telegram_notifier import send_signal_notification, send_summary, send_message_simple, send_position_status
+from src.telegram_notifier import (
+    send_signal_notification, send_summary, send_message_simple,
+    send_position_status, send_capital_signal_notification,
+)
 from src.paper_trading import (
     check_and_close_positions, get_stats, get_open_positions, touch_status_sent,
     open_position, suggest_position_size, get_account_state,
