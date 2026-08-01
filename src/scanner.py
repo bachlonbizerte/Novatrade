@@ -15,7 +15,7 @@ import yaml
 from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
-from src.ai_decision import decide
+from src.ai_decision import decide, decide_capital
 from src.telegram_notifier import send_signal_notification, send_summary, send_message_simple, send_position_status
 from src.paper_trading import (
     check_and_close_positions, get_stats, get_open_positions, touch_status_sent,
@@ -58,13 +58,6 @@ def save_results(decisions: list, stats: dict, path: str = "docs/data/latest_sca
 
 
 def _auto_buy(client, config: dict, symbol: str) -> str:
-    """
-    Ouvre une position automatiquement, SANS confirmation manuelle.
-    Garde-fou strict: ne fait absolument rien si client.dry_run est False —
-    l'auto-trading ne doit jamais pouvoir déclencher un ordre réel, peu
-    importe la config. Retourne None si rien n'a été ouvert (positions
-    max atteintes, budget insuffisant, ou mode réel).
-    """
     if not client.dry_run:
         logger.warning("Auto-trading ignoré: le mode réel (DRY_RUN=false) exige toujours une "
                         "confirmation manuelle via Telegram, par sécurité.")
@@ -93,12 +86,6 @@ def _auto_buy(client, config: dict, symbol: str) -> str:
 
 
 def scan_once(config: dict, client, bot_token: str, chat_id: str):
-    """
-    Effectue UN cycle complet: vérifie/clôture les positions ouvertes, envoie
-    les statuts périodiques, analyse les 10 cryptos, notifie la meilleure
-    opportunité si le seuil est atteint. Ne gère PAS les clics de boutons
-    Telegram — ça, c'est le rôle de telegram_listener.py (séparé, en continu).
-    """
     max_duration = config["risk"].get("max_position_duration_minutes", 60)
     closed_trades = check_and_close_positions(client, max_duration_minutes=max_duration)
     if closed_trades and bot_token and chat_id:
@@ -206,12 +193,48 @@ def scan_once(config: dict, client, bot_token: str, chat_id: str):
         send_summary(bot_token, chat_id, decisions)
 
 
+def scan_capital_once(config: dict, capital_client, bot_token: str, chat_id: str):
+    cap_config = config.get("capital", {})
+    if not cap_config.get("enabled", False):
+        return
+
+    symbols = cap_config.get("symbols", [])
+    timeframes = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
+    tf_weights = config["watchlist"].get("timeframe_weights")
+    notify_threshold = config["watchlist"].get("notify_score_threshold", 70)
+
+    results = []
+    for epic in symbols:
+        try:
+            logger.info(f"[CAPITAL] Analyse de {epic} sur {timeframes}...")
+            decision = decide_capital(capital_client, epic, timeframes, tf_weights,
+                                       stop_loss_pct=config["risk"]["stop_loss_pct"],
+                                       take_profit_min_pct=config["risk"]["take_profit_min_pct"],
+                                       take_profit_max_pct=config["risk"]["take_profit_max_pct"])
+            results.append(decision)
+            logger.info(f"[CAPITAL] {epic}: score={decision['final_score']} ({decision['recommendation']})")
+        except Exception as e:
+            logger.error(f"[CAPITAL] Erreur lors de l'analyse de {epic}: {e}")
+
+    if not bot_token or not chat_id or not results:
+        return
+
+    top = [d for d in results if d["final_score"] >= notify_threshold]
+    if top:
+        best = max(top, key=lambda d: d["final_score"])
+        reasoning_text = "\n".join(f"• {r}" for r in best["reasoning"])
+        send_message_simple(bot_token, chat_id,
+                             f"🥇 *[CAPITAL.COM]* Opportunité détectée: *{best['symbol']}*\n"
+                             f"Score: {best['final_score']}/100 ({best['recommendation']})\n\n"
+                             f"{reasoning_text}\n\n"
+                             f"Entrée: `{best['entry_price']}` · Stop: `{best['stop_price']}` · "
+                             f"Objectif: `{best['target_price']}`\n\n"
+                             f"⚠️ Exécution automatique pas encore activée pour Capital.com — "
+                             f"information uniquement pour l'instant.")
+        log_action(best["symbol"], "capital_signal_info", score=best["final_score"], success=True)
+
+
 def main():
-    """
-    Point d'entrée pour un run UNIQUE (ex: GitHub Actions, ou test manuel).
-    Sur le VPS, c'est run_forever.py qui est utilisé à la place (boucle
-    continue), avec telegram_listener.py séparé pour les boutons.
-    """
     load_dotenv()
     config = load_config()
 
