@@ -23,7 +23,7 @@ from src.dashboard_publisher import push_dashboard_data
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-SCAN_INTERVAL_SECONDS = 60
+SCAN_INTERVAL_SECONDS = 90
 DASHBOARD_PUSH_INTERVAL_SECONDS = 300  # toutes les ~5 min, pas à chaque cycle (éviter de spammer les commits)
 
 
