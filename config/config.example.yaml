@@ -68,3 +68,16 @@ backtest:
   start_date: "2024-01-01"
   end_date: "2024-12-31"
   initial_balance: 1000
+  # Instruments non-crypto via Capital.com (métaux, indices...). Utilise leur
+# compte Demo intégré. Nécessite CAPITAL_API_KEY, CAPITAL_IDENTIFIER,
+# CAPITAL_API_PASSWORD dans le .env.
+capital:
+  enabled: true
+  symbols:
+    - "GOLD"
+    - "SILVER"
+    - "OIL_CRUDE"
+    - "NATURALGAS"
+    - "COPPER"
+    - "US500"
+    - "US100"
