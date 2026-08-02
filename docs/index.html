@@ -102,7 +102,7 @@
 
   #stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
     margin-bottom: 24px;
   }
@@ -174,16 +174,12 @@
 </div>
 
 <script>
-// Chemin relatif car data/ est servi depuis le même dossier docs/ par GitHub Pages
 const DATA_URL = "./data/latest_scan.json";
 const TRADES_URL = "./data/trades.json";
 
 const colorFor = (reco) => reco === "ACHETER" ? "var(--buy)" : reco === "ATTENDRE" ? "var(--wait)" : "var(--pass)";
 
 async function fetchLivePrice(symbol) {
-  // Appel public direct à Binance (pas besoin de clé) pour le prix courant.
-  // Si bloqué/indisponible depuis le navigateur, on se contente d'afficher
-  // entrée/stop/objectif sans le point de progression en temps réel.
   const ticker = symbol.replace("/", "");
   const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${ticker}`);
   const data = await res.json();
@@ -202,7 +198,7 @@ async function loadPositions() {
     const res = await fetch(TRADES_URL + "?t=" + Date.now());
     trades = await res.json();
   } catch (e) {
-    return; // pas de trades.json encore généré, rien à afficher
+    return;
   }
 
   const open = (trades || []).filter(t => t.status === "open");
@@ -222,7 +218,7 @@ async function loadPositions() {
     listEl.appendChild(card);
 
     let livePrice = null;
-    try { livePrice = await fetchLivePrice(t.symbol); } catch (e) { /* pas grave, on affiche sans le point live */ }
+    try { livePrice = await fetchLivePrice(t.symbol); } catch (e) { }
 
     const low = t.stop_loss_price, high = t.take_profit_price;
     const range = high - low;
@@ -277,6 +273,7 @@ function renderStats(perf) {
   if (!perf) return;
   const pnlClass = perf.cumulative_pnl_pct > 0 ? "pos" : perf.cumulative_pnl_pct < 0 ? "neg" : "";
   const items = [
+    ["CAPITAL TOTAL", perf.current_capital !== undefined ? perf.current_capital + " USD" : "—", ""],
     ["TRADES CLÔTURÉS", perf.total_trades, ""],
     ["POSITIONS OUVERTES", perf.open_positions, ""],
     ["TAUX DE RÉUSSITE", perf.win_rate_pct + "%", ""],
@@ -338,7 +335,7 @@ function render(data) {
 }
 
 load();
-setInterval(loadPositions, 30000);  // rafraîchit le prix des positions ouvertes toutes les 30s
+setInterval(loadPositions, 30000);
 </script>
 </body>
 </html>

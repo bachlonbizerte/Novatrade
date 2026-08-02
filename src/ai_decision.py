@@ -53,7 +53,6 @@ HORIZON_BY_TIMEFRAME = {
 
 
 def _estimate_horizon(timeframes: list, weights: dict = None) -> str:
-    """Estime combien de temps garder la position, basé sur la timeframe dominante."""
     if not weights:
         dominant = timeframes[-1]
     else:
@@ -66,12 +65,6 @@ def decide(client, symbol: str, timeframes: list, tf_weights: dict = None,
            stop_loss_pct: float = 1.0, take_profit_min_pct: float = 2.0,
            take_profit_max_pct: float = 5.0, capital_usd: float = 100,
            capital_allocation_pct: float = 80, max_concurrent_positions: int = 2) -> dict:
-    """
-    Retourne la décision finale pour un symbole:
-    {symbol, final_score, recommendation, confidence, reasoning, breakdown,
-     entry_price, stop_price, target_price, dynamic_take_profit_pct,
-     suggested_amount_usdt, holding_horizon}
-    """
     mtf = analyze_multi_timeframe(client, symbol, timeframes, tf_weights)
     internal_score = mtf["consolidated_score"]
 
@@ -117,7 +110,7 @@ def decide(client, symbol: str, timeframes: list, tf_weights: dict = None,
             reasoning.append(f"Historique {symbol}: {hist['win_rate_pct']}% de réussite sur "
                               f"{hist['num_trades']} trades passés → confiance renforcée")
 
-    if final_score >= 70:
+    if final_score >= 80:
         recommendation = "ACHETER"
     elif final_score >= 45:
         recommendation = "ATTENDRE"
@@ -158,13 +151,6 @@ def decide(client, symbol: str, timeframes: list, tf_weights: dict = None,
 def decide_capital(client, epic: str, timeframes: list, tf_weights: dict = None,
                     stop_loss_pct: float = 1.0, take_profit_min_pct: float = 2.0,
                     take_profit_max_pct: float = 5.0) -> dict:
-    """
-    Version simplifiée de decide(), pour les instruments Capital.com (métaux,
-    indices...). Différences volontaires par rapport aux cryptos:
-    - Pas de mélange avec TradingView
-    - Pas de calcul de montant suggéré basé sur le capital crypto
-    - Score basé uniquement sur l'analyse technique interne multi-timeframe
-    """
     mtf = analyze_multi_timeframe(client, epic, timeframes, tf_weights)
     final_score = mtf["consolidated_score"]
 
@@ -193,9 +179,9 @@ def decide_capital(client, epic: str, timeframes: list, tf_weights: dict = None,
             reasoning.append(f"Historique {epic}: {hist['win_rate_pct']}% de réussite sur "
                               f"{hist['num_trades']} trades passés → confiance renforcée")
 
-    if final_score >= 70:
+    if final_score >= 60:
         recommendation = "ACHETER"
-    elif final_score >= 45:
+    elif final_score >= 40:
         recommendation = "ATTENDRE"
     else:
         recommendation = "PASSER"
