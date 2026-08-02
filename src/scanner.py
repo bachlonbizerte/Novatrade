@@ -118,7 +118,7 @@ def scan_once(config: dict, client, bot_token: str, chat_id: str):
     symbols = config["watchlist"]["symbols"]
     timeframes = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
     tf_weights = config["watchlist"].get("timeframe_weights")
-    notify_threshold = config["watchlist"].get("notify_score_threshold", 90)
+    notify_threshold = config["watchlist"].get("notify_score_threshold", 80)
     max_per_day = config["watchlist"].get("max_notifications_per_day", 15)
     min_interval = config["watchlist"].get("min_minutes_between_notifications", 5)
 
@@ -138,7 +138,19 @@ def scan_once(config: dict, client, bot_token: str, chat_id: str):
         except Exception as e:
             logger.error(f"Erreur lors de l'analyse de {symbol}: {e}")
 
-    save_results(decisions, get_stats())
+    stats = get_stats()
+    try:
+        account_state = get_account_state(
+            config["risk"].get("capital_usd", 100),
+            config["risk"].get("capital_allocation_pct", 80),
+            config["risk"].get("max_concurrent_positions", 2),
+        )
+        stats["current_capital"] = account_state["current_capital"]
+        stats["allocated_budget"] = account_state["allocated_budget"]
+    except Exception as e:
+        logger.warning(f"Impossible de calculer l'état du capital: {e}")
+
+    save_results(decisions, stats)
 
     if not bot_token or not chat_id:
         logger.warning("TELEGRAM_BOT_TOKEN ou TELEGRAM_CHAT_ID manquant — notifications désactivées.")
@@ -193,7 +205,7 @@ def scan_once(config: dict, client, bot_token: str, chat_id: str):
             logger.info(f"Traitement fait pour {best['symbol']} (score {best['final_score']}). "
                         f"Notifications restantes aujourd'hui: {remaining}")
 
-    if config["watchlist"].get("send_daily_summary", False) and decisions:
+    if decisions and any(d["final_score"] > 80 for d in decisions):
         send_summary(bot_token, chat_id, decisions)
 
 
@@ -205,7 +217,7 @@ def scan_capital_once(config: dict, capital_client, bot_token: str, chat_id: str
     symbols = cap_config.get("symbols", [])
     timeframes = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
     tf_weights = config["watchlist"].get("timeframe_weights")
-    notify_threshold = config["watchlist"].get("notify_score_threshold", 70)
+    notify_threshold = cap_config.get("notify_score_threshold", 60)
 
     results = []
     for epic in symbols:
