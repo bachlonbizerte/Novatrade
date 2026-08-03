@@ -3,13 +3,19 @@ Exécution de positions sur Capital.com (compte Demo). Volontairement séparé
 du système de paper trading crypto (paper_trading.py) — ici on s'appuie
 directement sur le compte Demo de Capital.com comme source de vérité pour
 les positions ouvertes, au lieu de tenir notre propre registre local.
+Ça donne des résultats plus réalistes (vrais spreads/slippage simulés par
+leur moteur) et évite de dupliquer la logique de suivi.
 """
 
+import os
+import json
 import logging
 
 from src.ai_decision import decide_capital
 
 logger = logging.getLogger(__name__)
+
+CAPITAL_SNAPSHOT_PATH = "docs/data/capital_positions_snapshot.json"
 
 
 def get_open_capital_positions(capital_client) -> list:
@@ -64,3 +70,51 @@ def handle_capital_close(capital_client, deal_id: str) -> str:
         return f"🔴 Position Capital.com clôturée (deal `{deal_id}`)."
     except Exception as e:
         return f"❌ Échec de la clôture: {e}"
+
+
+def _load_snapshot(path: str = CAPITAL_SNAPSHOT_PATH) -> dict:
+    if not os.path.exists(path):
+        return {}
+    with open(path, "r") as f:
+        return json.load(f)
+
+
+def _save_snapshot(snapshot: dict, path: str = CAPITAL_SNAPSHOT_PATH):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(snapshot, f, indent=2, default=str)
+
+
+def check_capital_closed_positions(capital_client, path: str = CAPITAL_SNAPSHOT_PATH) -> list:
+    """
+    Détecte les positions Capital.com fermées depuis le dernier passage.
+    Comme c'est le moteur de Capital.com (pas notre code) qui applique le
+    stop/take-profit, on ne peut pas "savoir" qu'une position s'est fermée
+    autrement qu'en comparant l'état actuel à l'instantané du cycle précédent
+    — une position présente avant et absente maintenant = fermée entre-temps.
+    Le PnL rapporté est la dernière valeur connue avant disparition (Capital.com
+    ne donne pas facilement le PnL exact de clôture sans requête supplémentaire),
+    donc une légère approximation, clairement indiquée comme telle.
+    """
+    current_positions = get_open_capital_positions(capital_client)
+    current_snapshot = {}
+    for p in current_positions:
+        pos = p.get("position", {})
+        deal_id = pos.get("dealId")
+        if deal_id:
+            current_snapshot[deal_id] = {
+                "epic": p.get("market", {}).get("epic", "?"),
+                "profit": pos.get("profit"),
+                "direction": pos.get("direction"),
+                "level": pos.get("level"),
+                "size": pos.get("size"),
+            }
+
+    previous_snapshot = _load_snapshot(path)
+    closed = []
+    for deal_id, info in previous_snapshot.items():
+        if deal_id not in current_snapshot:
+            closed.append({"deal_id": deal_id, **info})
+
+    _save_snapshot(current_snapshot, path)
+    return closed

@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
 from src.ai_decision import decide, decide_capital
-from src.capital_trading import handle_capital_buy, get_open_capital_positions
+from src.capital_trading import handle_capital_buy, get_open_capital_positions, check_capital_closed_positions
 from src.telegram_notifier import (
     send_signal_notification, send_summary, send_message_simple,
     send_position_status, send_capital_signal_notification,
@@ -213,6 +213,19 @@ def scan_capital_once(config: dict, capital_client, bot_token: str, chat_id: str
     cap_config = config.get("capital", {})
     if not cap_config.get("enabled", False):
         return
+
+    # Détecte d'abord si des positions se sont fermées depuis le dernier passage
+    # (SL/TP appliqué par Capital.com lui-même, pas par notre code)
+    if bot_token and chat_id:
+        closed = check_capital_closed_positions(capital_client)
+        for c in closed:
+            profit = c.get("profit")
+            emoji = "🟢" if (profit or 0) >= 0 else "🔴"
+            profit_text = f"{profit} USD (dernière valeur connue, approximatif)" if profit is not None else "non disponible"
+            send_message_simple(bot_token, chat_id,
+                                 f"{emoji} *[CAPITAL.COM]* Position {c['epic']} clôturée.\n"
+                                 f"PnL: {profit_text}")
+            logger.info(f"[CAPITAL] Position fermée détectée: {c['epic']} (deal {c['deal_id']}, pnl≈{profit})")
 
     symbols = cap_config.get("symbols", [])
     timeframes = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
