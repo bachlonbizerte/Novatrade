@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
 from src.ai_decision import decide, decide_capital
-from src.capital_trading import handle_capital_buy, get_open_capital_positions
+from src.capital_trading import handle_capital_buy, get_open_capital_positions, check_capital_closed_positions
 from src.telegram_notifier import (
     send_signal_notification, send_summary, send_message_simple,
     send_position_status, send_capital_signal_notification,
