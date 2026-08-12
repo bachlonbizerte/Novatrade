@@ -5,6 +5,12 @@ directement sur le compte Demo de Capital.com comme source de vérité pour
 les positions ouvertes, au lieu de tenir notre propre registre local.
 Ça donne des résultats plus réalistes (vrais spreads/slippage simulés par
 leur moteur) et évite de dupliquer la logique de suivi.
+
+En plus du suivi des positions ouvertes/fermées, on garde un historique
+persistant des trades clôturés (docs/data/capital_trades_history.json)
+pour calculer de vraies statistiques (taux de réussite, PnL cumulé) —
+le capital total, lui, est lu directement depuis le compte Capital.com
+(plus fiable que de le recalculer nous-mêmes).
 """
 
 import os
@@ -17,6 +23,7 @@ from src.telegram_notifier import send_message_simple
 logger = logging.getLogger(__name__)
 
 CAPITAL_SNAPSHOT_PATH = "docs/data/capital_positions_snapshot.json"
+CAPITAL_HISTORY_PATH = "docs/data/capital_trades_history.json"
 
 
 def get_open_capital_positions(capital_client) -> list:
@@ -96,6 +103,57 @@ def _remove_from_snapshot(deal_id: str, path: str = CAPITAL_SNAPSHOT_PATH):
         _save_snapshot(snapshot, path)
 
 
+def _load_history(path: str = CAPITAL_HISTORY_PATH) -> list:
+    if not os.path.exists(path):
+        return []
+    with open(path, "r") as f:
+        return json.load(f)
+
+
+def record_capital_trade_closed(trade_info: dict, path: str = CAPITAL_HISTORY_PATH):
+    """Ajoute un trade clôturé à l'historique persistant Capital.com."""
+    history = _load_history(path)
+    history.append(trade_info)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(history, f, indent=2, default=str)
+
+
+def get_capital_stats(capital_client, path: str = CAPITAL_HISTORY_PATH) -> dict:
+    """
+    Statistiques Capital.com: taux de réussite et PnL cumulé calculés à
+    partir de notre historique local des trades clôturés, mais le capital
+    total est lu en direct depuis le compte Capital.com (plus fiable).
+    """
+    history = _load_history(path)
+    open_positions = get_open_capital_positions(capital_client)
+
+    balance = {}
+    try:
+        balance = capital_client.get_account_balance()
+    except Exception as e:
+        logger.warning(f"Impossible de récupérer le solde Capital.com: {e}")
+
+    if not history:
+        return {
+            "total_trades": 0, "open_positions": len(open_positions), "win_rate_pct": 0,
+            "cumulative_pnl_usd": 0, "current_capital": balance.get("balance"),
+            "available": balance.get("available"),
+        }
+
+    wins = [t for t in history if (t.get("profit") or 0) > 0]
+    cumulative_usd = sum(t.get("profit", 0) or 0 for t in history)
+
+    return {
+        "total_trades": len(history),
+        "open_positions": len(open_positions),
+        "win_rate_pct": round(len(wins) / len(history) * 100, 1),
+        "cumulative_pnl_usd": round(cumulative_usd, 2),
+        "current_capital": balance.get("balance"),
+        "available": balance.get("available"),
+    }
+
+
 def check_capital_closed_positions(capital_client, path: str = CAPITAL_SNAPSHOT_PATH) -> list:
     """
     Détecte les positions Capital.com fermées depuis le dernier passage
@@ -103,8 +161,8 @@ def check_capital_closed_positions(capital_client, path: str = CAPITAL_SNAPSHOT_
     pas à l'origine de cette fermeture-là). On compare l'instantané actuel
     à celui du cycle précédent: une position présente avant et absente
     maintenant = fermée entre-temps. La raison (stop/objectif) est déduite
-    du dernier PnL connu avant disparition — Capital.com ne donne pas
-    directement le motif exact de clôture sans requête supplémentaire.
+    du dernier PnL connu avant disparition. Chaque fermeture détectée est
+    aussi ajoutée à l'historique persistant pour les statistiques.
     """
     current_positions = get_open_capital_positions(capital_client)
     current_snapshot = {}
@@ -133,7 +191,9 @@ def check_capital_closed_positions(capital_client, path: str = CAPITAL_SNAPSHOT_
                 reason = "objectif atteint (probable)"
             else:
                 reason = "stop touché (probable)"
-            closed.append({"deal_id": deal_id, "reason": reason, **info})
+            entry = {"deal_id": deal_id, "reason": reason, **info}
+            closed.append(entry)
+            record_capital_trade_closed(entry)
 
     _save_snapshot(current_snapshot, path)
     return closed
@@ -159,6 +219,11 @@ def monitor_capital_positions_quick(capital_client, bot_token: str, chat_id: str
             try:
                 capital_client.close_position(deal_id)
                 _remove_from_snapshot(deal_id)
+                record_capital_trade_closed({
+                    "deal_id": deal_id, "epic": epic, "profit": profit,
+                    "direction": pos.get("direction"), "level": pos.get("level"),
+                    "size": pos.get("size"), "reason": "prise de profit rapide",
+                })
                 if bot_token and chat_id:
                     send_message_simple(bot_token, chat_id,
                                          f"🟢 *[CAPITAL.COM]* {epic} clôturée rapidement en profit.\n"
