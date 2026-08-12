@@ -20,7 +20,6 @@ LIVE_BASE_URL = "https://api-capital.backend-capital.com"
 
 SESSION_REFRESH_MARGIN_SECONDS = 8 * 60
 
-
 RESOLUTION_MAP = {
     "1m": "MINUTE", "5m": "MINUTE_5", "15m": "MINUTE_15",
     "1h": "HOUR", "4h": "HOUR_4", "1d": "DAY",
@@ -130,3 +129,28 @@ class CapitalClient:
         resp = requests.delete(url, headers=self._headers(), timeout=15)
         resp.raise_for_status()
         return resp.json()
+
+    def get_accounts(self) -> list:
+        """
+        Retourne la liste des comptes (généralement 1 seul en Demo) avec leur
+        solde réel — plus fiable que de recalculer le capital nous-mêmes,
+        puisque c'est directement la comptabilité de Capital.com.
+        """
+        self._ensure_session()
+        url = f"{self.base_url}/api/v1/accounts"
+        resp = requests.get(url, headers=self._headers(), timeout=15)
+        resp.raise_for_status()
+        return resp.json().get("accounts", [])
+
+    def get_account_balance(self) -> dict:
+        """Solde du compte actif: {balance, available, deposit, profitLoss} ou {} si indisponible."""
+        try:
+            accounts = self.get_accounts()
+            for acc in accounts:
+                if acc.get("preferred") or acc.get("accountType") == "CFD":
+                    return acc.get("balance", {})
+            if accounts:
+                return accounts[0].get("balance", {})
+        except Exception as e:
+            logger.error(f"Impossible de récupérer le solde du compte Capital.com: {e}")
+        return {}
