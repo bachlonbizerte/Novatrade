@@ -12,6 +12,7 @@ import json
 import logging
 
 from src.ai_decision import decide_capital
+from src.telegram_notifier import send_message_simple
 
 logger = logging.getLogger(__name__)
 
@@ -85,16 +86,25 @@ def _save_snapshot(snapshot: dict, path: str = CAPITAL_SNAPSHOT_PATH):
         json.dump(snapshot, f, indent=2, default=str)
 
 
+def _remove_from_snapshot(deal_id: str, path: str = CAPITAL_SNAPSHOT_PATH):
+    """Retire une position du snapshot immédiatement après qu'on l'a nous-mêmes
+    clôturée — évite que le prochain scan la re-détecte comme "fermée" et
+    envoie une 2ème notification en double pour le même événement."""
+    snapshot = _load_snapshot(path)
+    if deal_id in snapshot:
+        del snapshot[deal_id]
+        _save_snapshot(snapshot, path)
+
+
 def check_capital_closed_positions(capital_client, path: str = CAPITAL_SNAPSHOT_PATH) -> list:
     """
-    Détecte les positions Capital.com fermées depuis le dernier passage.
-    Comme c'est le moteur de Capital.com (pas notre code) qui applique le
-    stop/take-profit, on ne peut pas "savoir" qu'une position s'est fermée
-    autrement qu'en comparant l'état actuel à l'instantané du cycle précédent
-    — une position présente avant et absente maintenant = fermée entre-temps.
-    Le PnL rapporté est la dernière valeur connue avant disparition (Capital.com
-    ne donne pas facilement le PnL exact de clôture sans requête supplémentaire),
-    donc une légère approximation, clairement indiquée comme telle.
+    Détecte les positions Capital.com fermées depuis le dernier passage
+    (par le moteur natif de Capital.com — SL/TP — puisque notre code n'est
+    pas à l'origine de cette fermeture-là). On compare l'instantané actuel
+    à celui du cycle précédent: une position présente avant et absente
+    maintenant = fermée entre-temps. La raison (stop/objectif) est déduite
+    du dernier PnL connu avant disparition — Capital.com ne donne pas
+    directement le motif exact de clôture sans requête supplémentaire.
     """
     current_positions = get_open_capital_positions(capital_client)
     current_snapshot = {}
@@ -108,13 +118,51 @@ def check_capital_closed_positions(capital_client, path: str = CAPITAL_SNAPSHOT_
                 "direction": pos.get("direction"),
                 "level": pos.get("level"),
                 "size": pos.get("size"),
+                "stop_level": pos.get("stopLevel"),
+                "profit_level": pos.get("profitLevel"),
             }
 
     previous_snapshot = _load_snapshot(path)
     closed = []
     for deal_id, info in previous_snapshot.items():
         if deal_id not in current_snapshot:
-            closed.append({"deal_id": deal_id, **info})
+            profit = info.get("profit")
+            if profit is None:
+                reason = "inconnue"
+            elif profit >= 0:
+                reason = "objectif atteint (probable)"
+            else:
+                reason = "stop touché (probable)"
+            closed.append({"deal_id": deal_id, "reason": reason, **info})
 
     _save_snapshot(current_snapshot, path)
     return closed
+
+
+def monitor_capital_positions_quick(capital_client, bot_token: str, chat_id: str):
+    """
+    Vérification rapide et légère (appelée toutes les ~30s, indépendamment
+    du scan complet toutes les 90s): dès qu'une position ouverte passe en
+    positif, on la clôture immédiatement pour sécuriser un petit gain,
+    plutôt que d'attendre l'objectif complet ou de risquer un retournement.
+    On ne touche PAS aux positions négatives — le stop-loss natif de
+    Capital.com reste seul responsable de la protection à la baisse.
+    """
+    positions = get_open_capital_positions(capital_client)
+    for p in positions:
+        pos = p.get("position", {})
+        profit = pos.get("profit")
+        deal_id = pos.get("dealId")
+        epic = p.get("market", {}).get("epic", "?")
+
+        if profit is not None and profit > 0 and deal_id:
+            try:
+                capital_client.close_position(deal_id)
+                _remove_from_snapshot(deal_id)
+                if bot_token and chat_id:
+                    send_message_simple(bot_token, chat_id,
+                                         f"🟢 *[CAPITAL.COM]* {epic} clôturée rapidement en profit.\n"
+                                         f"PnL: +{profit} USD (prise de profit anticipée)")
+                logger.info(f"[CAPITAL] Prise de profit rapide: {epic} (+{profit} USD)")
+            except Exception as e:
+                logger.error(f"[CAPITAL] Erreur lors de la clôture rapide de {epic}: {e}")
