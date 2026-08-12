@@ -16,7 +16,9 @@ from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
 from src.ai_decision import decide, decide_capital
-from src.capital_trading import handle_capital_buy, get_open_capital_positions, check_capital_closed_positions
+from src.capital_trading import (
+    handle_capital_buy, get_open_capital_positions, check_capital_closed_positions, get_capital_stats,
+)
 from src.telegram_notifier import (
     send_signal_notification, send_summary, send_message_simple,
     send_position_status, send_capital_signal_notification,
@@ -59,6 +61,18 @@ def save_results(decisions: list, stats: dict, path: str = "docs/data/latest_sca
     with open(path, "w") as f:
         json.dump(payload, f, indent=2, default=str, allow_nan=False)
     logger.info(f"Résultats sauvegardés dans {path}")
+
+
+def save_capital_results(decisions: list, stats: dict, path: str = "docs/data/capital_latest_scan.json"):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    payload = _sanitize_for_json({
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "results": decisions,
+        "performance": stats,
+    })
+    with open(path, "w") as f:
+        json.dump(payload, f, indent=2, default=str, allow_nan=False)
+    logger.info(f"Résultats Capital.com sauvegardés dans {path}")
 
 
 def _auto_buy(client, config: dict, symbol: str) -> str:
@@ -249,7 +263,28 @@ def scan_capital_once(config: dict, capital_client, bot_token: str, chat_id: str
         except Exception as e:
             logger.error(f"[CAPITAL] Erreur lors de l'analyse de {epic}: {e}")
 
-    if not bot_token or not chat_id or not results:
+    if not results:
+        return
+
+    try:
+        stats = get_capital_stats(capital_client)
+        open_positions_raw = get_open_capital_positions(capital_client)
+        stats["positions_detail"] = [
+            {
+                "epic": p.get("market", {}).get("epic", "?"),
+                "profit": p.get("position", {}).get("upl"),
+                "level": p.get("position", {}).get("level"),
+                "stop_level": p.get("position", {}).get("stopLevel"),
+                "profit_level": p.get("position", {}).get("profitLevel"),
+                "size": p.get("position", {}).get("size"),
+            }
+            for p in open_positions_raw
+        ]
+        save_capital_results(results, stats)
+    except Exception as e:
+        logger.warning(f"Impossible de sauvegarder les résultats Capital.com pour le dashboard: {e}")
+
+    if not bot_token or not chat_id:
         return
 
     top = [d for d in results if d["final_score"] >= notify_threshold]
