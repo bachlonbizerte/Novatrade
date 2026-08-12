@@ -18,6 +18,7 @@
     --wait: #e0b84a;
     --pass: #e0526a;
     --accent: #4fb8e8;
+    --gold: #d4af37;
   }
   * { box-sizing: border-box; }
   body {
@@ -48,6 +49,14 @@
   h1 span { color: var(--accent); }
   #updated { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
 
+  h2.section-title {
+    font-family: var(--mono); font-size: 13px; letter-spacing: 1px;
+    color: var(--text-dim); font-weight: 600; margin: 40px 0 14px;
+    padding-top: 20px; border-top: 1px solid var(--border);
+  }
+  h2.section-title.first { margin-top: 0; padding-top: 0; border-top: none; }
+  h2.section-title span.tag { color: var(--gold); }
+
   .grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -63,6 +72,7 @@
     grid-template-columns: 90px 1fr 70px 130px;
     align-items: center;
     gap: 14px;
+    cursor: pointer;
   }
   .card .symbol { font-family: var(--mono); font-weight: 600; font-size: 15px; }
   .card .bar-track {
@@ -97,15 +107,15 @@
     display: none;
   }
   .card.open .reasoning { display: block; }
-  .card { cursor: pointer; }
   .reasoning div { margin-bottom: 3px; }
 
-  #stats {
+  #stats, .stats-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 12px;
     margin-bottom: 24px;
   }
+  .stats-row.four { grid-template-columns: repeat(4, 1fr); }
   .stat {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -117,15 +127,10 @@
   .stat .value.pos { color: var(--buy); }
   .stat .value.neg { color: var(--pass); }
 
-  #empty { font-family: var(--mono); color: var(--text-dim); font-size: 13px; padding: 40px 0; text-align: center; }
-  #chart-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-bottom: 28px; }
+  #empty, .empty-msg { font-family: var(--mono); color: var(--text-dim); font-size: 13px; padding: 40px 0; text-align: center; }
+  .chart-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-bottom: 28px; }
   footer { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-align: center; margin-top: 20px; }
 
-  #positions-section { margin-bottom: 32px; }
-  #positions-section h2 {
-    font-family: var(--mono); font-size: 13px; letter-spacing: 0.5px;
-    color: var(--text-dim); font-weight: 600; margin: 0 0 12px;
-  }
   .position-card {
     background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
     padding: 16px 18px; margin-bottom: 12px;
@@ -158,17 +163,35 @@
     <div id="updated">chargement…</div>
   </header>
 
+  <!-- ===================== SECTION CRYPTO ===================== -->
+  <h2 class="section-title first">CRYPTO (BINANCE)</h2>
+
   <div id="stats"></div>
 
   <div id="positions-section" style="display:none;">
-    <h2>POSITIONS OUVERTES — PROGRESSION EN TEMPS RÉEL</h2>
+    <h2 class="section-title">POSITIONS OUVERTES — PROGRESSION EN TEMPS RÉEL</h2>
     <div id="positions-list"></div>
   </div>
 
-  <div id="chart-wrap"><canvas id="scoreChart" height="90"></canvas></div>
+  <div class="chart-wrap"><canvas id="scoreChart" height="90"></canvas></div>
 
-  <div id="empty" style="display:none;">Aucune donnée pour l'instant — attends le prochain run du scanner (cron GitHub Actions).</div>
+  <div id="empty" class="empty-msg" style="display:none;">Aucune donnée pour l'instant — attends le prochain scan.</div>
   <div class="grid" id="cards"></div>
+
+  <!-- ===================== SECTION CAPITAL.COM ===================== -->
+  <h2 class="section-title"><span class="tag">CAPITAL.COM</span> (métaux, indices — compte Demo)</h2>
+
+  <div class="stats-row four" id="capital-stats"></div>
+
+  <div id="capital-positions-section" style="display:none;">
+    <h2 class="section-title">POSITIONS OUVERTES CAPITAL.COM</h2>
+    <div id="capital-positions-list"></div>
+  </div>
+
+  <div class="chart-wrap"><canvas id="capitalScoreChart" height="90"></canvas></div>
+
+  <div id="capital-empty" class="empty-msg" style="display:none;">Aucune donnée Capital.com pour l'instant.</div>
+  <div class="grid" id="capital-cards"></div>
 
   <footer>Données générées automatiquement par le scanner · usage éducatif, ne constitue pas un conseil financier</footer>
 </div>
@@ -176,6 +199,7 @@
 <script>
 const DATA_URL = "./data/latest_scan.json";
 const TRADES_URL = "./data/trades.json";
+const CAPITAL_DATA_URL = "./data/capital_latest_scan.json";
 
 const colorFor = (reco) => reco === "ACHETER" ? "var(--buy)" : reco === "ATTENDRE" ? "var(--wait)" : "var(--pass)";
 
@@ -197,18 +221,13 @@ async function loadPositions() {
   try {
     const res = await fetch(TRADES_URL + "?t=" + Date.now());
     trades = await res.json();
-  } catch (e) {
-    return;
-  }
+  } catch (e) { return; }
 
   const open = (trades || []).filter(t => t.status === "open");
   const section = document.getElementById("positions-section");
   const listEl = document.getElementById("positions-list");
 
-  if (!open.length) {
-    section.style.display = "none";
-    return;
-  }
+  if (!open.length) { section.style.display = "none"; return; }
   section.style.display = "block";
   listEl.innerHTML = "";
 
@@ -218,7 +237,7 @@ async function loadPositions() {
     listEl.appendChild(card);
 
     let livePrice = null;
-    try { livePrice = await fetchLivePrice(t.symbol); } catch (e) { }
+    try { livePrice = await fetchLivePrice(t.symbol); } catch (e) {}
 
     const low = t.stop_loss_price, high = t.take_profit_price;
     const range = high - low;
@@ -245,28 +264,13 @@ async function loadPositions() {
         <div class="position-dot" style="left:${entryPct}%; background:var(--text-dim);" title="Entrée"></div>
         ${nowPct !== null ? `<div class="position-dot" style="left:${nowPct}%; background:var(--accent);" title="Prix actuel"></div>` : ""}
       </div>
-      <div class="position-labels">
-        <span>${low}</span>
-        <span>${high}</span>
-      </div>
+      <div class="position-labels"><span>${low}</span><span>${high}</span></div>
       <div class="position-meta">
         Entrée: ${t.entry_price} · Montant: ${t.position_size_usdt} USDT · Ouverte depuis ${timeElapsed(t.opened_at)}
         ${livePrice !== null ? ` · Prix actuel: ${livePrice}` : ""}
       </div>
     `;
   }
-}
-
-async function load() {
-  try {
-    const res = await fetch(DATA_URL + "?t=" + Date.now());
-    const data = await res.json();
-    render(data);
-  } catch (e) {
-    document.getElementById("empty").style.display = "block";
-    document.getElementById("updated").textContent = "pas de données disponibles";
-  }
-  loadPositions();
 }
 
 function renderStats(perf) {
@@ -281,24 +285,15 @@ function renderStats(perf) {
       (perf.cumulative_pnl_usd > 0 ? "+" : "") + perf.cumulative_pnl_usd + " USD)", pnlClass],
   ];
   document.getElementById("stats").innerHTML = items.map(([label, value, cls]) => `
-    <div class="stat">
-      <div class="label">${label}</div>
-      <div class="value ${cls}">${value}</div>
-    </div>
+    <div class="stat"><div class="label">${label}</div><div class="value ${cls}">${value}</div></div>
   `).join("");
 }
 
-function render(data) {
-  const results = (data.results || []).slice().sort((a, b) => b.final_score - a.final_score);
-  document.getElementById("updated").textContent = "Dernier scan : " + new Date(data.generated_at).toLocaleString("fr-FR");
-  renderStats(data.performance);
-
-  if (!results.length) {
-    document.getElementById("empty").style.display = "block";
-    return;
-  }
-
-  const cardsEl = document.getElementById("cards");
+function renderScoreCards(results, cardsElId, emptyElId) {
+  const cardsEl = document.getElementById(cardsElId);
+  const emptyEl = document.getElementById(emptyElId);
+  if (!results.length) { emptyEl.style.display = "block"; cardsEl.innerHTML = ""; return; }
+  emptyEl.style.display = "none";
   cardsEl.innerHTML = "";
   results.forEach(r => {
     const div = document.createElement("div");
@@ -313,16 +308,14 @@ function render(data) {
     div.addEventListener("click", () => div.classList.toggle("open"));
     cardsEl.appendChild(div);
   });
+}
 
-  new Chart(document.getElementById("scoreChart"), {
+function renderScoreChart(results, canvasId) {
+  new Chart(document.getElementById(canvasId), {
     type: "bar",
     data: {
       labels: results.map(r => r.symbol.replace("/USDT", "")),
-      datasets: [{
-        data: results.map(r => r.final_score),
-        backgroundColor: results.map(r => colorFor(r.recommendation)),
-        borderRadius: 3,
-      }]
+      datasets: [{ data: results.map(r => r.final_score), backgroundColor: results.map(r => colorFor(r.recommendation)), borderRadius: 3 }]
     },
     options: {
       plugins: { legend: { display: false } },
@@ -334,8 +327,91 @@ function render(data) {
   });
 }
 
+function render(data) {
+  const results = (data.results || []).slice().sort((a, b) => b.final_score - a.final_score);
+  document.getElementById("updated").textContent = "Dernier scan : " + new Date(data.generated_at).toLocaleString("fr-FR");
+  renderStats(data.performance);
+  renderScoreCards(results, "cards", "empty");
+  if (results.length) renderScoreChart(results, "scoreChart");
+}
+
+// ===================== CAPITAL.COM =====================
+
+function renderCapitalStats(perf) {
+  if (!perf) return;
+  const pnlClass = (perf.cumulative_pnl_usd || 0) > 0 ? "pos" : (perf.cumulative_pnl_usd || 0) < 0 ? "neg" : "";
+  const items = [
+    ["CAPITAL TOTAL", perf.current_capital !== undefined && perf.current_capital !== null ? perf.current_capital.toFixed(2) + " USD" : "—", ""],
+    ["TRADES CLÔTURÉS", perf.total_trades, ""],
+    ["POSITIONS OUVERTES", perf.open_positions, ""],
+    ["TAUX DE RÉUSSITE", perf.win_rate_pct + "%", ""],
+  ];
+  document.getElementById("capital-stats").innerHTML = items.map(([label, value, cls]) => `
+    <div class="stat"><div class="label">${label}</div><div class="value ${cls}">${value}</div></div>
+  `).join("") + `
+    <div class="stat" style="grid-column: span 4;">
+      <div class="label">PNL CUMULÉ</div>
+      <div class="value ${pnlClass}">${(perf.cumulative_pnl_usd || 0) >= 0 ? "+" : ""}${(perf.cumulative_pnl_usd || 0).toFixed(2)} USD</div>
+    </div>
+  `;
+}
+
+function renderCapitalPositions(positions) {
+  const section = document.getElementById("capital-positions-section");
+  const listEl = document.getElementById("capital-positions-list");
+  if (!positions || !positions.length) { section.style.display = "none"; return; }
+  section.style.display = "block";
+  listEl.innerHTML = "";
+
+  positions.forEach(p => {
+    const profit = p.profit;
+    const pnlClass = profit === null || profit === undefined ? "" : profit >= 0 ? "pos" : "neg";
+    const pnlText = profit === null || profit === undefined ? "non disponible" : `${profit >= 0 ? "+" : ""}${profit.toFixed(2)} USD`;
+    const card = document.createElement("div");
+    card.className = "position-card";
+    card.innerHTML = `
+      <div class="position-top">
+        <div class="position-symbol">${p.epic}</div>
+        <div class="position-pnl ${pnlClass}">${pnlText}</div>
+      </div>
+      <div class="position-meta">
+        Entrée: ${p.level} · Stop: ${p.stop_level} · Objectif: ${p.profit_level} · Taille: ${p.size}
+      </div>
+    `;
+    listEl.appendChild(card);
+  });
+}
+
+async function loadCapital() {
+  try {
+    const res = await fetch(CAPITAL_DATA_URL + "?t=" + Date.now());
+    const data = await res.json();
+    const results = (data.results || []).slice().sort((a, b) => b.final_score - a.final_score);
+    renderCapitalStats(data.performance);
+    renderCapitalPositions((data.performance || {}).positions_detail);
+    renderScoreCards(results, "capital-cards", "capital-empty");
+    if (results.length) renderScoreChart(results, "capitalScoreChart");
+  } catch (e) {
+    document.getElementById("capital-empty").style.display = "block";
+  }
+}
+
+async function load() {
+  try {
+    const res = await fetch(DATA_URL + "?t=" + Date.now());
+    const data = await res.json();
+    render(data);
+  } catch (e) {
+    document.getElementById("empty").style.display = "block";
+    document.getElementById("updated").textContent = "pas de données disponibles";
+  }
+  loadPositions();
+  loadCapital();
+}
+
 load();
 setInterval(loadPositions, 30000);
+setInterval(loadCapital, 30000);
 </script>
 </body>
 </html>
