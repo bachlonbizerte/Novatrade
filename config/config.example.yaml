@@ -63,6 +63,7 @@ risk:
   stop_loss_pct: 1.0            # SL fixe: 1% sous le prix d'entrée
   take_profit_min_pct: 2.0      # TP dynamique: jamais moins de 2%
   take_profit_max_pct: 5.0      # TP dynamique: jamais plus de 5% (calé sur la volatilité ATR du moment)
+  min_profit_to_close_pct: 0.5   # gain minimum exigé pour clôturer à l'échéance (sinon, prolongation auto)
 
 backtest:
   start_date: "2024-01-01"

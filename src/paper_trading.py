@@ -54,15 +54,20 @@ def open_position(symbol: str, entry_price: float, stop_loss_pct: float,
     return trade
 
 
-def check_and_close_positions(client, max_duration_minutes: float = None, path: str = TRADES_PATH) -> list:
+def check_and_close_positions(client, max_duration_minutes: float = None,
+                               min_profit_to_close_pct: float = 0.5,
+                               path: str = TRADES_PATH) -> list:
     """
     Vérifie chaque position ouverte contre le prix actuel: la ferme si le
     stop loss ou le take profit est atteint. À l'échéance de durée max:
-    - si la position est POSITIVE à ce moment, elle se clôture (on prend le gain)
-    - si elle est NÉGATIVE, elle est prolongée automatiquement d'une durée
-      max supplémentaire au lieu de se fermer — pour ne pas cristalliser
-      une perte simplement parce que le délai a expiré. Le stop-loss reste
-      la vraie limite basse, vérifié à chaque cycle indépendamment de ça.
+    - si le gain est SUPÉRIEUR À min_profit_to_close_pct, elle se clôture
+      (on prend un gain qui vaut vraiment la peine, pas juste +0.01%)
+    - sinon (négatif OU gain trop faible), elle est prolongée automatiquement
+      d'une durée max supplémentaire — pour ne pas cristalliser une perte
+      simplement parce que le délai a expiré, ET pour laisser une vraie
+      chance d'atteindre l'objectif complet plutôt que de sortir sur un
+      gain symbolique. Le stop-loss reste la vraie limite basse, vérifié
+      à chaque cycle indépendamment de ça.
     Retourne la liste des trades fermés.
     """
     trades = _load(path)
@@ -90,12 +95,13 @@ def check_and_close_positions(client, max_duration_minutes: float = None, path: 
 
         if hit_time_limit and not hit_tp and not hit_sl:
             current_pnl_pct = (current_price - trade["entry_price"]) / trade["entry_price"] * 100
-            if current_pnl_pct <= 0:
+            if current_pnl_pct < min_profit_to_close_pct:
                 trade["extended_minutes"] = trade.get("extended_minutes", 0) + max_duration_minutes
                 modified = True
                 hit_time_limit = False
-                logger.info(f"Position {trade['symbol']} négative à l'échéance ({current_pnl_pct:.2f}%) "
-                            f"— prolongée automatiquement de {max_duration_minutes} min.")
+                logger.info(f"Position {trade['symbol']} à {current_pnl_pct:.2f}% à l'échéance "
+                            f"(< seuil de {min_profit_to_close_pct}%) — prolongée automatiquement "
+                            f"de {max_duration_minutes} min.")
 
         if hit_tp or hit_sl or hit_time_limit:
             trade["status"] = "closed"
