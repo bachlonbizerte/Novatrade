@@ -221,11 +221,13 @@ def scan_capital_once(config: dict, capital_client, bot_token: str, chat_id: str
         for c in closed:
             profit = c.get("profit")
             emoji = "🟢" if (profit or 0) >= 0 else "🔴"
-            profit_text = f"{profit} USD (dernière valeur connue, approximatif)" if profit is not None else "non disponible"
+            profit_text = f"{profit} USD (dernière valeur connue)" if profit is not None else "non disponible"
             send_message_simple(bot_token, chat_id,
                                  f"{emoji} *[CAPITAL.COM]* Position {c['epic']} clôturée.\n"
+                                 f"Raison: {c.get('reason', 'inconnue')}\n"
                                  f"PnL: {profit_text}")
-            logger.info(f"[CAPITAL] Position fermée détectée: {c['epic']} (deal {c['deal_id']}, pnl≈{profit})")
+            logger.info(f"[CAPITAL] Position fermée détectée: {c['epic']} (deal {c['deal_id']}, "
+                        f"pnl≈{profit}, raison={c.get('reason')})")
 
     symbols = cap_config.get("symbols", [])
     timeframes = config["watchlist"].get("timeframes", ["15m", "1h", "4h"])
