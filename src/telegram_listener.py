@@ -61,7 +61,7 @@ def _send_capital_positions_status(capital_client, bot_token: str, chat_id: str)
     for p in positions:
         pos = p.get("position", {})
         epic = p.get("market", {}).get("epic", "?")
-        profit = pos.get("profit")
+        profit = pos.get("upl")
         level = pos.get("level")
         stop_level = pos.get("stopLevel")
         profit_level = pos.get("profitLevel")
