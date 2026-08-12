@@ -58,7 +58,7 @@ watchlist:
 risk:
   capital_usd: 100                    # capital de référence de départ (évolue avec les gains/pertes simulés)
   capital_allocation_pct: 80          # % du capital courant utilisable pour trader — le reste (20%) reste en sécurité
-  max_concurrent_positions: 4         # jusqu'à 4 positions ouvertes en même temps, budget partagé intelligemment entre elles
+  max_concurrent_positions: 2         # jusqu'à 4 positions ouvertes en même temps, budget partagé intelligemment entre elles
   max_position_duration_minutes: 60   # clôture automatique si ni le stop ni l'objectif ne sont touchés après ce délai
   stop_loss_pct: 1.0            # SL fixe: 1% sous le prix d'entrée
   take_profit_min_pct: 2.0      # TP dynamique: jamais moins de 2%
@@ -73,7 +73,7 @@ backtest:
 # CAPITAL_API_PASSWORD dans le .env.
 capital:
   enabled: true
-  max_concurrent_positions: 4   # séparé des cryptos — 4 positions max ici, indépendamment des cryptos
+  max_concurrent_positions: 2   # séparé des cryptos — 4 positions max ici, indépendamment des cryptos
   notify_score_threshold: 60
   auto_trade: true               # ouvre automatiquement sur le compte Demo, sans confirmation manuelle.
                                   # ⚠️ Ne fonctionne QUE si le client Capital.com est en mode Demo
