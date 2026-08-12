@@ -1,6 +1,7 @@
 """
 Écoute en continu les clics sur les boutons Telegram (ACHETER / IGNORER /
-RESCAN / Clôturer / Prolonger) via long-polling — réaction quasi instantanée.
+RESCAN / Clôturer / Prolonger / capbuy / capignore) via long-polling —
+réaction quasi instantanée.
 
 Fait pour tourner 24/7 sur un VPS (contrairement à telegram_poller.py, conçu
 pour un contexte "un seul passage" comme GitHub Actions). Sur le VPS, ce
@@ -19,7 +20,7 @@ from dotenv import load_dotenv
 
 from src.exchange_client import ExchangeClient
 from src.capital_client import CapitalClient
-from src.capital_trading import handle_capital_buy
+from src.capital_trading import handle_capital_buy, get_open_capital_positions
 from src.paper_trading import (
     open_position, suggest_position_size, get_account_state,
     close_position_manually, extend_position, get_trade_by_id, get_open_positions,
@@ -49,21 +50,54 @@ def send_message(bot_token: str, chat_id: str, text: str, keyboard: bool = False
     requests.post(url, json=payload, timeout=10)
 
 
-def handle_status_command(client: ExchangeClient, bot_token: str, chat_id: str):
-    """Répond à /status ou au bouton 'Statut des positions': état de chaque position ouverte."""
+def _send_capital_positions_status(capital_client, bot_token: str, chat_id: str):
+    """Envoie le statut de chaque position Capital.com ouverte (métaux, indices...)."""
+    positions = get_open_capital_positions(capital_client)
+
+    if not positions:
+        send_message(bot_token, chat_id, "Aucune position Capital.com ouverte actuellement.")
+        return
+
+    for p in positions:
+        pos = p.get("position", {})
+        epic = p.get("market", {}).get("epic", "?")
+        profit = pos.get("profit")
+        level = pos.get("level")
+        stop_level = pos.get("stopLevel")
+        profit_level = pos.get("profitLevel")
+        size = pos.get("size")
+
+        emoji = "🟢" if (profit or 0) >= 0 else "🔴"
+        profit_text = f"{profit:+.2f} USD" if profit is not None else "non disponible"
+
+        text = (
+            f"{emoji} *[CAPITAL.COM]* {epic} — position en cours\n"
+            f"PnL : *{profit_text}*\n\n"
+            f"Entrée : `{level}`\n"
+            f"Stop : `{stop_level}`\n"
+            f"Objectif : `{profit_level}`\n"
+            f"Taille : `{size}`"
+        )
+        send_message(bot_token, chat_id, text)
+
+
+def handle_status_command(client: ExchangeClient, capital_client, bot_token: str, chat_id: str):
+    """Répond à /status ou au bouton 'Statut des positions': crypto ET Capital.com."""
     open_positions = get_open_positions()
 
     if not open_positions:
-        send_message(bot_token, chat_id, "Aucune position ouverte actuellement.")
-        return
+        send_message(bot_token, chat_id, "Aucune position crypto ouverte actuellement.")
+    else:
+        for pos in open_positions:
+            try:
+                df = client.fetch_ohlcv(pos["symbol"], "15m", limit=1)
+                current_price = float(df.iloc[-1]["close"])
+                send_position_status(bot_token, chat_id, pos, current_price)
+            except Exception as e:
+                send_message(bot_token, chat_id, f"❌ Impossible de récupérer le statut de {pos['symbol']}: {e}")
 
-    for pos in open_positions:
-        try:
-            df = client.fetch_ohlcv(pos["symbol"], "15m", limit=1)
-            current_price = float(df.iloc[-1]["close"])
-            send_position_status(bot_token, chat_id, pos, current_price)
-        except Exception as e:
-            send_message(bot_token, chat_id, f"❌ Impossible de récupérer le statut de {pos['symbol']}: {e}")
+    if capital_client:
+        _send_capital_positions_status(capital_client, bot_token, chat_id)
 
 
 def handle_buy(client: ExchangeClient, config: dict, symbol: str) -> str:
@@ -130,7 +164,8 @@ def run_listener():
     if chat_id_env:
         send_message(bot_token, chat_id_env,
                       "🤖 NOVA est en ligne. Utilise le bouton ci-dessous ou tape /status "
-                      "pour voir l'état de tes positions ouvertes à tout moment.", keyboard=True)
+                      "pour voir l'état de tes positions ouvertes (crypto + Capital.com) à tout moment.",
+                      keyboard=True)
 
     while True:
         try:
@@ -147,7 +182,7 @@ def run_listener():
                 message = update.get("message")
                 if message and message.get("text", "").strip() in ("/status", "📊 Statut des positions"):
                     try:
-                        handle_status_command(client, bot_token, message["chat"]["id"])
+                        handle_status_command(client, capital_client, bot_token, message["chat"]["id"])
                     except Exception as e:
                         logger.error(f"Erreur lors du /status: {e}")
                     continue
