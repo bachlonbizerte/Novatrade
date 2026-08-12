@@ -91,7 +91,9 @@ def _auto_buy(client, config: dict, symbol: str) -> str:
 
 def scan_once(config: dict, client, bot_token: str, chat_id: str):
     max_duration = config["risk"].get("max_position_duration_minutes", 60)
-    closed_trades = check_and_close_positions(client, max_duration_minutes=max_duration)
+    min_profit_to_close_pct = config["risk"].get("min_profit_to_close_pct", 0.5)
+    closed_trades = check_and_close_positions(client, max_duration_minutes=max_duration,
+                                               min_profit_to_close_pct=min_profit_to_close_pct)
     if closed_trades and bot_token and chat_id:
         for t in closed_trades:
             emoji = "🟢" if t["pnl_pct"] > 0 else "🔴"
