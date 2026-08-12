@@ -114,7 +114,7 @@ def check_capital_closed_positions(capital_client, path: str = CAPITAL_SNAPSHOT_
         if deal_id:
             current_snapshot[deal_id] = {
                 "epic": p.get("market", {}).get("epic", "?"),
-                "profit": pos.get("profit"),
+                "profit": pos.get("upl"),
                 "direction": pos.get("direction"),
                 "level": pos.get("level"),
                 "size": pos.get("size"),
@@ -151,7 +151,7 @@ def monitor_capital_positions_quick(capital_client, bot_token: str, chat_id: str
     positions = get_open_capital_positions(capital_client)
     for p in positions:
         pos = p.get("position", {})
-        profit = pos.get("profit")
+        profit = pos.get("upl")
         deal_id = pos.get("dealId")
         epic = p.get("market", {}).get("epic", "?")
 
