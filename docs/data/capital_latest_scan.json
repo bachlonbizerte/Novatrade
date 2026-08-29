@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-29T20:25:18.443608+00:00",
+  "generated_at": "2026-08-29T20:30:37.502250+00:00",
   "results": [
     {
       "symbol": "GOLD",
@@ -106,7 +106,7 @@
       "recommendation": "ATTENDRE",
       "confidence": "moyenne",
       "reasoning": [
-        "Analyse technique interne multi-timeframe: 54/100 (consensus: MIXTE)",
+        "Analyse technique interne multi-timeframe: 54/100 (consensus: ATTENDRE)",
         "Score bas\u00e9 uniquement sur l'analyse interne (pas de croisement TradingView pour cet instrument)"
       ],
       "entry_price": 66.367,
@@ -124,7 +124,7 @@
         "internal_multi_timeframe": {
           "symbol": "SILVER",
           "consolidated_score": 54,
-          "consensus": "MIXTE",
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "SILVER",
@@ -174,9 +174,26 @@
             },
             "4h": {
               "symbol": "SILVER",
-              "score": 0,
-              "recommendation": "ERREUR",
-              "error": "HTTPSConnectionPool(host='demo-api-capital.backend-capital.com', port=443): Read timed out."
+              "score": 54,
+              "recommendation": "ATTENDRE",
+              "price": 66.367,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 42.1,
+                "macd_hist": -0.3242,
+                "volume_ratio": 0.17,
+                "support": 62.57,
+                "resistance": 71.164,
+                "position_in_range_pct": 44.2,
+                "volatility_pct": 1.83,
+                "breakdown": {
+                  "trend": "15/25",
+                  "momentum": "10/20",
+                  "volume": "0/20",
+                  "structure": "14/20",
+                  "risk": "15/15"
+                }
+              }
             }
           }
         }
