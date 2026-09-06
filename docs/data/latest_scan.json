@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-06T07:13:30.056335+00:00",
+  "generated_at": "2026-09-06T07:19:33.300676+00:00",
   "results": [
     {
       "symbol": "BTC/USDT",
-      "final_score": 47,
-      "recommendation": "ATTENDRE",
-      "confidence": "haute",
+      "final_score": 24,
+      "recommendation": "PASSER",
+      "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 54/100 (consensus: MIXTE)",
-        "TradingView: SELL (4 achat / 13 vente / 9 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
+        "Analyse interne multi-timeframe: 56/100 (consensus: MIXTE)",
+        "TradingView: STRONG_SELL (0 achat / 16 vente / 10 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
       ],
-      "entry_price": 79680.53,
-      "stop_price": 78883.7247,
-      "target_price": 81274.1406,
+      "entry_price": 79793.44,
+      "stop_price": 78995.5056,
+      "target_price": 81389.3088,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -24,48 +24,48 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "BTC/USDT",
-          "consolidated_score": 54,
+          "consolidated_score": 56,
           "consensus": "MIXTE",
           "per_timeframe": {
             "15m": {
               "symbol": "BTC/USDT",
-              "score": 43,
+              "score": 39,
               "recommendation": "PASSER",
-              "price": 79680.53,
+              "price": 79793.44,
               "details": {
                 "trend": "baissi\u00e8re",
-                "rsi": 25.1,
-                "macd_hist": -26.6623,
-                "volume_ratio": 0.7,
-                "support": 79676.66,
+                "rsi": 36.9,
+                "macd_hist": -23.5215,
+                "volume_ratio": 0.24,
+                "support": 79577.0,
                 "resistance": 80107.99,
-                "position_in_range_pct": 0.9,
-                "volatility_pct": 0.13,
+                "position_in_range_pct": 40.8,
+                "volatility_pct": 0.14,
                 "breakdown": {
                   "trend": "0/25",
-                  "momentum": "8/20",
+                  "momentum": "10/20",
                   "volume": "0/20",
-                  "structure": "20/20",
+                  "structure": "14/20",
                   "risk": "15/15"
                 }
               }
             },
             "1h": {
               "symbol": "BTC/USDT",
-              "score": 54,
+              "score": 64,
               "recommendation": "ATTENDRE",
-              "price": 79680.53,
+              "price": 79793.44,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 37.7,
-                "macd_hist": -10.8626,
-                "volume_ratio": 0.15,
+                "rsi": 40.8,
+                "macd_hist": -3.6569,
+                "volume_ratio": 0.35,
                 "support": 78660.0,
                 "resistance": 81423.03,
-                "position_in_range_pct": 36.9,
-                "volatility_pct": 0.25,
+                "position_in_range_pct": 41.0,
+                "volatility_pct": 0.26,
                 "breakdown": {
-                  "trend": "15/25",
+                  "trend": "25/25",
                   "momentum": "10/20",
                   "volume": "0/20",
                   "structure": "14/20",
@@ -77,21 +77,128 @@
               "symbol": "BTC/USDT",
               "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 79680.53,
+              "price": 79793.44,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 32.9,
-                "macd_hist": -80.1733,
-                "volume_ratio": 0.54,
+                "rsi": 33.7,
+                "macd_hist": -72.9677,
+                "volume_ratio": 0.57,
                 "support": 76264.0,
                 "resistance": 82300.0,
-                "position_in_range_pct": 56.6,
-                "volatility_pct": 0.75,
+                "position_in_range_pct": 58.5,
+                "volatility_pct": 0.76,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
                   "volume": "0/20",
                   "structure": "8/20",
+                  "risk": "15/15"
+                }
+              }
+            }
+          }
+        },
+        "tradingview": {
+          "recommendation": "STRONG_SELL",
+          "score": 0,
+          "buy_signals": 0,
+          "sell_signals": 16,
+          "neutral_signals": 10
+        }
+      }
+    },
+    {
+      "symbol": "ETH/USDT",
+      "final_score": 32,
+      "recommendation": "PASSER",
+      "confidence": "basse",
+      "reasoning": [
+        "Analyse interne multi-timeframe: 62/100 (consensus: MIXTE)",
+        "TradingView: SELL (4 achat / 13 vente / 9 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
+        "Historique ETH/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
+      ],
+      "entry_price": 2496.29,
+      "stop_price": 2471.3271,
+      "target_price": 2546.2158,
+      "dynamic_take_profit_pct": 2.0,
+      "suggested_amount_usdt": 0,
+      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
+      "symbol_history": {
+        "num_trades": 3,
+        "win_rate_pct": 33.3
+      },
+      "breakdown": {
+        "internal_multi_timeframe": {
+          "symbol": "ETH/USDT",
+          "consolidated_score": 62,
+          "consensus": "MIXTE",
+          "per_timeframe": {
+            "15m": {
+              "symbol": "ETH/USDT",
+              "score": 64,
+              "recommendation": "ATTENDRE",
+              "price": 2496.29,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 38.9,
+                "macd_hist": -2.3844,
+                "volume_ratio": 0.51,
+                "support": 2472.86,
+                "resistance": 2523.97,
+                "position_in_range_pct": 45.8,
+                "volatility_pct": 0.3,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "10/20",
+                  "volume": "0/20",
+                  "structure": "14/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "1h": {
+              "symbol": "ETH/USDT",
+              "score": 72,
+              "recommendation": "ACHETER",
+              "price": 2496.29,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 58.6,
+                "macd_hist": 1.7485,
+                "volume_ratio": 1.04,
+                "support": 2431.61,
+                "resistance": 2546.66,
+                "position_in_range_pct": 56.2,
+                "volatility_pct": 0.54,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "12/20",
+                  "volume": "12/20",
+                  "structure": "8/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "4h": {
+              "symbol": "ETH/USDT",
+              "score": 56,
+              "recommendation": "ATTENDRE",
+              "price": 2496.29,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 46.9,
+                "macd_hist": 2.9226,
+                "volume_ratio": 0.68,
+                "support": 2356.41,
+                "resistance": 2546.66,
+                "position_in_range_pct": 73.5,
+                "volatility_pct": 1.09,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "16/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
                   "risk": "15/15"
                 }
               }
@@ -108,125 +215,18 @@
       }
     },
     {
-      "symbol": "ETH/USDT",
-      "final_score": 65,
-      "recommendation": "ATTENDRE",
+      "symbol": "SOL/USDT",
+      "final_score": 35,
+      "recommendation": "PASSER",
       "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 58/100 (consensus: ATTENDRE)",
-        "TradingView: BUY (14 achat / 3 vente / 9 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
-        "Historique ETH/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
+        "Analyse interne multi-timeframe: 59/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (6 achat / 10 vente / 10 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
       ],
-      "entry_price": 2499.84,
-      "stop_price": 2474.8416,
-      "target_price": 2549.8368,
-      "dynamic_take_profit_pct": 2.0,
-      "suggested_amount_usdt": 0,
-      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
-      "symbol_history": {
-        "num_trades": 3,
-        "win_rate_pct": 33.3
-      },
-      "breakdown": {
-        "internal_multi_timeframe": {
-          "symbol": "ETH/USDT",
-          "consolidated_score": 58,
-          "consensus": "ATTENDRE",
-          "per_timeframe": {
-            "15m": {
-              "symbol": "ETH/USDT",
-              "score": 58,
-              "recommendation": "ATTENDRE",
-              "price": 2499.84,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 36.1,
-                "macd_hist": -1.477,
-                "volume_ratio": 0.96,
-                "support": 2472.86,
-                "resistance": 2523.97,
-                "position_in_range_pct": 52.8,
-                "volatility_pct": 0.25,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "10/20",
-                  "volume": "0/20",
-                  "structure": "8/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "1h": {
-              "symbol": "ETH/USDT",
-              "score": 60,
-              "recommendation": "ATTENDRE",
-              "price": 2499.93,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 61.1,
-                "macd_hist": 1.9808,
-                "volume_ratio": 0.26,
-                "support": 2431.61,
-                "resistance": 2546.66,
-                "position_in_range_pct": 59.4,
-                "volatility_pct": 0.49,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "12/20",
-                  "volume": "0/20",
-                  "structure": "8/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "4h": {
-              "symbol": "ETH/USDT",
-              "score": 56,
-              "recommendation": "ATTENDRE",
-              "price": 2499.93,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 47.8,
-                "macd_hist": 3.1549,
-                "volume_ratio": 0.56,
-                "support": 2356.41,
-                "resistance": 2546.66,
-                "position_in_range_pct": 75.4,
-                "volatility_pct": 1.05,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "16/20",
-                  "volume": "0/20",
-                  "structure": "0/20",
-                  "risk": "15/15"
-                }
-              }
-            }
-          }
-        },
-        "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 14,
-          "sell_signals": 3,
-          "neutral_signals": 9
-        }
-      }
-    },
-    {
-      "symbol": "SOL/USDT",
-      "final_score": 69,
-      "recommendation": "ATTENDRE",
-      "confidence": "haute",
-      "reasoning": [
-        "Analyse interne multi-timeframe: 56/100 (consensus: ATTENDRE)",
-        "TradingView: BUY (11 achat / 6 vente / 9 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
-      ],
-      "entry_price": 105.01,
-      "stop_price": 103.9599,
-      "target_price": 107.1102,
+      "entry_price": 105.18,
+      "stop_price": 104.1282,
+      "target_price": 107.2836,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -237,22 +237,22 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "SOL/USDT",
-          "consolidated_score": 56,
+          "consolidated_score": 59,
           "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "SOL/USDT",
               "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 105.01,
+              "price": 105.18,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 31.1,
-                "macd_hist": -0.1522,
-                "volume_ratio": 0.99,
+                "rsi": 40.4,
+                "macd_hist": -0.1813,
+                "volume_ratio": 0.31,
                 "support": 102.94,
                 "resistance": 107.07,
-                "position_in_range_pct": 50.1,
+                "position_in_range_pct": 54.2,
                 "volatility_pct": 0.52,
                 "breakdown": {
                   "trend": "25/25",
@@ -265,41 +265,18 @@
             },
             "1h": {
               "symbol": "SOL/USDT",
-              "score": 60,
-              "recommendation": "ATTENDRE",
-              "price": 105.01,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 55.5,
-                "macd_hist": 0.1711,
-                "volume_ratio": 0.36,
-                "support": 100.21,
-                "resistance": 107.07,
-                "position_in_range_pct": 70.0,
-                "volatility_pct": 0.85,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "12/20",
-                  "volume": "0/20",
-                  "structure": "8/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "4h": {
-              "symbol": "SOL/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 105.01,
+              "price": 105.18,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 55.7,
-                "macd_hist": 0.3063,
-                "volume_ratio": 0.94,
-                "support": 97.38,
-                "resistance": 107.48,
-                "position_in_range_pct": 75.5,
-                "volatility_pct": 1.44,
+                "rsi": 56.9,
+                "macd_hist": 0.1819,
+                "volume_ratio": 0.71,
+                "support": 100.21,
+                "resistance": 107.07,
+                "position_in_range_pct": 72.4,
+                "volatility_pct": 0.87,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -308,31 +285,54 @@
                   "risk": "15/15"
                 }
               }
+            },
+            "4h": {
+              "symbol": "SOL/USDT",
+              "score": 64,
+              "recommendation": "ATTENDRE",
+              "price": 105.18,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 56.7,
+                "macd_hist": 0.3172,
+                "volume_ratio": 1.02,
+                "support": 97.38,
+                "resistance": 107.48,
+                "position_in_range_pct": 77.2,
+                "volatility_pct": 1.46,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "12/20",
+                  "volume": "12/20",
+                  "structure": "0/20",
+                  "risk": "15/15"
+                }
+              }
             }
           }
         },
         "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 11,
-          "sell_signals": 6,
-          "neutral_signals": 9
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 6,
+          "sell_signals": 10,
+          "neutral_signals": 10
         }
       }
     },
     {
       "symbol": "BNB/USDT",
-      "final_score": 47,
+      "final_score": 46,
       "recommendation": "ATTENDRE",
       "confidence": "haute",
       "reasoning": [
-        "Analyse interne multi-timeframe: 54/100 (consensus: MIXTE)",
-        "TradingView: SELL (5 achat / 12 vente / 9 neutre)",
+        "Analyse interne multi-timeframe: 52/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (2 achat / 14 vente / 10 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 758.43,
-      "stop_price": 750.8457,
-      "target_price": 773.5986,
+      "entry_price": 758.38,
+      "stop_price": 750.7962,
+      "target_price": 773.5476,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -343,27 +343,27 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "BNB/USDT",
-          "consolidated_score": 54,
-          "consensus": "MIXTE",
+          "consolidated_score": 52,
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "BNB/USDT",
-              "score": 70,
-              "recommendation": "ACHETER",
-              "price": 758.43,
+              "score": 60,
+              "recommendation": "ATTENDRE",
+              "price": 758.38,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 27.8,
-                "macd_hist": -0.1957,
-                "volume_ratio": 1.13,
-                "support": 758.18,
+                "rsi": 30.9,
+                "macd_hist": -0.3004,
+                "volume_ratio": 0.52,
+                "support": 756.7,
                 "resistance": 779.77,
-                "position_in_range_pct": 1.2,
-                "volatility_pct": 0.27,
+                "position_in_range_pct": 7.3,
+                "volatility_pct": 0.28,
                 "breakdown": {
                   "trend": "15/25",
-                  "momentum": "8/20",
-                  "volume": "12/20",
+                  "momentum": "10/20",
+                  "volume": "0/20",
                   "structure": "20/20",
                   "risk": "15/15"
                 }
@@ -373,16 +373,16 @@
               "symbol": "BNB/USDT",
               "score": 56,
               "recommendation": "ATTENDRE",
-              "price": 758.43,
+              "price": 758.38,
               "details": {
                 "trend": "haussi\u00e8re",
                 "rsi": 12.1,
-                "macd_hist": -2.951,
-                "volume_ratio": 0.15,
+                "macd_hist": -2.9542,
+                "volume_ratio": 0.34,
                 "support": 708.88,
                 "resistance": 780.64,
                 "position_in_range_pct": 69.0,
-                "volatility_pct": 0.56,
+                "volatility_pct": 0.57,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "8/20",
@@ -396,16 +396,16 @@
               "symbol": "BNB/USDT",
               "score": 46,
               "recommendation": "ATTENDRE",
-              "price": 758.43,
+              "price": 758.38,
               "details": {
                 "trend": "haussi\u00e8re",
                 "rsi": 66.6,
-                "macd_hist": 3.499,
-                "volume_ratio": 0.6,
+                "macd_hist": 3.4959,
+                "volume_ratio": 0.66,
                 "support": 674.6,
                 "resistance": 780.64,
-                "position_in_range_pct": 79.1,
-                "volatility_pct": 1.64,
+                "position_in_range_pct": 79.0,
+                "volatility_pct": 1.66,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
@@ -420,25 +420,25 @@
         "tradingview": {
           "recommendation": "SELL",
           "score": 25,
-          "buy_signals": 5,
-          "sell_signals": 12,
-          "neutral_signals": 9
+          "buy_signals": 2,
+          "sell_signals": 14,
+          "neutral_signals": 10
         }
       }
     },
     {
       "symbol": "XRP/USDT",
-      "final_score": 71,
-      "recommendation": "ATTENDRE",
-      "confidence": "haute",
+      "final_score": 25,
+      "recommendation": "PASSER",
+      "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 60/100 (consensus: ATTENDRE)",
-        "TradingView: BUY (10 achat / 7 vente / 9 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
+        "Analyse interne multi-timeframe: 58/100 (consensus: MIXTE)",
+        "TradingView: STRONG_SELL (1 achat / 16 vente / 9 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
       ],
-      "entry_price": 1.4136,
-      "stop_price": 1.399464,
-      "target_price": 1.441872,
+      "entry_price": 1.4149,
+      "stop_price": 1.400751,
+      "target_price": 1.443198,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -449,27 +449,27 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "XRP/USDT",
-          "consolidated_score": 60,
-          "consensus": "ATTENDRE",
+          "consolidated_score": 58,
+          "consensus": "MIXTE",
           "per_timeframe": {
             "15m": {
               "symbol": "XRP/USDT",
-              "score": 57,
-              "recommendation": "ATTENDRE",
-              "price": 1.4136,
+              "score": 39,
+              "recommendation": "PASSER",
+              "price": 1.4149,
               "details": {
                 "trend": "baissi\u00e8re",
-                "rsi": 28.1,
-                "macd_hist": -0.0009,
-                "volume_ratio": 2.01,
+                "rsi": 37.1,
+                "macd_hist": -0.0011,
+                "volume_ratio": 0.47,
                 "support": 1.4012,
                 "resistance": 1.4327,
-                "position_in_range_pct": 39.4,
-                "volatility_pct": 0.35,
+                "position_in_range_pct": 43.5,
+                "volatility_pct": 0.38,
                 "breakdown": {
                   "trend": "0/25",
-                  "momentum": "8/20",
-                  "volume": "20/20",
+                  "momentum": "10/20",
+                  "volume": "0/20",
                   "structure": "14/20",
                   "risk": "15/15"
                 }
@@ -477,21 +477,21 @@
             },
             "1h": {
               "symbol": "XRP/USDT",
-              "score": 64,
-              "recommendation": "ATTENDRE",
-              "price": 1.4136,
+              "score": 70,
+              "recommendation": "ACHETER",
+              "price": 1.4149,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 38.7,
-                "macd_hist": -0.0001,
-                "volume_ratio": 0.42,
+                "rsi": 39.6,
+                "macd_hist": 0.0,
+                "volume_ratio": 0.77,
                 "support": 1.3836,
                 "resistance": 1.4625,
-                "position_in_range_pct": 38.0,
-                "volatility_pct": 0.64,
+                "position_in_range_pct": 39.7,
+                "volatility_pct": 0.66,
                 "breakdown": {
                   "trend": "25/25",
-                  "momentum": "10/20",
+                  "momentum": "16/20",
                   "volume": "0/20",
                   "structure": "14/20",
                   "risk": "15/15"
@@ -502,16 +502,16 @@
               "symbol": "XRP/USDT",
               "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 1.4136,
+              "price": 1.4149,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 33.5,
-                "macd_hist": -0.0007,
-                "volume_ratio": 0.39,
+                "rsi": 33.9,
+                "macd_hist": -0.0006,
+                "volume_ratio": 0.44,
                 "support": 1.3098,
                 "resistance": 1.4835,
-                "position_in_range_pct": 59.8,
-                "volatility_pct": 1.46,
+                "position_in_range_pct": 60.5,
+                "volatility_pct": 1.49,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -524,28 +524,28 @@
           }
         },
         "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 10,
-          "sell_signals": 7,
+          "recommendation": "STRONG_SELL",
+          "score": 0,
+          "buy_signals": 1,
+          "sell_signals": 16,
           "neutral_signals": 9
         }
       }
     },
     {
       "symbol": "ADA/USDT",
-      "final_score": 42,
+      "final_score": 29,
       "recommendation": "PASSER",
       "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 61/100 (consensus: MIXTE)",
-        "TradingView: NEUTRAL (9 achat / 11 vente / 6 neutre)",
+        "Analyse interne multi-timeframe: 57/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (4 achat / 14 vente / 8 neutre)",
         "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
         "Historique ADA/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
       ],
-      "entry_price": 0.2186,
-      "stop_price": 0.216414,
-      "target_price": 0.222972,
+      "entry_price": 0.2189,
+      "stop_price": 0.216711,
+      "target_price": 0.223278,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -556,27 +556,27 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "ADA/USDT",
-          "consolidated_score": 61,
-          "consensus": "MIXTE",
+          "consolidated_score": 57,
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "ADA/USDT",
-              "score": 78,
-              "recommendation": "ACHETER",
-              "price": 0.2186,
+              "score": 60,
+              "recommendation": "ATTENDRE",
+              "price": 0.2189,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 24.7,
-                "macd_hist": -0.0003,
-                "volume_ratio": 2.27,
-                "support": 0.218,
+                "rsi": 30.3,
+                "macd_hist": -0.0004,
+                "volume_ratio": 0.39,
+                "support": 0.2173,
                 "resistance": 0.2238,
-                "position_in_range_pct": 10.3,
-                "volatility_pct": 0.58,
+                "position_in_range_pct": 24.6,
+                "volatility_pct": 0.61,
                 "breakdown": {
                   "trend": "15/25",
-                  "momentum": "8/20",
-                  "volume": "20/20",
+                  "momentum": "10/20",
+                  "volume": "0/20",
                   "structure": "20/20",
                   "risk": "15/15"
                 }
@@ -586,16 +586,16 @@
               "symbol": "ADA/USDT",
               "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 0.2186,
+              "price": 0.2189,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 42.0,
-                "macd_hist": -0.0002,
-                "volume_ratio": 0.4,
+                "rsi": 42.9,
+                "macd_hist": -0.0001,
+                "volume_ratio": 0.84,
                 "support": 0.2091,
                 "resistance": 0.2249,
-                "position_in_range_pct": 60.1,
-                "volatility_pct": 1.07,
+                "position_in_range_pct": 62.0,
+                "volatility_pct": 1.11,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -609,16 +609,16 @@
               "symbol": "ADA/USDT",
               "score": 56,
               "recommendation": "ATTENDRE",
-              "price": 0.2185,
+              "price": 0.2189,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 46.7,
+                "rsi": 47.2,
                 "macd_hist": 0.0001,
-                "volume_ratio": 0.48,
+                "volume_ratio": 0.57,
                 "support": 0.1894,
                 "resistance": 0.2272,
-                "position_in_range_pct": 77.0,
-                "volatility_pct": 2.51,
+                "position_in_range_pct": 78.0,
+                "volatility_pct": 2.54,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "16/20",
@@ -631,27 +631,27 @@
           }
         },
         "tradingview": {
-          "recommendation": "NEUTRAL",
-          "score": 50,
-          "buy_signals": 9,
-          "sell_signals": 11,
-          "neutral_signals": 6
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 4,
+          "sell_signals": 14,
+          "neutral_signals": 8
         }
       }
     },
     {
       "symbol": "DOGE/USDT",
-      "final_score": 73,
-      "recommendation": "ATTENDRE",
-      "confidence": "haute",
+      "final_score": 37,
+      "recommendation": "PASSER",
+      "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 64/100 (consensus: MIXTE)",
-        "TradingView: BUY (15 achat / 1 vente / 10 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
+        "Analyse interne multi-timeframe: 61/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (5 achat / 11 vente / 10 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
       ],
-      "entry_price": 0.0907,
-      "stop_price": 0.089793,
-      "target_price": 0.092514,
+      "entry_price": 0.091,
+      "stop_price": 0.09009,
+      "target_price": 0.09282,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -662,49 +662,49 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "DOGE/USDT",
-          "consolidated_score": 64,
-          "consensus": "MIXTE",
+          "consolidated_score": 61,
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "DOGE/USDT",
-              "score": 76,
-              "recommendation": "ACHETER",
-              "price": 0.0907,
+              "score": 58,
+              "recommendation": "ATTENDRE",
+              "price": 0.091,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 39.5,
+                "rsi": 47.2,
                 "macd_hist": -0.0,
-                "volume_ratio": 1.0,
+                "volume_ratio": 0.34,
                 "support": 0.0893,
-                "resistance": 0.0921,
-                "position_in_range_pct": 49.5,
-                "volatility_pct": 0.58,
+                "resistance": 0.092,
+                "position_in_range_pct": 63.7,
+                "volatility_pct": 0.62,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
-                  "volume": "12/20",
-                  "structure": "14/20",
+                  "volume": "0/20",
+                  "structure": "8/20",
                   "risk": "15/15"
                 }
               }
             },
             "1h": {
               "symbol": "DOGE/USDT",
-              "score": 56,
+              "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 0.0907,
+              "price": 0.091,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 30.0,
+                "rsi": 31.1,
                 "macd_hist": -0.0001,
-                "volume_ratio": 0.19,
+                "volume_ratio": 0.35,
                 "support": 0.0838,
                 "resistance": 0.0951,
-                "position_in_range_pct": 60.9,
-                "volatility_pct": 1.29,
+                "position_in_range_pct": 63.9,
+                "volatility_pct": 1.31,
                 "breakdown": {
                   "trend": "25/25",
-                  "momentum": "8/20",
+                  "momentum": "10/20",
                   "volume": "0/20",
                   "structure": "8/20",
                   "risk": "15/15"
@@ -715,16 +715,16 @@
               "symbol": "DOGE/USDT",
               "score": 64,
               "recommendation": "ATTENDRE",
-              "price": 0.0907,
+              "price": 0.091,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 59.7,
-                "macd_hist": 0.0005,
-                "volume_ratio": 1.07,
+                "rsi": 61.0,
+                "macd_hist": 0.0006,
+                "volume_ratio": 1.13,
                 "support": 0.0801,
                 "resistance": 0.0951,
-                "position_in_range_pct": 70.4,
-                "volatility_pct": 2.28,
+                "position_in_range_pct": 72.6,
+                "volatility_pct": 2.27,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -737,28 +737,28 @@
           }
         },
         "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 15,
-          "sell_signals": 1,
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 5,
+          "sell_signals": 11,
           "neutral_signals": 10
         }
       }
     },
     {
       "symbol": "AVAX/USDT",
-      "final_score": 45,
-      "recommendation": "ATTENDRE",
+      "final_score": 42,
+      "recommendation": "PASSER",
       "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 50/100 (consensus: ATTENDRE)",
-        "TradingView: BUY (14 achat / 3 vente / 9 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
+        "Analyse interne multi-timeframe: 53/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (4 achat / 13 vente / 9 neutre)",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique AVAX/USDT: 0.0% de r\u00e9ussite sur 4 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
       ],
-      "entry_price": 7.627,
-      "stop_price": 7.55073,
-      "target_price": 7.77954,
+      "entry_price": 7.639,
+      "stop_price": 7.56261,
+      "target_price": 7.79178,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -769,26 +769,26 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "AVAX/USDT",
-          "consolidated_score": 50,
+          "consolidated_score": 53,
           "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "AVAX/USDT",
-              "score": 52,
+              "score": 64,
               "recommendation": "ATTENDRE",
-              "price": 7.627,
+              "price": 7.639,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 25.8,
-                "macd_hist": -0.0068,
-                "volume_ratio": 0.86,
+                "rsi": 32.5,
+                "macd_hist": -0.0072,
+                "volume_ratio": 0.3,
                 "support": 7.567,
                 "resistance": 7.741,
-                "position_in_range_pct": 34.5,
-                "volatility_pct": 0.39,
+                "position_in_range_pct": 41.4,
+                "volatility_pct": 0.4,
                 "breakdown": {
-                  "trend": "15/25",
-                  "momentum": "8/20",
+                  "trend": "25/25",
+                  "momentum": "10/20",
                   "volume": "0/20",
                   "structure": "14/20",
                   "risk": "15/15"
@@ -799,16 +799,16 @@
               "symbol": "AVAX/USDT",
               "score": 46,
               "recommendation": "ATTENDRE",
-              "price": 7.627,
+              "price": 7.639,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 50.6,
-                "macd_hist": -0.003,
-                "volume_ratio": 0.16,
+                "rsi": 52.1,
+                "macd_hist": -0.0022,
+                "volume_ratio": 0.32,
                 "support": 7.269,
                 "resistance": 7.741,
-                "position_in_range_pct": 75.8,
-                "volatility_pct": 0.74,
+                "position_in_range_pct": 78.4,
+                "volatility_pct": 0.76,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
@@ -822,16 +822,16 @@
               "symbol": "AVAX/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 7.627,
+              "price": 7.639,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 58.5,
-                "macd_hist": 0.021,
-                "volume_ratio": 0.49,
+                "rsi": 59.6,
+                "macd_hist": 0.0218,
+                "volume_ratio": 0.53,
                 "support": 7.011,
                 "resistance": 7.741,
-                "position_in_range_pct": 84.4,
-                "volatility_pct": 1.27,
+                "position_in_range_pct": 86.0,
+                "volatility_pct": 1.29,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -844,27 +844,27 @@
           }
         },
         "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 14,
-          "sell_signals": 3,
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 4,
+          "sell_signals": 13,
           "neutral_signals": 9
         }
       }
     },
     {
       "symbol": "LINK/USDT",
-      "final_score": 62,
+      "final_score": 47,
       "recommendation": "ATTENDRE",
-      "confidence": "basse",
+      "confidence": "haute",
       "reasoning": [
         "Analyse interne multi-timeframe: 54/100 (consensus: ATTENDRE)",
-        "TradingView: STRONG_BUY (15 achat / 1 vente / 10 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
+        "TradingView: SELL (6 achat / 11 vente / 9 neutre)",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 12.186,
-      "stop_price": 12.06414,
-      "target_price": 12.42972,
+      "entry_price": 12.199,
+      "stop_price": 12.07701,
+      "target_price": 12.44298,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -882,16 +882,16 @@
               "symbol": "LINK/USDT",
               "score": 64,
               "recommendation": "ATTENDRE",
-              "price": 12.186,
+              "price": 12.199,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 43.1,
-                "macd_hist": -0.0062,
-                "volume_ratio": 0.73,
+                "rsi": 47.9,
+                "macd_hist": -0.0092,
+                "volume_ratio": 0.31,
                 "support": 11.937,
                 "resistance": 12.462,
-                "position_in_range_pct": 47.4,
-                "volatility_pct": 0.54,
+                "position_in_range_pct": 49.9,
+                "volatility_pct": 0.56,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -905,16 +905,16 @@
               "symbol": "LINK/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 12.186,
+              "price": 12.199,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 54.1,
-                "macd_hist": 0.0046,
-                "volume_ratio": 0.17,
+                "rsi": 54.8,
+                "macd_hist": 0.0055,
+                "volume_ratio": 0.35,
                 "support": 11.464,
                 "resistance": 12.462,
-                "position_in_range_pct": 72.3,
-                "volatility_pct": 1.08,
+                "position_in_range_pct": 73.6,
+                "volatility_pct": 1.11,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -928,123 +928,16 @@
               "symbol": "LINK/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 12.189,
+              "price": 12.199,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 63.0,
-                "macd_hist": 0.0437,
-                "volume_ratio": 0.64,
+                "rsi": 63.5,
+                "macd_hist": 0.0443,
+                "volume_ratio": 0.68,
                 "support": 10.908,
                 "resistance": 12.462,
-                "position_in_range_pct": 82.4,
+                "position_in_range_pct": 83.1,
                 "volatility_pct": 2.01,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "12/20",
-                  "volume": "0/20",
-                  "structure": "0/20",
-                  "risk": "15/15"
-                }
-              }
-            }
-          }
-        },
-        "tradingview": {
-          "recommendation": "STRONG_BUY",
-          "score": 100,
-          "buy_signals": 15,
-          "sell_signals": 1,
-          "neutral_signals": 10
-        }
-      }
-    },
-    {
-      "symbol": "SUI/USDT",
-      "final_score": 30,
-      "recommendation": "PASSER",
-      "confidence": "basse",
-      "reasoning": [
-        "Analyse interne multi-timeframe: 59/100 (consensus: MIXTE)",
-        "TradingView: SELL (7 achat / 11 vente / 8 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
-        "Historique SUI/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
-      ],
-      "entry_price": 0.7874,
-      "stop_price": 0.779526,
-      "target_price": 0.803148,
-      "dynamic_take_profit_pct": 2.0,
-      "suggested_amount_usdt": 0,
-      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
-      "symbol_history": {
-        "num_trades": 3,
-        "win_rate_pct": 33.3
-      },
-      "breakdown": {
-        "internal_multi_timeframe": {
-          "symbol": "SUI/USDT",
-          "consolidated_score": 59,
-          "consensus": "MIXTE",
-          "per_timeframe": {
-            "15m": {
-              "symbol": "SUI/USDT",
-              "score": 78,
-              "recommendation": "ACHETER",
-              "price": 0.7874,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 23.5,
-                "macd_hist": -0.0008,
-                "volume_ratio": 2.17,
-                "support": 0.782,
-                "resistance": 0.813,
-                "position_in_range_pct": 17.4,
-                "volatility_pct": 0.63,
-                "breakdown": {
-                  "trend": "15/25",
-                  "momentum": "8/20",
-                  "volume": "20/20",
-                  "structure": "20/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "1h": {
-              "symbol": "SUI/USDT",
-              "score": 58,
-              "recommendation": "ATTENDRE",
-              "price": 0.7874,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 36.2,
-                "macd_hist": -0.0022,
-                "volume_ratio": 0.45,
-                "support": 0.739,
-                "resistance": 0.813,
-                "position_in_range_pct": 65.4,
-                "volatility_pct": 1.36,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "10/20",
-                  "volume": "0/20",
-                  "structure": "8/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "4h": {
-              "symbol": "SUI/USDT",
-              "score": 52,
-              "recommendation": "ATTENDRE",
-              "price": 0.7875,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 51.4,
-                "macd_hist": 0.0016,
-                "volume_ratio": 0.54,
-                "support": 0.6969,
-                "resistance": 0.813,
-                "position_in_range_pct": 78.0,
-                "volatility_pct": 2.49,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -1059,25 +952,132 @@
         "tradingview": {
           "recommendation": "SELL",
           "score": 25,
-          "buy_signals": 7,
+          "buy_signals": 6,
           "sell_signals": 11,
-          "neutral_signals": 8
+          "neutral_signals": 9
+        }
+      }
+    },
+    {
+      "symbol": "SUI/USDT",
+      "final_score": 28,
+      "recommendation": "PASSER",
+      "confidence": "basse",
+      "reasoning": [
+        "Analyse interne multi-timeframe: 55/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (2 achat / 14 vente / 10 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
+        "Historique SUI/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
+      ],
+      "entry_price": 0.7905,
+      "stop_price": 0.782595,
+      "target_price": 0.80631,
+      "dynamic_take_profit_pct": 2.0,
+      "suggested_amount_usdt": 0,
+      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
+      "symbol_history": {
+        "num_trades": 3,
+        "win_rate_pct": 33.3
+      },
+      "breakdown": {
+        "internal_multi_timeframe": {
+          "symbol": "SUI/USDT",
+          "consolidated_score": 55,
+          "consensus": "ATTENDRE",
+          "per_timeframe": {
+            "15m": {
+              "symbol": "SUI/USDT",
+              "score": 60,
+              "recommendation": "ATTENDRE",
+              "price": 0.7905,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 33.4,
+                "macd_hist": -0.0009,
+                "volume_ratio": 0.83,
+                "support": 0.782,
+                "resistance": 0.813,
+                "position_in_range_pct": 27.4,
+                "volatility_pct": 0.63,
+                "breakdown": {
+                  "trend": "15/25",
+                  "momentum": "10/20",
+                  "volume": "0/20",
+                  "structure": "20/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "1h": {
+              "symbol": "SUI/USDT",
+              "score": 58,
+              "recommendation": "ATTENDRE",
+              "price": 0.7905,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 38.3,
+                "macd_hist": -0.002,
+                "volume_ratio": 0.83,
+                "support": 0.739,
+                "resistance": 0.813,
+                "position_in_range_pct": 69.6,
+                "volatility_pct": 1.35,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "10/20",
+                  "volume": "0/20",
+                  "structure": "8/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "4h": {
+              "symbol": "SUI/USDT",
+              "score": 52,
+              "recommendation": "ATTENDRE",
+              "price": 0.7905,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 52.4,
+                "macd_hist": 0.0018,
+                "volume_ratio": 0.65,
+                "support": 0.6969,
+                "resistance": 0.813,
+                "position_in_range_pct": 80.6,
+                "volatility_pct": 2.48,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "12/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
+                  "risk": "15/15"
+                }
+              }
+            }
+          }
+        },
+        "tradingview": {
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 2,
+          "sell_signals": 14,
+          "neutral_signals": 10
         }
       }
     },
     {
       "symbol": "POL/USDT",
-      "final_score": 71,
+      "final_score": 45,
       "recommendation": "ATTENDRE",
-      "confidence": "haute",
+      "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 60/100 (consensus: MIXTE)",
-        "TradingView: BUY (14 achat / 3 vente / 9 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
+        "Analyse interne multi-timeframe: 58/100 (consensus: MIXTE)",
+        "TradingView: NEUTRAL (7 achat / 9 vente / 10 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
       ],
-      "entry_price": 0.0984,
-      "stop_price": 0.097416,
-      "target_price": 0.100368,
+      "entry_price": 0.0983,
+      "stop_price": 0.097317,
+      "target_price": 0.100266,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -1088,27 +1088,27 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "POL/USDT",
-          "consolidated_score": 60,
+          "consolidated_score": 58,
           "consensus": "MIXTE",
           "per_timeframe": {
             "15m": {
               "symbol": "POL/USDT",
-              "score": 70,
-              "recommendation": "ACHETER",
-              "price": 0.0984,
+              "score": 58,
+              "recommendation": "ATTENDRE",
+              "price": 0.0983,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 36.6,
+                "rsi": 32.8,
                 "macd_hist": -0.0002,
-                "volume_ratio": 1.01,
+                "volume_ratio": 0.24,
                 "support": 0.0949,
                 "resistance": 0.1004,
-                "position_in_range_pct": 62.3,
-                "volatility_pct": 0.78,
+                "position_in_range_pct": 61.7,
+                "volatility_pct": 0.75,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
-                  "volume": "12/20",
+                  "volume": "0/20",
                   "structure": "8/20",
                   "risk": "15/15"
                 }
@@ -1118,16 +1118,16 @@
               "symbol": "POL/USDT",
               "score": 21,
               "recommendation": "PASSER",
-              "price": 0.0984,
+              "price": 0.0983,
               "details": {
                 "trend": "baissi\u00e8re",
-                "rsi": 69.2,
+                "rsi": 69.1,
                 "macd_hist": 0.0001,
-                "volume_ratio": 0.45,
+                "volume_ratio": 0.66,
                 "support": 0.0909,
                 "resistance": 0.1004,
-                "position_in_range_pct": 78.3,
-                "volatility_pct": 1.42,
+                "position_in_range_pct": 78.1,
+                "volatility_pct": 1.45,
                 "breakdown": {
                   "trend": "0/25",
                   "momentum": "6/20",
@@ -1141,21 +1141,127 @@
               "symbol": "POL/USDT",
               "score": 80,
               "recommendation": "ACHETER",
-              "price": 0.0984,
+              "price": 0.0983,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 61.8,
+                "rsi": 61.7,
                 "macd_hist": 0.0008,
-                "volume_ratio": 1.55,
+                "volume_ratio": 1.61,
                 "support": 0.0863,
                 "resistance": 0.1093,
-                "position_in_range_pct": 52.4,
+                "position_in_range_pct": 52.3,
                 "volatility_pct": 2.21,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
                   "volume": "20/20",
                   "structure": "8/20",
+                  "risk": "15/15"
+                }
+              }
+            }
+          }
+        },
+        "tradingview": {
+          "recommendation": "NEUTRAL",
+          "score": 50,
+          "buy_signals": 7,
+          "sell_signals": 9,
+          "neutral_signals": 10
+        }
+      }
+    },
+    {
+      "symbol": "DOT/USDT",
+      "final_score": 48,
+      "recommendation": "ATTENDRE",
+      "confidence": "basse",
+      "reasoning": [
+        "Analyse interne multi-timeframe: 47/100 (consensus: ATTENDRE)",
+        "TradingView: BUY (14 achat / 3 vente / 9 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
+      ],
+      "entry_price": 0.937,
+      "stop_price": 0.92763,
+      "target_price": 0.95574,
+      "dynamic_take_profit_pct": 2.0,
+      "suggested_amount_usdt": 0,
+      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
+      "symbol_history": {
+        "num_trades": 5,
+        "win_rate_pct": 40.0
+      },
+      "breakdown": {
+        "internal_multi_timeframe": {
+          "symbol": "DOT/USDT",
+          "consolidated_score": 47,
+          "consensus": "ATTENDRE",
+          "per_timeframe": {
+            "15m": {
+              "symbol": "DOT/USDT",
+              "score": 52,
+              "recommendation": "ATTENDRE",
+              "price": 0.937,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 59.5,
+                "macd_hist": 0.0004,
+                "volume_ratio": 0.46,
+                "support": 0.907,
+                "resistance": 0.943,
+                "position_in_range_pct": 83.3,
+                "volatility_pct": 0.62,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "12/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "1h": {
+              "symbol": "DOT/USDT",
+              "score": 46,
+              "recommendation": "ATTENDRE",
+              "price": 0.937,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 71.9,
+                "macd_hist": 0.0008,
+                "volume_ratio": 0.69,
+                "support": 0.842,
+                "resistance": 0.943,
+                "position_in_range_pct": 94.1,
+                "volatility_pct": 1.07,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "6/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "4h": {
+              "symbol": "DOT/USDT",
+              "score": 46,
+              "recommendation": "ATTENDRE",
+              "price": 0.937,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 66.0,
+                "macd_hist": 0.0043,
+                "volume_ratio": 0.69,
+                "support": 0.808,
+                "resistance": 0.943,
+                "position_in_range_pct": 95.6,
+                "volatility_pct": 2.45,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "6/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
                   "risk": "15/15"
                 }
               }
@@ -1172,120 +1278,14 @@
       }
     },
     {
-      "symbol": "DOT/USDT",
-      "final_score": 51,
-      "recommendation": "ATTENDRE",
-      "confidence": "basse",
-      "reasoning": [
-        "Analyse interne multi-timeframe: 51/100 (consensus: MIXTE)",
-        "TradingView: BUY (15 achat / 2 vente / 9 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
-      ],
-      "entry_price": 0.936,
-      "stop_price": 0.92664,
-      "target_price": 0.95472,
-      "dynamic_take_profit_pct": 2.0,
-      "suggested_amount_usdt": 0,
-      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
-      "symbol_history": {
-        "num_trades": 5,
-        "win_rate_pct": 40.0
-      },
-      "breakdown": {
-        "internal_multi_timeframe": {
-          "symbol": "DOT/USDT",
-          "consolidated_score": 51,
-          "consensus": "MIXTE",
-          "per_timeframe": {
-            "15m": {
-              "symbol": "DOT/USDT",
-              "score": 72,
-              "recommendation": "ACHETER",
-              "price": 0.936,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 62.9,
-                "macd_hist": 0.0004,
-                "volume_ratio": 1.57,
-                "support": 0.907,
-                "resistance": 0.943,
-                "position_in_range_pct": 80.6,
-                "volatility_pct": 0.59,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "12/20",
-                  "volume": "20/20",
-                  "structure": "0/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "1h": {
-              "symbol": "DOT/USDT",
-              "score": 46,
-              "recommendation": "ATTENDRE",
-              "price": 0.936,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 70.7,
-                "macd_hist": 0.0007,
-                "volume_ratio": 0.45,
-                "support": 0.842,
-                "resistance": 0.943,
-                "position_in_range_pct": 93.1,
-                "volatility_pct": 1.05,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "6/20",
-                  "volume": "0/20",
-                  "structure": "0/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "4h": {
-              "symbol": "DOT/USDT",
-              "score": 46,
-              "recommendation": "ATTENDRE",
-              "price": 0.936,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 65.8,
-                "macd_hist": 0.0042,
-                "volume_ratio": 0.65,
-                "support": 0.808,
-                "resistance": 0.943,
-                "position_in_range_pct": 94.8,
-                "volatility_pct": 2.45,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "6/20",
-                  "volume": "0/20",
-                  "structure": "0/20",
-                  "risk": "15/15"
-                }
-              }
-            }
-          }
-        },
-        "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 15,
-          "sell_signals": 2,
-          "neutral_signals": 9
-        }
-      }
-    },
-    {
       "symbol": "TRX/USDT",
-      "final_score": 46,
-      "recommendation": "ATTENDRE",
-      "confidence": "basse",
+      "final_score": 41,
+      "recommendation": "PASSER",
+      "confidence": "haute",
       "reasoning": [
         "Analyse interne multi-timeframe: 44/100 (consensus: MIXTE)",
-        "TradingView: BUY (14 achat / 2 vente / 10 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
+        "TradingView: SELL (5 achat / 12 vente / 9 neutre)",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
       ],
       "entry_price": 0.3336,
       "stop_price": 0.330264,
@@ -1310,13 +1310,13 @@
               "price": 0.3336,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 58.6,
+                "rsi": 60.0,
                 "macd_hist": 0.0001,
-                "volume_ratio": 0.49,
+                "volume_ratio": 0.15,
                 "support": 0.3329,
                 "resistance": 0.3348,
                 "position_in_range_pct": 36.8,
-                "volatility_pct": 0.09,
+                "volatility_pct": 0.1,
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "12/20",
@@ -1335,11 +1335,11 @@
                 "trend": "haussi\u00e8re",
                 "rsi": 43.8,
                 "macd_hist": -0.0002,
-                "volume_ratio": 0.12,
+                "volume_ratio": 0.2,
                 "support": 0.3276,
                 "resistance": 0.3348,
                 "position_in_range_pct": 83.3,
-                "volatility_pct": 0.16,
+                "volatility_pct": 0.17,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -1358,7 +1358,7 @@
                 "trend": "baissi\u00e8re",
                 "rsi": 61.9,
                 "macd_hist": 0.0005,
-                "volume_ratio": 0.51,
+                "volume_ratio": 0.52,
                 "support": 0.3217,
                 "resistance": 0.3422,
                 "position_in_range_pct": 58.0,
@@ -1375,28 +1375,28 @@
           }
         },
         "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 14,
-          "sell_signals": 2,
-          "neutral_signals": 10
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 5,
+          "sell_signals": 12,
+          "neutral_signals": 9
         }
       }
     },
     {
       "symbol": "LTC/USDT",
-      "final_score": 52,
+      "final_score": 50,
       "recommendation": "ATTENDRE",
       "confidence": "haute",
       "reasoning": [
-        "Analyse interne multi-timeframe: 53/100 (consensus: ATTENDRE)",
-        "TradingView: SELL (6 achat / 10 vente / 10 neutre)",
+        "Analyse interne multi-timeframe: 50/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (4 achat / 13 vente / 9 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique LTC/USDT: 76.9% de r\u00e9ussite sur 13 trades pass\u00e9s \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 53.99,
-      "stop_price": 53.4501,
-      "target_price": 55.0698,
+      "entry_price": 54.1,
+      "stop_price": 53.559,
+      "target_price": 55.182,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -1407,26 +1407,26 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "LTC/USDT",
-          "consolidated_score": 53,
+          "consolidated_score": 50,
           "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "LTC/USDT",
-              "score": 58,
+              "score": 60,
               "recommendation": "ATTENDRE",
-              "price": 53.99,
+              "price": 54.1,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 25.6,
-                "macd_hist": -0.0575,
-                "volume_ratio": 0.64,
+                "rsi": 33.3,
+                "macd_hist": -0.0528,
+                "volume_ratio": 0.4,
                 "support": 53.66,
                 "resistance": 55.35,
-                "position_in_range_pct": 19.5,
-                "volatility_pct": 0.48,
+                "position_in_range_pct": 26.0,
+                "volatility_pct": 0.47,
                 "breakdown": {
                   "trend": "15/25",
-                  "momentum": "8/20",
+                  "momentum": "10/20",
                   "volume": "0/20",
                   "structure": "20/20",
                   "risk": "15/15"
@@ -1437,15 +1437,15 @@
               "symbol": "LTC/USDT",
               "score": 50,
               "recommendation": "ATTENDRE",
-              "price": 53.99,
+              "price": 54.1,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 38.0,
-                "macd_hist": -0.1594,
-                "volume_ratio": 0.14,
+                "rsi": 39.1,
+                "macd_hist": -0.1524,
+                "volume_ratio": 0.3,
                 "support": 49.8,
                 "resistance": 55.35,
-                "position_in_range_pct": 75.5,
+                "position_in_range_pct": 77.5,
                 "volatility_pct": 1.07,
                 "breakdown": {
                   "trend": "25/25",
@@ -1458,18 +1458,230 @@
             },
             "4h": {
               "symbol": "LTC/USDT",
-              "score": 52,
+              "score": 46,
               "recommendation": "ATTENDRE",
-              "price": 53.99,
+              "price": 54.1,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 64.8,
-                "macd_hist": 0.2595,
-                "volume_ratio": 0.78,
+                "rsi": 65.6,
+                "macd_hist": 0.2665,
+                "volume_ratio": 0.83,
                 "support": 47.41,
                 "resistance": 55.35,
-                "position_in_range_pct": 82.9,
+                "position_in_range_pct": 84.3,
                 "volatility_pct": 2.09,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "6/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
+                  "risk": "15/15"
+                }
+              }
+            }
+          }
+        },
+        "tradingview": {
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 4,
+          "sell_signals": 13,
+          "neutral_signals": 9
+        }
+      }
+    },
+    {
+      "symbol": "BCH/USDT",
+      "final_score": 34,
+      "recommendation": "PASSER",
+      "confidence": "basse",
+      "reasoning": [
+        "Analyse interne multi-timeframe: 57/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (4 achat / 13 vente / 9 neutre)",
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
+      ],
+      "entry_price": 259.1,
+      "stop_price": 256.509,
+      "target_price": 264.282,
+      "dynamic_take_profit_pct": 2.0,
+      "suggested_amount_usdt": 0,
+      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
+      "symbol_history": {
+        "num_trades": 2,
+        "win_rate_pct": 0.0
+      },
+      "breakdown": {
+        "internal_multi_timeframe": {
+          "symbol": "BCH/USDT",
+          "consolidated_score": 57,
+          "consensus": "ATTENDRE",
+          "per_timeframe": {
+            "15m": {
+              "symbol": "BCH/USDT",
+              "score": 64,
+              "recommendation": "ATTENDRE",
+              "price": 259.1,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 38.5,
+                "macd_hist": -0.4529,
+                "volume_ratio": 0.24,
+                "support": 254.8,
+                "resistance": 265.2,
+                "position_in_range_pct": 41.3,
+                "volatility_pct": 0.66,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "10/20",
+                  "volume": "0/20",
+                  "structure": "14/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "1h": {
+              "symbol": "BCH/USDT",
+              "score": 60,
+              "recommendation": "ATTENDRE",
+              "price": 259.1,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 52.9,
+                "macd_hist": 0.2716,
+                "volume_ratio": 0.63,
+                "support": 244.9,
+                "resistance": 265.2,
+                "position_in_range_pct": 70.0,
+                "volatility_pct": 1.23,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "12/20",
+                  "volume": "0/20",
+                  "structure": "8/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "4h": {
+              "symbol": "BCH/USDT",
+              "score": 52,
+              "recommendation": "ATTENDRE",
+              "price": 259.1,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 53.0,
+                "macd_hist": 0.7486,
+                "volume_ratio": 1.0,
+                "support": 239.1,
+                "resistance": 265.2,
+                "position_in_range_pct": 76.6,
+                "volatility_pct": 2.31,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "12/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
+                  "risk": "15/15"
+                }
+              }
+            }
+          }
+        },
+        "tradingview": {
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 4,
+          "sell_signals": 13,
+          "neutral_signals": 9
+        }
+      }
+    },
+    {
+      "symbol": "ATOM/USDT",
+      "final_score": 46,
+      "recommendation": "ATTENDRE",
+      "confidence": "haute",
+      "reasoning": [
+        "Analyse interne multi-timeframe: 52/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (6 achat / 10 vente / 10 neutre)",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
+      ],
+      "entry_price": 1.578,
+      "stop_price": 1.56222,
+      "target_price": 1.60956,
+      "dynamic_take_profit_pct": 2.0,
+      "suggested_amount_usdt": 0,
+      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
+      "symbol_history": {
+        "num_trades": 16,
+        "win_rate_pct": 62.5
+      },
+      "breakdown": {
+        "internal_multi_timeframe": {
+          "symbol": "ATOM/USDT",
+          "consolidated_score": 52,
+          "consensus": "ATTENDRE",
+          "per_timeframe": {
+            "15m": {
+              "symbol": "ATOM/USDT",
+              "score": 50,
+              "recommendation": "ATTENDRE",
+              "price": 1.578,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 37.9,
+                "macd_hist": -0.0004,
+                "volume_ratio": 0.75,
+                "support": 1.541,
+                "resistance": 1.593,
+                "position_in_range_pct": 71.2,
+                "volatility_pct": 0.52,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "10/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "1h": {
+              "symbol": "ATOM/USDT",
+              "score": 52,
+              "recommendation": "ATTENDRE",
+              "price": 1.578,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 60.9,
+                "macd_hist": 0.0003,
+                "volume_ratio": 0.49,
+                "support": 1.47,
+                "resistance": 1.593,
+                "position_in_range_pct": 87.8,
+                "volatility_pct": 0.94,
+                "breakdown": {
+                  "trend": "25/25",
+                  "momentum": "12/20",
+                  "volume": "0/20",
+                  "structure": "0/20",
+                  "risk": "15/15"
+                }
+              }
+            },
+            "4h": {
+              "symbol": "ATOM/USDT",
+              "score": 52,
+              "recommendation": "ATTENDRE",
+              "price": 1.578,
+              "details": {
+                "trend": "haussi\u00e8re",
+                "rsi": 63.2,
+                "macd_hist": 0.0069,
+                "volume_ratio": 0.82,
+                "support": 1.436,
+                "resistance": 1.593,
+                "position_in_range_pct": 90.4,
+                "volatility_pct": 1.81,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -1491,231 +1703,19 @@
       }
     },
     {
-      "symbol": "BCH/USDT",
-      "final_score": 70,
-      "recommendation": "ATTENDRE",
-      "confidence": "haute",
-      "reasoning": [
-        "Analyse interne multi-timeframe: 59/100 (consensus: MIXTE)",
-        "TradingView: BUY (11 achat / 6 vente / 9 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
-      ],
-      "entry_price": 258.3,
-      "stop_price": 255.717,
-      "target_price": 263.466,
-      "dynamic_take_profit_pct": 2.0,
-      "suggested_amount_usdt": 0,
-      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
-      "symbol_history": {
-        "num_trades": 2,
-        "win_rate_pct": 0.0
-      },
-      "breakdown": {
-        "internal_multi_timeframe": {
-          "symbol": "BCH/USDT",
-          "consolidated_score": 59,
-          "consensus": "MIXTE",
-          "per_timeframe": {
-            "15m": {
-              "symbol": "BCH/USDT",
-              "score": 74,
-              "recommendation": "ACHETER",
-              "price": 258.3,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 34.0,
-                "macd_hist": -0.3918,
-                "volume_ratio": 1.39,
-                "support": 254.8,
-                "resistance": 265.2,
-                "position_in_range_pct": 33.7,
-                "volatility_pct": 0.66,
-                "breakdown": {
-                  "trend": "15/25",
-                  "momentum": "10/20",
-                  "volume": "20/20",
-                  "structure": "14/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "1h": {
-              "symbol": "BCH/USDT",
-              "score": 60,
-              "recommendation": "ATTENDRE",
-              "price": 258.3,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 51.1,
-                "macd_hist": 0.2206,
-                "volume_ratio": 0.43,
-                "support": 244.9,
-                "resistance": 265.2,
-                "position_in_range_pct": 66.0,
-                "volatility_pct": 1.22,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "12/20",
-                  "volume": "0/20",
-                  "structure": "8/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "4h": {
-              "symbol": "BCH/USDT",
-              "score": 52,
-              "recommendation": "ATTENDRE",
-              "price": 258.3,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 52.0,
-                "macd_hist": 0.6975,
-                "volume_ratio": 0.94,
-                "support": 239.1,
-                "resistance": 265.2,
-                "position_in_range_pct": 73.6,
-                "volatility_pct": 2.3,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "12/20",
-                  "volume": "0/20",
-                  "structure": "0/20",
-                  "risk": "15/15"
-                }
-              }
-            }
-          }
-        },
-        "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 11,
-          "sell_signals": 6,
-          "neutral_signals": 9
-        }
-      }
-    },
-    {
-      "symbol": "ATOM/USDT",
-      "final_score": 51,
-      "recommendation": "ATTENDRE",
-      "confidence": "basse",
-      "reasoning": [
-        "Analyse interne multi-timeframe: 51/100 (consensus: ATTENDRE)",
-        "TradingView: BUY (12 achat / 3 vente / 11 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
-      ],
-      "entry_price": 1.572,
-      "stop_price": 1.55628,
-      "target_price": 1.60344,
-      "dynamic_take_profit_pct": 2.0,
-      "suggested_amount_usdt": 0,
-      "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
-      "symbol_history": {
-        "num_trades": 16,
-        "win_rate_pct": 62.5
-      },
-      "breakdown": {
-        "internal_multi_timeframe": {
-          "symbol": "ATOM/USDT",
-          "consolidated_score": 51,
-          "consensus": "ATTENDRE",
-          "per_timeframe": {
-            "15m": {
-              "symbol": "ATOM/USDT",
-              "score": 58,
-              "recommendation": "ATTENDRE",
-              "price": 1.572,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 35.2,
-                "macd_hist": -0.0007,
-                "volume_ratio": 0.47,
-                "support": 1.541,
-                "resistance": 1.593,
-                "position_in_range_pct": 59.6,
-                "volatility_pct": 0.5,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "10/20",
-                  "volume": "0/20",
-                  "structure": "8/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "1h": {
-              "symbol": "ATOM/USDT",
-              "score": 46,
-              "recommendation": "ATTENDRE",
-              "price": 1.572,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 57.8,
-                "macd_hist": -0.0001,
-                "volume_ratio": 0.14,
-                "support": 1.47,
-                "resistance": 1.593,
-                "position_in_range_pct": 82.9,
-                "volatility_pct": 0.92,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "6/20",
-                  "volume": "0/20",
-                  "structure": "0/20",
-                  "risk": "15/15"
-                }
-              }
-            },
-            "4h": {
-              "symbol": "ATOM/USDT",
-              "score": 52,
-              "recommendation": "ATTENDRE",
-              "price": 1.572,
-              "details": {
-                "trend": "haussi\u00e8re",
-                "rsi": 61.9,
-                "macd_hist": 0.0066,
-                "volume_ratio": 0.74,
-                "support": 1.436,
-                "resistance": 1.593,
-                "position_in_range_pct": 86.6,
-                "volatility_pct": 1.81,
-                "breakdown": {
-                  "trend": "25/25",
-                  "momentum": "12/20",
-                  "volume": "0/20",
-                  "structure": "0/20",
-                  "risk": "15/15"
-                }
-              }
-            }
-          }
-        },
-        "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 12,
-          "sell_signals": 3,
-          "neutral_signals": 11
-        }
-      }
-    },
-    {
       "symbol": "NEAR/USDT",
-      "final_score": 55,
-      "recommendation": "ATTENDRE",
+      "final_score": 43,
+      "recommendation": "PASSER",
       "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 50/100 (consensus: MIXTE)",
-        "TradingView: STRONG_BUY (16 achat / 0 vente / 10 neutre)",
+        "Analyse interne multi-timeframe: 46/100 (consensus: MIXTE)",
+        "TradingView: BUY (14 achat / 3 vente / 9 neutre)",
         "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
         "Historique NEAR/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
       ],
-      "entry_price": 2.24,
-      "stop_price": 2.2176,
-      "target_price": 2.2848,
+      "entry_price": 2.237,
+      "stop_price": 2.21463,
+      "target_price": 2.28174,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -1726,27 +1726,27 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "NEAR/USDT",
-          "consolidated_score": 50,
+          "consolidated_score": 46,
           "consensus": "MIXTE",
           "per_timeframe": {
             "15m": {
               "symbol": "NEAR/USDT",
-              "score": 80,
-              "recommendation": "ACHETER",
-              "price": 2.24,
+              "score": 60,
+              "recommendation": "ATTENDRE",
+              "price": 2.237,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 53.1,
-                "macd_hist": 0.0034,
-                "volume_ratio": 1.74,
+                "rsi": 54.9,
+                "macd_hist": 0.003,
+                "volume_ratio": 0.37,
                 "support": 2.162,
                 "resistance": 2.277,
-                "position_in_range_pct": 67.8,
-                "volatility_pct": 1.11,
+                "position_in_range_pct": 65.2,
+                "volatility_pct": 1.12,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
-                  "volume": "20/20",
+                  "volume": "0/20",
                   "structure": "8/20",
                   "risk": "15/15"
                 }
@@ -1756,16 +1756,16 @@
               "symbol": "NEAR/USDT",
               "score": 50,
               "recommendation": "ATTENDRE",
-              "price": 2.24,
+              "price": 2.237,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 47.5,
-                "macd_hist": -0.0004,
-                "volume_ratio": 0.48,
+                "rsi": 46.9,
+                "macd_hist": -0.0006,
+                "volume_ratio": 0.69,
                 "support": 1.907,
                 "resistance": 2.289,
-                "position_in_range_pct": 87.2,
-                "volatility_pct": 1.73,
+                "position_in_range_pct": 86.4,
+                "volatility_pct": 1.75,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -1779,16 +1779,16 @@
               "symbol": "NEAR/USDT",
               "score": 39,
               "recommendation": "PASSER",
-              "price": 2.24,
+              "price": 2.237,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 71.8,
-                "macd_hist": 0.0114,
-                "volume_ratio": 0.9,
+                "rsi": 71.7,
+                "macd_hist": 0.0112,
+                "volume_ratio": 0.95,
                 "support": 1.779,
                 "resistance": 2.289,
-                "position_in_range_pct": 90.4,
-                "volatility_pct": 4.44,
+                "position_in_range_pct": 89.8,
+                "volatility_pct": 4.45,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
@@ -1801,28 +1801,28 @@
           }
         },
         "tradingview": {
-          "recommendation": "STRONG_BUY",
-          "score": 100,
-          "buy_signals": 16,
-          "sell_signals": 0,
-          "neutral_signals": 10
+          "recommendation": "BUY",
+          "score": 75,
+          "buy_signals": 14,
+          "sell_signals": 3,
+          "neutral_signals": 9
         }
       }
     },
     {
       "symbol": "APT/USDT",
-      "final_score": 62,
+      "final_score": 51,
       "recommendation": "ATTENDRE",
       "confidence": "haute",
       "reasoning": [
-        "Analyse interne multi-timeframe: 53/100 (consensus: ATTENDRE)",
-        "TradingView: NEUTRAL (8 achat / 9 vente / 9 neutre)",
+        "Analyse interne multi-timeframe: 51/100 (consensus: ATTENDRE)",
+        "TradingView: SELL (4 achat / 12 vente / 10 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique APT/USDT: 83.3% de r\u00e9ussite sur 6 trades pass\u00e9s \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 0.613,
-      "stop_price": 0.60687,
-      "target_price": 0.62526,
+      "entry_price": 0.614,
+      "stop_price": 0.60786,
+      "target_price": 0.62628,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -1833,23 +1833,23 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "APT/USDT",
-          "consolidated_score": 53,
+          "consolidated_score": 51,
           "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "APT/USDT",
               "score": 54,
               "recommendation": "ATTENDRE",
-              "price": 0.613,
+              "price": 0.614,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 35.7,
+                "rsi": 40.0,
                 "macd_hist": -0.0005,
-                "volume_ratio": 0.88,
+                "volume_ratio": 0.04,
                 "support": 0.601,
                 "resistance": 0.633,
-                "position_in_range_pct": 37.5,
-                "volatility_pct": 0.7,
+                "position_in_range_pct": 40.6,
+                "volatility_pct": 0.71,
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "10/20",
@@ -1861,23 +1861,23 @@
             },
             "1h": {
               "symbol": "APT/USDT",
-              "score": 54,
+              "score": 46,
               "recommendation": "ATTENDRE",
-              "price": 0.613,
+              "price": 0.614,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 57.4,
+                "rsi": 58.2,
                 "macd_hist": -0.0005,
-                "volume_ratio": 0.24,
+                "volume_ratio": 0.42,
                 "support": 0.569,
                 "resistance": 0.633,
-                "position_in_range_pct": 68.8,
-                "volatility_pct": 1.53,
+                "position_in_range_pct": 70.3,
+                "volatility_pct": 1.55,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
                   "volume": "0/20",
-                  "structure": "8/20",
+                  "structure": "0/20",
                   "risk": "15/15"
                 }
               }
@@ -1886,16 +1886,16 @@
               "symbol": "APT/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 0.613,
+              "price": 0.614,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 55.3,
+                "rsi": 55.9,
                 "macd_hist": 0.001,
-                "volume_ratio": 0.59,
+                "volume_ratio": 0.61,
                 "support": 0.509,
                 "resistance": 0.633,
-                "position_in_range_pct": 83.9,
-                "volatility_pct": 2.46,
+                "position_in_range_pct": 84.7,
+                "volatility_pct": 2.47,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -1908,29 +1908,29 @@
           }
         },
         "tradingview": {
-          "recommendation": "NEUTRAL",
-          "score": 50,
-          "buy_signals": 8,
-          "sell_signals": 9,
-          "neutral_signals": 9
+          "recommendation": "SELL",
+          "score": 25,
+          "buy_signals": 4,
+          "sell_signals": 12,
+          "neutral_signals": 10
         }
       }
     },
     {
       "symbol": "ARB/USDT",
-      "final_score": 56,
+      "final_score": 61,
       "recommendation": "ATTENDRE",
-      "confidence": "basse",
+      "confidence": "haute",
       "reasoning": [
         "Analyse interne multi-timeframe: 51/100 (consensus: MIXTE)",
-        "TradingView: BUY (14 achat / 2 vente / 10 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
+        "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique ARB/USDT: 75.0% de r\u00e9ussite sur 4 trades pass\u00e9s \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 0.1927,
-      "stop_price": 0.190773,
-      "target_price": 0.197595,
-      "dynamic_take_profit_pct": 2.54,
+      "entry_price": 0.1944,
+      "stop_price": 0.192456,
+      "target_price": 0.199143,
+      "dynamic_take_profit_pct": 2.44,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
       "symbol_history": {
@@ -1947,16 +1947,16 @@
               "symbol": "ARB/USDT",
               "score": 50,
               "recommendation": "ATTENDRE",
-              "price": 0.1927,
+              "price": 0.1944,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 46.7,
-                "macd_hist": -0.0011,
-                "volume_ratio": 0.68,
-                "support": 0.1409,
+                "rsi": 44.1,
+                "macd_hist": -0.001,
+                "volume_ratio": 0.16,
+                "support": 0.142,
                 "resistance": 0.2051,
-                "position_in_range_pct": 80.7,
-                "volatility_pct": 2.54,
+                "position_in_range_pct": 83.0,
+                "volatility_pct": 2.44,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -1970,16 +1970,16 @@
               "symbol": "ARB/USDT",
               "score": 39,
               "recommendation": "PASSER",
-              "price": 0.1927,
+              "price": 0.1944,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 84.3,
-                "macd_hist": 0.0021,
-                "volume_ratio": 0.17,
+                "rsi": 86.2,
+                "macd_hist": 0.0022,
+                "volume_ratio": 0.24,
                 "support": 0.1282,
                 "resistance": 0.2051,
-                "position_in_range_pct": 83.9,
-                "volatility_pct": 5.54,
+                "position_in_range_pct": 86.1,
+                "volatility_pct": 5.5,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
@@ -1993,16 +1993,16 @@
               "symbol": "ARB/USDT",
               "score": 59,
               "recommendation": "ATTENDRE",
-              "price": 0.1928,
+              "price": 0.1943,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 79.4,
-                "macd_hist": 0.0055,
-                "volume_ratio": 1.4,
+                "rsi": 80.7,
+                "macd_hist": 0.0056,
+                "volume_ratio": 1.42,
                 "support": 0.0831,
                 "resistance": 0.2051,
-                "position_in_range_pct": 89.9,
-                "volatility_pct": 5.78,
+                "position_in_range_pct": 91.1,
+                "volatility_pct": 5.73,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
@@ -2015,28 +2015,28 @@
           }
         },
         "tradingview": {
-          "recommendation": "BUY",
-          "score": 75,
-          "buy_signals": 14,
-          "sell_signals": 2,
-          "neutral_signals": 10
+          "recommendation": "INDISPONIBLE",
+          "score": 50,
+          "buy_signals": 0,
+          "sell_signals": 0,
+          "neutral_signals": 0
         }
       }
     },
     {
       "symbol": "OP/USDT",
-      "final_score": 62,
+      "final_score": 61,
       "recommendation": "ATTENDRE",
       "confidence": "haute",
       "reasoning": [
-        "Analyse interne multi-timeframe: 54/100 (consensus: ATTENDRE)",
+        "Analyse interne multi-timeframe: 51/100 (consensus: ATTENDRE)",
         "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique OP/USDT: 71.4% de r\u00e9ussite sur 7 trades pass\u00e9s \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 0.1087,
-      "stop_price": 0.107613,
-      "target_price": 0.110874,
+      "entry_price": 0.109,
+      "stop_price": 0.10791,
+      "target_price": 0.11118,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -2047,23 +2047,23 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "OP/USDT",
-          "consolidated_score": 54,
+          "consolidated_score": 51,
           "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "OP/USDT",
               "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 0.1087,
+              "price": 0.109,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 41.8,
+                "rsi": 39.8,
                 "macd_hist": -0.0002,
-                "volume_ratio": 0.46,
+                "volume_ratio": 0.67,
                 "support": 0.1014,
                 "resistance": 0.1142,
-                "position_in_range_pct": 57.0,
-                "volatility_pct": 1.09,
+                "position_in_range_pct": 59.4,
+                "volatility_pct": 1.13,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -2077,16 +2077,16 @@
               "symbol": "OP/USDT",
               "score": 45,
               "recommendation": "ATTENDRE",
-              "price": 0.1087,
+              "price": 0.109,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 64.2,
+                "rsi": 64.9,
                 "macd_hist": 0.0,
-                "volume_ratio": 0.12,
+                "volume_ratio": 0.38,
                 "support": 0.095,
                 "resistance": 0.1142,
-                "position_in_range_pct": 71.4,
-                "volatility_pct": 3.16,
+                "position_in_range_pct": 72.9,
+                "volatility_pct": 3.21,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -2098,21 +2098,21 @@
             },
             "4h": {
               "symbol": "OP/USDT",
-              "score": 57,
+              "score": 51,
               "recommendation": "ATTENDRE",
-              "price": 0.1087,
+              "price": 0.109,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 64.8,
+                "rsi": 65.6,
                 "macd_hist": 0.0009,
-                "volume_ratio": 1.19,
+                "volume_ratio": 1.3,
                 "support": 0.0848,
                 "resistance": 0.1142,
-                "position_in_range_pct": 81.3,
-                "volatility_pct": 3.61,
+                "position_in_range_pct": 82.3,
+                "volatility_pct": 3.64,
                 "breakdown": {
                   "trend": "25/25",
-                  "momentum": "12/20",
+                  "momentum": "6/20",
                   "volume": "12/20",
                   "structure": "0/20",
                   "risk": "8/15"
@@ -2132,17 +2132,17 @@
     },
     {
       "symbol": "UNI/USDT",
-      "final_score": 56,
+      "final_score": 57,
       "recommendation": "ATTENDRE",
       "confidence": "haute",
       "reasoning": [
-        "Analyse interne multi-timeframe: 51/100 (consensus: MIXTE)",
+        "Analyse interne multi-timeframe: 53/100 (consensus: ATTENDRE)",
         "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 6.973,
-      "stop_price": 6.90327,
-      "target_price": 7.11246,
+      "entry_price": 6.998,
+      "stop_price": 6.92802,
+      "target_price": 7.13796,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -2153,27 +2153,27 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "UNI/USDT",
-          "consolidated_score": 51,
-          "consensus": "MIXTE",
+          "consolidated_score": 53,
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "UNI/USDT",
-              "score": 78,
-              "recommendation": "ACHETER",
-              "price": 6.973,
+              "score": 58,
+              "recommendation": "ATTENDRE",
+              "price": 6.998,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 23.9,
-                "macd_hist": -0.0188,
-                "volume_ratio": 1.53,
-                "support": 6.944,
+                "rsi": 28.1,
+                "macd_hist": -0.02,
+                "volume_ratio": 0.76,
+                "support": 6.894,
                 "resistance": 7.483,
-                "position_in_range_pct": 5.4,
-                "volatility_pct": 1.14,
+                "position_in_range_pct": 17.7,
+                "volatility_pct": 1.16,
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "8/20",
-                  "volume": "20/20",
+                  "volume": "0/20",
                   "structure": "20/20",
                   "risk": "15/15"
                 }
@@ -2183,16 +2183,16 @@
               "symbol": "UNI/USDT",
               "score": 54,
               "recommendation": "ATTENDRE",
-              "price": 6.973,
+              "price": 6.998,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 57.7,
-                "macd_hist": -0.0267,
-                "volume_ratio": 0.39,
+                "rsi": 58.7,
+                "macd_hist": -0.0251,
+                "volume_ratio": 0.77,
                 "support": 6.054,
                 "resistance": 7.483,
-                "position_in_range_pct": 64.3,
-                "volatility_pct": 2.68,
+                "position_in_range_pct": 66.1,
+                "volatility_pct": 2.72,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
@@ -2204,22 +2204,22 @@
             },
             "4h": {
               "symbol": "UNI/USDT",
-              "score": 39,
-              "recommendation": "PASSER",
-              "price": 6.973,
+              "score": 51,
+              "recommendation": "ATTENDRE",
+              "price": 6.998,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 65.3,
-                "macd_hist": 0.0576,
-                "volume_ratio": 0.94,
+                "rsi": 66.0,
+                "macd_hist": 0.0592,
+                "volume_ratio": 1.05,
                 "support": 4.35,
                 "resistance": 7.483,
-                "position_in_range_pct": 83.7,
-                "volatility_pct": 4.24,
+                "position_in_range_pct": 84.5,
+                "volatility_pct": 4.28,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
-                  "volume": "0/20",
+                  "volume": "12/20",
                   "structure": "0/20",
                   "risk": "8/15"
                 }
@@ -2247,9 +2247,9 @@
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique AAVE/USDT: 33.3% de r\u00e9ussite sur 6 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
       ],
-      "entry_price": 134.43,
-      "stop_price": 133.0857,
-      "target_price": 137.1186,
+      "entry_price": 134.92,
+      "stop_price": 133.5708,
+      "target_price": 137.6184,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -2267,16 +2267,16 @@
               "symbol": "AAVE/USDT",
               "score": 60,
               "recommendation": "ATTENDRE",
-              "price": 134.43,
+              "price": 134.92,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 38.5,
-                "macd_hist": -0.1164,
-                "volume_ratio": 0.74,
+                "rsi": 44.3,
+                "macd_hist": -0.1334,
+                "volume_ratio": 0.38,
                 "support": 133.23,
                 "resistance": 140.19,
-                "position_in_range_pct": 17.2,
-                "volatility_pct": 0.69,
+                "position_in_range_pct": 24.3,
+                "volatility_pct": 0.7,
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "10/20",
@@ -2290,16 +2290,16 @@
               "symbol": "AAVE/USDT",
               "score": 54,
               "recommendation": "ATTENDRE",
-              "price": 134.43,
+              "price": 134.92,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 53.6,
-                "macd_hist": -0.0619,
-                "volume_ratio": 0.17,
+                "rsi": 54.9,
+                "macd_hist": -0.0307,
+                "volume_ratio": 0.28,
                 "support": 128.52,
                 "resistance": 140.19,
-                "position_in_range_pct": 50.6,
-                "volatility_pct": 1.7,
+                "position_in_range_pct": 54.8,
+                "volatility_pct": 1.71,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "6/20",
@@ -2313,16 +2313,16 @@
               "symbol": "AAVE/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 134.43,
+              "price": 134.92,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 56.0,
-                "macd_hist": 0.1957,
-                "volume_ratio": 0.66,
+                "rsi": 58.1,
+                "macd_hist": 0.2269,
+                "volume_ratio": 0.69,
                 "support": 120.41,
                 "resistance": 140.19,
-                "position_in_range_pct": 70.9,
-                "volatility_pct": 2.33,
+                "position_in_range_pct": 73.4,
+                "volatility_pct": 2.32,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -2345,17 +2345,17 @@
     },
     {
       "symbol": "ICP/USDT",
-      "final_score": 57,
+      "final_score": 54,
       "recommendation": "ATTENDRE",
       "confidence": "haute",
       "reasoning": [
-        "Analyse interne multi-timeframe: 54/100 (consensus: MIXTE)",
+        "Analyse interne multi-timeframe: 48/100 (consensus: ATTENDRE)",
         "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 2.623,
-      "stop_price": 2.59677,
-      "target_price": 2.67546,
+      "entry_price": 2.634,
+      "stop_price": 2.60766,
+      "target_price": 2.68668,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -2366,27 +2366,27 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "ICP/USDT",
-          "consolidated_score": 54,
-          "consensus": "MIXTE",
+          "consolidated_score": 48,
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "ICP/USDT",
-              "score": 70,
-              "recommendation": "ACHETER",
-              "price": 2.623,
+              "score": 60,
+              "recommendation": "ATTENDRE",
+              "price": 2.634,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 29.8,
-                "macd_hist": -0.0032,
-                "volume_ratio": 1.15,
+                "rsi": 33.9,
+                "macd_hist": -0.0025,
+                "volume_ratio": 0.17,
                 "support": 2.622,
                 "resistance": 2.733,
-                "position_in_range_pct": 0.9,
-                "volatility_pct": 0.57,
+                "position_in_range_pct": 10.8,
+                "volatility_pct": 0.55,
                 "breakdown": {
                   "trend": "15/25",
-                  "momentum": "8/20",
-                  "volume": "12/20",
+                  "momentum": "10/20",
+                  "volume": "0/20",
                   "structure": "20/20",
                   "risk": "15/15"
                 }
@@ -2394,23 +2394,23 @@
             },
             "1h": {
               "symbol": "ICP/USDT",
-              "score": 58,
+              "score": 46,
               "recommendation": "ATTENDRE",
-              "price": 2.623,
+              "price": 2.634,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 49.1,
-                "macd_hist": -0.0089,
-                "volume_ratio": 0.3,
+                "rsi": 51.6,
+                "macd_hist": -0.0082,
+                "volume_ratio": 0.43,
                 "support": 2.4,
                 "resistance": 2.733,
-                "position_in_range_pct": 67.0,
+                "position_in_range_pct": 70.3,
                 "volatility_pct": 1.25,
                 "breakdown": {
                   "trend": "25/25",
-                  "momentum": "10/20",
+                  "momentum": "6/20",
                   "volume": "0/20",
-                  "structure": "8/20",
+                  "structure": "0/20",
                   "risk": "15/15"
                 }
               }
@@ -2419,16 +2419,16 @@
               "symbol": "ICP/USDT",
               "score": 45,
               "recommendation": "ATTENDRE",
-              "price": 2.623,
+              "price": 2.634,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 58.9,
-                "macd_hist": 0.0089,
-                "volume_ratio": 0.67,
+                "rsi": 60.0,
+                "macd_hist": 0.0096,
+                "volume_ratio": 0.7,
                 "support": 2.322,
                 "resistance": 2.733,
-                "position_in_range_pct": 73.2,
-                "volatility_pct": 3.03,
+                "position_in_range_pct": 75.9,
+                "volatility_pct": 3.02,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -2451,17 +2451,17 @@
     },
     {
       "symbol": "FIL/USDT",
-      "final_score": 57,
+      "final_score": 47,
       "recommendation": "ATTENDRE",
-      "confidence": "haute",
+      "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 54/100 (consensus: ATTENDRE)",
+        "Analyse interne multi-timeframe: 62/100 (consensus: ATTENDRE)",
         "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
-        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
+        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence"
       ],
-      "entry_price": 0.7944,
-      "stop_price": 0.786456,
-      "target_price": 0.810288,
+      "entry_price": 0.7994,
+      "stop_price": 0.791406,
+      "target_price": 0.815388,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -2472,23 +2472,23 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "FIL/USDT",
-          "consolidated_score": 54,
+          "consolidated_score": 62,
           "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "FIL/USDT",
               "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 0.7944,
+              "price": 0.7994,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 21.9,
-                "macd_hist": -0.0027,
-                "volume_ratio": 0.99,
-                "support": 0.7821,
+                "rsi": 28.8,
+                "macd_hist": -0.0025,
+                "volume_ratio": 0.18,
+                "support": 0.7824,
                 "resistance": 0.8409,
-                "position_in_range_pct": 20.9,
-                "volatility_pct": 0.69,
+                "position_in_range_pct": 29.1,
+                "volatility_pct": 0.68,
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "8/20",
@@ -2500,21 +2500,21 @@
             },
             "1h": {
               "symbol": "FIL/USDT",
-              "score": 54,
+              "score": 60,
               "recommendation": "ATTENDRE",
-              "price": 0.7944,
+              "price": 0.7994,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 56.4,
-                "macd_hist": -0.0002,
-                "volume_ratio": 0.38,
+                "rsi": 59.0,
+                "macd_hist": 0.0001,
+                "volume_ratio": 0.51,
                 "support": 0.7378,
                 "resistance": 0.8409,
-                "position_in_range_pct": 54.9,
+                "position_in_range_pct": 59.7,
                 "volatility_pct": 1.58,
                 "breakdown": {
                   "trend": "25/25",
-                  "momentum": "6/20",
+                  "momentum": "12/20",
                   "volume": "0/20",
                   "structure": "8/20",
                   "risk": "15/15"
@@ -2523,22 +2523,22 @@
             },
             "4h": {
               "symbol": "FIL/USDT",
-              "score": 52,
+              "score": 64,
               "recommendation": "ATTENDRE",
-              "price": 0.7944,
+              "price": 0.7994,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 50.6,
-                "macd_hist": 0.0008,
-                "volume_ratio": 0.97,
+                "rsi": 52.4,
+                "macd_hist": 0.0011,
+                "volume_ratio": 1.01,
                 "support": 0.6482,
                 "resistance": 0.8409,
-                "position_in_range_pct": 75.9,
-                "volatility_pct": 2.57,
+                "position_in_range_pct": 78.5,
+                "volatility_pct": 2.56,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
-                  "volume": "0/20",
+                  "volume": "12/20",
                   "structure": "0/20",
                   "risk": "15/15"
                 }
@@ -2566,9 +2566,9 @@
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique ETC/USDT: 25.0% de r\u00e9ussite sur 4 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
       ],
-      "entry_price": 7.7,
-      "stop_price": 7.623,
-      "target_price": 7.854,
+      "entry_price": 7.72,
+      "stop_price": 7.6428,
+      "target_price": 7.8744,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -2586,16 +2586,16 @@
               "symbol": "ETC/USDT",
               "score": 60,
               "recommendation": "ATTENDRE",
-              "price": 7.7,
+              "price": 7.72,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 30.6,
-                "macd_hist": -0.0047,
-                "volume_ratio": 0.77,
-                "support": 7.7,
+                "rsi": 39.4,
+                "macd_hist": -0.007,
+                "volume_ratio": 0.27,
+                "support": 7.69,
                 "resistance": 7.87,
-                "position_in_range_pct": 0.0,
-                "volatility_pct": 0.52,
+                "position_in_range_pct": 16.7,
+                "volatility_pct": 0.51,
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "10/20",
@@ -2609,16 +2609,16 @@
               "symbol": "ETC/USDT",
               "score": 50,
               "recommendation": "ATTENDRE",
-              "price": 7.7,
+              "price": 7.72,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 42.1,
-                "macd_hist": -0.0139,
-                "volume_ratio": 0.17,
+                "rsi": 43.6,
+                "macd_hist": -0.0126,
+                "volume_ratio": 0.55,
                 "support": 7.29,
                 "resistance": 7.87,
-                "position_in_range_pct": 70.7,
-                "volatility_pct": 0.96,
+                "position_in_range_pct": 74.1,
+                "volatility_pct": 0.97,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -2632,15 +2632,15 @@
               "symbol": "ETC/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 7.7,
+              "price": 7.72,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 54.7,
-                "macd_hist": 0.0206,
-                "volume_ratio": 0.86,
+                "rsi": 55.7,
+                "macd_hist": 0.0219,
+                "volume_ratio": 0.97,
                 "support": 7.08,
                 "resistance": 7.87,
-                "position_in_range_pct": 78.5,
+                "position_in_range_pct": 81.0,
                 "volatility_pct": 2.08,
                 "breakdown": {
                   "trend": "25/25",
@@ -2664,13 +2664,13 @@
     },
     {
       "symbol": "XLM/USDT",
-      "final_score": 39,
-      "recommendation": "PASSER",
+      "final_score": 52,
+      "recommendation": "ATTENDRE",
       "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 57/100 (consensus: MIXTE)",
+        "Analyse interne multi-timeframe: 53/100 (consensus: ATTENDRE)",
         "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique XLM/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
       ],
       "entry_price": 0.1847,
@@ -2686,19 +2686,19 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "XLM/USDT",
-          "consolidated_score": 57,
-          "consensus": "MIXTE",
+          "consolidated_score": 53,
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "XLM/USDT",
-              "score": 80,
-              "recommendation": "ACHETER",
+              "score": 60,
+              "recommendation": "ATTENDRE",
               "price": 0.1847,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 36.8,
-                "macd_hist": -0.0002,
-                "volume_ratio": 2.07,
+                "rsi": 38.7,
+                "macd_hist": -0.0003,
+                "volume_ratio": 0.5,
                 "support": 0.1836,
                 "resistance": 0.1877,
                 "position_in_range_pct": 26.8,
@@ -2706,7 +2706,7 @@
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "10/20",
-                  "volume": "20/20",
+                  "volume": "0/20",
                   "structure": "20/20",
                   "risk": "15/15"
                 }
@@ -2721,7 +2721,7 @@
                 "trend": "haussi\u00e8re",
                 "rsi": 47.0,
                 "macd_hist": -0.0,
-                "volume_ratio": 0.53,
+                "volume_ratio": 0.84,
                 "support": 0.1773,
                 "resistance": 0.1877,
                 "position_in_range_pct": 71.2,
@@ -2744,7 +2744,7 @@
                 "trend": "haussi\u00e8re",
                 "rsi": 50.5,
                 "macd_hist": 0.0004,
-                "volume_ratio": 0.9,
+                "volume_ratio": 0.97,
                 "support": 0.1713,
                 "resistance": 0.1881,
                 "position_in_range_pct": 79.8,
@@ -2771,18 +2771,18 @@
     },
     {
       "symbol": "HBAR/USDT",
-      "final_score": 38,
-      "recommendation": "PASSER",
+      "final_score": 51,
+      "recommendation": "ATTENDRE",
       "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 55/100 (consensus: MIXTE)",
+        "Analyse interne multi-timeframe: 51/100 (consensus: ATTENDRE)",
         "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
-        "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
+        "Les deux sources s'accordent \u2192 confiance renforc\u00e9e",
         "Historique HBAR/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
       ],
-      "entry_price": 0.0807,
-      "stop_price": 0.079893,
-      "target_price": 0.082314,
+      "entry_price": 0.0809,
+      "stop_price": 0.080091,
+      "target_price": 0.082518,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -2793,28 +2793,28 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "HBAR/USDT",
-          "consolidated_score": 55,
-          "consensus": "MIXTE",
+          "consolidated_score": 51,
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "HBAR/USDT",
-              "score": 70,
-              "recommendation": "ACHETER",
-              "price": 0.0807,
+              "score": 52,
+              "recommendation": "ATTENDRE",
+              "price": 0.0809,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 26.3,
+                "rsi": 25.0,
                 "macd_hist": -0.0001,
-                "volume_ratio": 1.24,
+                "volume_ratio": 0.13,
                 "support": 0.0801,
                 "resistance": 0.0823,
-                "position_in_range_pct": 26.3,
-                "volatility_pct": 0.43,
+                "position_in_range_pct": 35.3,
+                "volatility_pct": 0.42,
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "8/20",
-                  "volume": "12/20",
-                  "structure": "20/20",
+                  "volume": "0/20",
+                  "structure": "14/20",
                   "risk": "15/15"
                 }
               }
@@ -2823,15 +2823,15 @@
               "symbol": "HBAR/USDT",
               "score": 50,
               "recommendation": "ATTENDRE",
-              "price": 0.0807,
+              "price": 0.0809,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 45.0,
+                "rsi": 46.7,
                 "macd_hist": -0.0001,
-                "volume_ratio": 0.34,
+                "volume_ratio": 0.39,
                 "support": 0.0764,
                 "resistance": 0.0823,
-                "position_in_range_pct": 72.1,
+                "position_in_range_pct": 75.3,
                 "volatility_pct": 0.82,
                 "breakdown": {
                   "trend": "25/25",
@@ -2846,16 +2846,16 @@
               "symbol": "HBAR/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 0.0807,
+              "price": 0.0809,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 55.9,
+                "rsi": 56.9,
                 "macd_hist": 0.0002,
-                "volume_ratio": 0.53,
+                "volume_ratio": 0.54,
                 "support": 0.0728,
                 "resistance": 0.0823,
-                "position_in_range_pct": 82.8,
-                "volatility_pct": 1.75,
+                "position_in_range_pct": 84.8,
+                "volatility_pct": 1.74,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
@@ -2878,18 +2878,18 @@
     },
     {
       "symbol": "ALGO/USDT",
-      "final_score": 40,
+      "final_score": 38,
       "recommendation": "PASSER",
       "confidence": "basse",
       "reasoning": [
-        "Analyse interne multi-timeframe: 58/100 (consensus: MIXTE)",
+        "Analyse interne multi-timeframe: 55/100 (consensus: ATTENDRE)",
         "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
         "Signaux contradictoires entre analyse interne et TradingView \u2192 prudence",
         "Historique ALGO/USDT: 33.3% de r\u00e9ussite sur 3 trades pass\u00e9s \u2192 score r\u00e9duit par prudence"
       ],
-      "entry_price": 0.094,
-      "stop_price": 0.09306,
-      "target_price": 0.09588,
+      "entry_price": 0.0942,
+      "stop_price": 0.093258,
+      "target_price": 0.096084,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -2900,27 +2900,27 @@
       "breakdown": {
         "internal_multi_timeframe": {
           "symbol": "ALGO/USDT",
-          "consolidated_score": 58,
-          "consensus": "MIXTE",
+          "consolidated_score": 55,
+          "consensus": "ATTENDRE",
           "per_timeframe": {
             "15m": {
               "symbol": "ALGO/USDT",
-              "score": 72,
-              "recommendation": "ACHETER",
-              "price": 0.094,
+              "score": 60,
+              "recommendation": "ATTENDRE",
+              "price": 0.0942,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 33.3,
+                "rsi": 42.3,
                 "macd_hist": -0.0,
-                "volume_ratio": 1.14,
+                "volume_ratio": 0.41,
                 "support": 0.0937,
                 "resistance": 0.0959,
-                "position_in_range_pct": 13.6,
-                "volatility_pct": 0.48,
+                "position_in_range_pct": 22.7,
+                "volatility_pct": 0.49,
                 "breakdown": {
                   "trend": "15/25",
                   "momentum": "10/20",
-                  "volume": "12/20",
+                  "volume": "0/20",
                   "structure": "20/20",
                   "risk": "15/15"
                 }
@@ -2930,16 +2930,16 @@
               "symbol": "ALGO/USDT",
               "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 0.094,
+              "price": 0.0942,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 44.9,
+                "rsi": 46.3,
                 "macd_hist": -0.0002,
-                "volume_ratio": 0.23,
+                "volume_ratio": 0.32,
                 "support": 0.0896,
                 "resistance": 0.0979,
-                "position_in_range_pct": 53.0,
-                "volatility_pct": 0.97,
+                "position_in_range_pct": 55.4,
+                "volatility_pct": 0.99,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -2953,15 +2953,15 @@
               "symbol": "ALGO/USDT",
               "score": 52,
               "recommendation": "ATTENDRE",
-              "price": 0.094,
+              "price": 0.0942,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 52.8,
+                "rsi": 53.7,
                 "macd_hist": 0.0,
-                "volume_ratio": 0.72,
+                "volume_ratio": 0.74,
                 "support": 0.0836,
                 "resistance": 0.0979,
-                "position_in_range_pct": 72.7,
+                "position_in_range_pct": 74.1,
                 "volatility_pct": 2.27,
                 "breakdown": {
                   "trend": "25/25",
@@ -2993,9 +2993,9 @@
         "TradingView: INDISPONIBLE (0 achat / 0 vente / 0 neutre)",
         "Les deux sources s'accordent \u2192 confiance renforc\u00e9e"
       ],
-      "entry_price": 5.063,
-      "stop_price": 5.01237,
-      "target_price": 5.16426,
+      "entry_price": 5.089,
+      "stop_price": 5.03811,
+      "target_price": 5.19078,
       "dynamic_take_profit_pct": 2.0,
       "suggested_amount_usdt": 0,
       "holding_horizon": "1 \u00e0 4 jours (swing court terme)",
@@ -3013,16 +3013,16 @@
               "symbol": "INJ/USDT",
               "score": 58,
               "recommendation": "ATTENDRE",
-              "price": 5.063,
+              "price": 5.089,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 35.1,
-                "macd_hist": -0.012,
-                "volume_ratio": 0.41,
+                "rsi": 44.3,
+                "macd_hist": -0.0111,
+                "volume_ratio": 0.18,
                 "support": 4.904,
                 "resistance": 5.198,
-                "position_in_range_pct": 54.1,
-                "volatility_pct": 0.73,
+                "position_in_range_pct": 62.9,
+                "volatility_pct": 0.7,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "10/20",
@@ -3036,15 +3036,15 @@
               "symbol": "INJ/USDT",
               "score": 21,
               "recommendation": "PASSER",
-              "price": 5.061,
+              "price": 5.089,
               "details": {
                 "trend": "baissi\u00e8re",
-                "rsi": 69.9,
-                "macd_hist": 0.0084,
-                "volume_ratio": 0.15,
+                "rsi": 75.8,
+                "macd_hist": 0.0102,
+                "volume_ratio": 0.28,
                 "support": 4.654,
                 "resistance": 5.198,
-                "position_in_range_pct": 74.8,
+                "position_in_range_pct": 80.0,
                 "volatility_pct": 1.23,
                 "breakdown": {
                   "trend": "0/25",
@@ -3059,16 +3059,16 @@
               "symbol": "INJ/USDT",
               "score": 60,
               "recommendation": "ATTENDRE",
-              "price": 5.061,
+              "price": 5.089,
               "details": {
                 "trend": "haussi\u00e8re",
-                "rsi": 54.6,
-                "macd_hist": 0.033,
-                "volume_ratio": 0.91,
+                "rsi": 56.3,
+                "macd_hist": 0.0347,
+                "volume_ratio": 0.94,
                 "support": 4.654,
                 "resistance": 5.366,
-                "position_in_range_pct": 57.2,
-                "volatility_pct": 2.4,
+                "position_in_range_pct": 61.1,
+                "volatility_pct": 2.39,
                 "breakdown": {
                   "trend": "25/25",
                   "momentum": "12/20",
